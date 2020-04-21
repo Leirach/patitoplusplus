@@ -1,0 +1,215 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> tipo
+Rule 1     tipo -> INT
+Rule 2     tipo -> FLOAT
+Rule 3     tipo -> CHAR
+Rule 4     program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
+Rule 5     dimensions -> OPENBRAC CTEI CLOSEBRAC
+Rule 6     dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
+Rule 7     dimensions -> empty
+Rule 8     declare_vars -> VAR vars
+Rule 9     declare_vars -> empty
+Rule 10    vars -> tipo ID dimensions getvars COLON SEMICOLON vars
+Rule 11    vars -> empty
+Rule 12    getvars -> COMMA ID dimensions getvars
+Rule 13    getvars -> empty
+Rule 14    declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+Rule 15    declare_func_params -> tipo ID more_params
+Rule 16    declare_func_params -> empty
+Rule 17    more_params -> COMMA tipo ID
+Rule 18    more_params -> empty
+Rule 19    bloque -> LCURLYB estatuto RCURLYB
+Rule 20    estatuto -> asignacion
+Rule 21    estatuto -> condicion
+Rule 22    estatuto -> func_void
+Rule 23    estatuto -> retorno
+Rule 24    estatuto -> escribe
+Rule 25    estatuto -> lee
+Rule 26    estatuto -> desde
+Rule 27    estatuto -> mientras
+Rule 28    estatuto -> empty
+Rule 29    id -> ID
+Rule 30    id -> ID OPENBRAC exp CLOSEBRAC
+Rule 31    id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
+Rule 32    asignacion -> id ASSIGN megaexp SEMICOLON
+Rule 33    condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino
+Rule 34    bloque_sino -> SINO bloque
+Rule 35    bloque_sino -> empty
+Rule 36    func_call_params -> megaexp more_call_params
+Rule 37    func_call_params -> empty
+Rule 38    more_call_params -> COMMA megaexp
+Rule 39    more_call_params -> empty
+Rule 40    func_void -> ID OPENPAR CLOSEPAR func_call_params SEMICOLON
+Rule 41    escribe -> ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON
+Rule 42    print_options -> CTES more_print
+Rule 43    print_options -> megaexp more_print
+Rule 44    more_print -> COMMA CTES
+Rule 45    more_print -> COMMA megaexp
+Rule 46    more_print -> empty
+Rule 47    lee -> LEE OPENPAR ID read_more CLOSEPAR SEMICOLON
+Rule 48    read_more -> COMMA ID read_more
+Rule 49    read_more -> empty
+Rule 50    retorno -> RETORNO OPENPAR megaexp CLOSEPAR
+Rule 51    blooean_op -> OR
+Rule 52    blooean_op -> AND
+Rule 53    logical_op -> GT
+Rule 54    logical_op -> GTE
+Rule 55    logical_op -> LT
+Rule 56    logical_op -> LTE
+Rule 57    logical_op -> NEQ
+Rule 58    logical_op -> EQ
+Rule 59    sums -> MINUS
+Rule 60    sums -> PLUS
+Rule 61    multdiv -> TIMES
+Rule 62    multdiv -> DIVIDE
+Rule 63    megaexp -> superexp
+Rule 64    megaexp -> superexp blooean_op megaexp
+Rule 65    superexp -> exp
+Rule 66    superexp -> exp logical_op superexp
+Rule 67    exp -> termino
+Rule 68    exp -> termino sums exp
+Rule 69    termino -> factor
+Rule 70    termino -> factor multdiv factor
+Rule 71    factor -> vcte
+Rule 72    factor -> OPENPAR megaexp CLOSEPAR
+Rule 73    vcte -> id
+Rule 74    vcte -> CTEI
+Rule 75    vcte -> CTEF
+Rule 76    vcte -> CTEC
+Rule 77    desde -> DESDE ID ASSIGN exp HASTA exp HACER bloque
+Rule 78    mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque
+Rule 79    empty -> <empty>
+
+Terminals, with rules where they appear
+
+AND                  : 52
+ASSIGN               : 32 77
+CHAR                 : 3
+CLOSEBRAC            : 5 6 6 30 31 31
+CLOSEPAR             : 4 14 33 40 41 47 50 72 78
+COLON                : 10
+COMMA                : 12 17 38 44 45 48
+CTEC                 : 76
+CTEF                 : 75
+CTEI                 : 5 6 6 74
+CTES                 : 42 44
+DESDE                : 77
+DIVIDE               : 62
+ENTONCES             : 33
+EQ                   : 58
+ESCRIBE              : 41
+FLOAT                : 2
+FUNCION              : 14
+GT                   : 53
+GTE                  : 54
+HACER                : 77
+HASTA                : 77
+HAZ                  : 78
+ID                   : 4 10 12 14 15 17 29 30 31 40 47 48 77
+INT                  : 1
+LCURLYB              : 19
+LEE                  : 47
+LT                   : 55
+LTE                  : 56
+MIENTRAS             : 78
+MINUS                : 59
+NEQ                  : 57
+OPENBRAC             : 5 6 6 30 31 31
+OPENPAR              : 4 14 33 40 41 47 50 72 78
+OR                   : 51
+PLUS                 : 60
+PRINCIPAL            : 4
+PROGRAMA             : 4
+RCURLYB              : 19
+RETORNO              : 50
+SEMICOLON            : 4 10 32 40 41 47
+SI                   : 33
+SINO                 : 34
+TIMES                : 61
+VAR                  : 8
+error                : 
+
+Nonterminals, with rules where they appear
+
+asignacion           : 20
+blooean_op           : 64
+bloque               : 4 14 33 34 77 78
+bloque_sino          : 33
+condicion            : 21
+declare_func         : 4
+declare_func_params  : 14
+declare_vars         : 4 14
+desde                : 26
+dimensions           : 10 12
+empty                : 7 9 11 13 16 18 28 35 37 39 46 49
+escribe              : 24
+estatuto             : 19
+exp                  : 30 31 31 65 66 68 77 77
+factor               : 69 70 70
+func_call_params     : 40
+func_void            : 22
+getvars              : 10 12
+id                   : 32 73
+lee                  : 25
+logical_op           : 66
+megaexp              : 32 33 36 38 43 45 50 64 72 78
+mientras             : 27
+more_call_params     : 36
+more_params          : 15
+more_print           : 42 43
+multdiv              : 70
+print_options        : 41
+program_declaration  : 
+read_more            : 47 48
+retorno              : 23
+sums                 : 68
+superexp             : 63 64 66
+termino              : 67 68
+tipo                 : 10 14 15 17 0
+vars                 : 8 10
+vcte                 : 71
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . tipo
+    (1) tipo -> . INT
+    (2) tipo -> . FLOAT
+    (3) tipo -> . CHAR
+
+    INT             shift and go to state 2
+    FLOAT           shift and go to state 3
+    CHAR            shift and go to state 4
+
+    tipo                           shift and go to state 1
+
+state 1
+
+    (0) S' -> tipo .
+
+
+
+state 2
+
+    (1) tipo -> INT .
+
+    $end            reduce using rule 1 (tipo -> INT .)
+
+
+state 3
+
+    (2) tipo -> FLOAT .
+
+    $end            reduce using rule 2 (tipo -> FLOAT .)
+
+
+state 4
+
+    (3) tipo -> CHAR .
+
+    $end            reduce using rule 3 (tipo -> CHAR .)
+

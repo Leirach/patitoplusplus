@@ -19,7 +19,7 @@ def p_tipo(p):
 
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque'
-    programId = t[2]
+    programId = p[2]
 
 def p_dimensions(p):
     '''dimensions : OPENBRAC CTEI CLOSEBRAC 

@@ -129,27 +129,45 @@ def p_logical_op(p):
 def p_sums(p):
     '''sums : MINUS 
             | PLUS '''
+    p[0] = p[1]
 
 def p_multdiv(p):
     '''multdiv : TIMES 
                | DIVIDE '''
-
+    p[0] = p[1]
 # -- Expresiones
+
 def p_megaexp(p):
-    '''megaexp : superexp
-               | superexp blooean_op megaexp'''
+    '''megaexp : superexp megaexp2'''
+
+def p_megaexp2(p):
+    '''megaexp2 : blooean_op megaexp
+                | empty'''
 
 def p_superexp(p):
-    '''superexp : exp
-                | exp logical_op superexp'''
+    '''superexp : exp superexp2'''
+
+def p_superexp2(p):
+    '''superexp2 : logical_op superexp
+                 | empty'''
 
 def p_exp(p):
-    '''exp : termino
-            | termino sums exp'''
+    '''exp : termino exp2'''
+
+def p_exp2(p):
+    '''exp2 : sums exp
+            | empty'''
+    if (p[1] is not None):
+        print("sums", p[1])
 
 def p_termino(p):
-    '''termino : factor
-               | factor multdiv factor'''
+    '''termino : factor termino2'''
+
+def p_termino2(p):
+    '''termino2 : multdiv termino
+                | empty'''
+    #pushear operador
+    #eh pushear termino? o se hace push abajo? no se que hacer ayuda
 
 def p_factor(p):
     '''factor : vcte
@@ -162,6 +180,7 @@ def p_vcte(p):
             | CTEC
             | TRUE
             | FALSE'''
+    p[0] = p[1]
 
 # -- ID o acceso a arreglo --
 def p_id(p):

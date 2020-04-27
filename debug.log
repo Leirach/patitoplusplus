@@ -1,0 +1,129 @@
+PLY: PARSE DEBUG START
+
+State  : 0
+Stack  : . LexToken(ID,'A',1,0)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : ID . LexToken(TIMES,'*',1,1)
+Action : Reduce rule [vcte -> ID] with ['A'] and goto state 4
+factor A
+Result : <str @ 0x10a8d1ca8> ('A')
+
+State  : 4
+Stack  : vcte . LexToken(TIMES,'*',1,1)
+Action : Reduce rule [factor -> vcte] with ['A'] and goto state 3
+Result : <str @ 0x10a8d1ca8> ('A')
+
+State  : 3
+Stack  : factor . LexToken(TIMES,'*',1,1)
+Action : Shift and goto state 20
+
+State  : 20
+Stack  : factor TIMES . LexToken(ID,'B',1,2)
+Action : Reduce rule [multdiv -> TIMES] with ['*'] and goto state 18
+mult *
+Result : <str @ 0x10a73cae8> ('*')
+
+State  : 18
+Stack  : factor multdiv . LexToken(ID,'B',1,2)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : factor multdiv ID . LexToken(TIMES,'*',1,3)
+Action : Reduce rule [vcte -> ID] with ['B'] and goto state 4
+factor B
+Result : <str @ 0x10a8901b8> ('B')
+
+State  : 4
+Stack  : factor multdiv vcte . LexToken(TIMES,'*',1,3)
+Action : Reduce rule [factor -> vcte] with ['B'] and goto state 3
+Result : <str @ 0x10a8901b8> ('B')
+
+====================== Aqui deberia de hacer la operacion ======================
+
+State  : 3
+Stack  : factor multdiv factor . LexToken(TIMES,'*',1,3)
+Action : Shift and goto state 20
+
+State  : 20
+Stack  : factor multdiv factor TIMES . LexToken(ID,'C',1,4)
+Action : Reduce rule [multdiv -> TIMES] with ['*'] and goto state 18
+mult *
+Result : <str @ 0x10a73cae8> ('*')
+
+===================== O aqui cuando lea otra operacion, * o / ==================
+
+State  : 18
+Stack  : factor multdiv factor multdiv . LexToken(ID,'C',1,4)
+Action : Shift and goto state 6
+
+State  : 6
+Stack  : factor multdiv factor multdiv ID . $end
+Action : Reduce rule [vcte -> ID] with ['C'] and goto state 4
+factor C
+Result : <str @ 0x10a87ee68> ('C')
+
+State  : 4
+Stack  : factor multdiv factor multdiv vcte . $end
+Action : Reduce rule [factor -> vcte] with ['C'] and goto state 3
+Result : <str @ 0x10a87ee68> ('C')
+
+State  : 3
+Stack  : factor multdiv factor multdiv factor . $end
+Action : Reduce rule [empty -> <empty>] with [] and goto state 19
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 19
+Stack  : factor multdiv factor multdiv factor empty . $end
+Action : Reduce rule [termino2 -> empty] with [None] and goto state 17
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 17
+Stack  : factor multdiv factor multdiv factor termino2 . $end
+Action : Reduce rule [termino -> factor termino2] with ['C',None] and goto state 24
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 24
+Stack  : factor multdiv factor multdiv termino . $end
+Action : Reduce rule [termino2 -> multdiv termino] with ['*',None] and goto state 17
+writing to file:  * B C t1
+
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 17
+Stack  : factor multdiv factor termino2 . $end
+Action : Reduce rule [termino -> factor termino2] with ['B',None] and goto state 24
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 24
+Stack  : factor multdiv termino . $end
+Action : Reduce rule [termino2 -> multdiv termino] with ['*',None] and goto state 17
+writing to file:  * A t1 t2
+
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 17
+Stack  : factor termino2 . $end
+Action : Reduce rule [termino -> factor termino2] with ['A',None] and goto state 2
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 2
+Stack  : termino . $end
+Action : Reduce rule [empty -> <empty>] with [] and goto state 14
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 14
+Stack  : termino empty . $end
+Action : Reduce rule [exp2 -> empty] with [None] and goto state 12
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 12
+Stack  : termino exp2 . $end
+Action : Reduce rule [exp -> termino exp2] with [None,None] and goto state 1
+Result : <NoneType @ 0x10a566fb8> (None)
+
+State  : 1
+Stack  : exp . $end
+Done   : Returning <NoneType @ 0x10a566fb8> (None)
+PLY: PARSE DEBUG END

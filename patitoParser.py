@@ -5,54 +5,54 @@ import ply.yacc as yacc
 
 tokens = patitoLexer.tokens
 
-# dictionary of names UNUSED
-programId = ""
-ids = { }
-cte_i = { }
-cte_d = { }
-
-def p_tipo(p):
-    '''tipo : INT 
-            | FLOAT
-            | CHAR
-            | BOOL'''
+#stacks
+opStack = []
+idStack = []
 
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque'
+    global programId
     programId = p[2]
-
-def p_dimensions(p):
-    '''dimensions : OPENBRAC CTEI CLOSEBRAC 
-                  | OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
-                  | empty'''
 
 def p_declare_vars(p):
     '''declare_vars : VAR vars
                     | empty'''
 
 def p_vars(p):
-    '''vars : tipo ID dimensions getvars COLON SEMICOLON vars
-            | empty '''
+    '''vars : tipo ID dimensions more_vars SEMICOLON vars
+            | empty'''
 
-def p_getvars(p):
-    '''getvars : COMMA ID dimensions getvars 
-               | empty '''
+def p_more_vars(p):
+    '''more_vars : COMMA ID dimensions more_vars
+                 | empty'''
 
-def p_declare_func(p):
-    '''declare_func : FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque'''
-
-def p_declare_func_params(p):
-    '''declare_func_params : tipo ID more_params
-                          | empty'''
-
-def p_more_params(p):
-    '''more_params : COMMA tipo ID
+def p_dimensions(p):
+    '''dimensions : OPENBRAC CTEI CLOSEBRAC 
+                  | OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
                   | empty'''
 
-def p_block_group(p):
+def p_declare_func(p):
+    '''declare_func : FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+                    | empty'''
+                    
+def p_declare_func_params(p):
+    '''declare_func_params : tipo ID more_params
+                           | empty'''
+
+def p_more_params(p):
+    '''more_params : COMMA tipo ID more_params
+                  | empty'''
+
+def p_tipo(p):
+    '''tipo : INT 
+            | FLOAT
+            | CHAR
+            | BOOL'''
+    p[0] = p[1]
+
+def p_bloque(p):
     'bloque : LCURLYB estatuto RCURLYB'
 
-#
 def p_estatuto(p):
     '''estatuto : asignacion 
                 | condicion 
@@ -63,12 +63,6 @@ def p_estatuto(p):
                 | desde
                 | mientras
                 | empty'''
-
-# -- ID o acceso a arreglo --
-def p_id(p):
-    '''id : ID
-          | ID OPENBRAC exp CLOSEBRAC
-          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
 
 # -- Asignacion --
 def p_asignacion(p):
@@ -165,7 +159,15 @@ def p_vcte(p):
     '''vcte : id
             | CTEI
             | CTEF
-            | CTEC'''
+            | CTEC
+            | TRUE
+            | FALSE'''
+
+# -- ID o acceso a arreglo --
+def p_id(p):
+    '''id : ID
+          | ID OPENBRAC exp CLOSEBRAC
+          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
 
 def p_desde(p):
     '''desde : DESDE ID ASSIGN exp HASTA exp HACER bloque'''
@@ -176,6 +178,9 @@ def p_mientras(p):
 def p_empty(p):
     'empty :'
     pass
+
+def p_error(p):
+    print("error")
 
 parser = yacc.yacc()
 

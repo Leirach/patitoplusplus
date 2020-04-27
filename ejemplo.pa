@@ -1,0 +1,6 @@
+programa patito; var int i; float valor; funcion int fact(int j) var int i; { } principal() { }
+programa patito; var int i; float valor; principal() { }
+programa patito; funcion int fact(int j) var int i; { } principal() { }
+programa patito; principal() { }
+
+programa patito; principal() { i = 2; }

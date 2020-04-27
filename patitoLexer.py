@@ -87,14 +87,14 @@ def t_ID(t):
 
  
 # Ignored characters
-t_ignore = " \t"
+t_ignore = " \t\n"
 
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print("Illegal character '%s'" % lexer.token())
     t.lexer.skip(1)
     
 # Build the lexer

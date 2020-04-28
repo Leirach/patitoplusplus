@@ -5,10 +5,6 @@ import ply.yacc as yacc
 
 tokens = patitoLexer.tokens
 
-#stacks
-opStack = []
-idStack = []
-
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque'
     global programId

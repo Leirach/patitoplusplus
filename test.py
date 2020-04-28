@@ -15,6 +15,10 @@ def p_megaexp(p):
 def p_megaexp2(p):
     '''megaexp2 : blooean_op megaexp
                 | empty'''
+    if (p[1] is not None):
+        nextOp = code.peek(code.opStack) 
+        if (nextOp in ['&', '|']):
+            code.generate()
 
 def p_superexp(p):
     '''superexp : exp superexp2'''
@@ -22,6 +26,10 @@ def p_superexp(p):
 def p_superexp2(p):
     '''superexp2 : logical_op superexp
                  | empty''' 
+    if (p[1] is not None):
+        nextOp = code.peek(code.opStack) 
+        if (nextOp in ['>', '>=', '<=', '!=', '==']):
+            code.generate()
 
 def p_exp(p):
     '''exp : termino exp2'''
@@ -48,8 +56,7 @@ def p_termino2(p):
 
 def p_factor(p):
     '''factor : vcte
-              | OPENPAR exp CLOSEPAR'''
-    p[0] = p[1]
+              | OPENPAR megaexp CLOSEPAR'''
 
 def p_vcte(p):
     '''vcte : ID
@@ -65,6 +72,8 @@ def p_vcte(p):
 def p_boolean_op(p):
     '''blooean_op : OR 
                   | AND'''
+    p[0] = p[1]
+    code.opStack.append(p[1])
 
 def p_logical_op(p):
     '''logical_op : GT
@@ -73,7 +82,9 @@ def p_logical_op(p):
                   | LTE
                   | NEQ
                   | EQ'''
-                  
+    p[0] = p[1]
+    code.opStack.append(p[1])
+
 def p_sums(p):
     '''sums : MINUS 
             | PLUS '''

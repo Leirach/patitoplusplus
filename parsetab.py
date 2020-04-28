@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COLON COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ ESCRIBE FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LEE LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VARexp : termino exp2exp2 : sums exp\n            | emptytermino : factor termino2termino2 : multdiv termino\n                | emptyfactor : vcte\n              | OPENPAR exp CLOSEPARvcte : ID\n            | CTEI\n            | CTEF\n            | CTEC\n            | TRUE\n            | FALSEsums : MINUS \n            | PLUS multdiv : TIMES \n               | DIVIDE empty :'
+_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COLON COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ ESCRIBE FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LEE LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VARmegaexp : superexp megaexp2megaexp2 : blooean_op megaexp\n                | emptysuperexp : exp superexp2superexp2 : logical_op superexp\n                 | emptyexp : termino exp2exp2 : sums exp\n            | emptytermino : factor termino2termino2 : multdiv termino\n                | emptyfactor : vcte\n              | OPENPAR megaexp CLOSEPARvcte : ID\n            | CTEI\n            | CTEF\n            | CTEC\n            | TRUE\n            | FALSEblooean_op : OR \n                  | ANDlogical_op : GT\n                  | GTE\n                  | LT\n                  | LTE\n                  | NEQ\n                  | EQsums : MINUS \n            | PLUS multdiv : TIMES \n               | DIVIDE empty :'
     
-_lr_action_items = {'OPENPAR':([0,5,13,15,16,18,20,21,],[5,5,5,-15,-16,5,-17,-18,]),'ID':([0,5,13,15,16,18,20,21,],[6,6,6,-15,-16,6,-17,-18,]),'CTEI':([0,5,13,15,16,18,20,21,],[7,7,7,-15,-16,7,-17,-18,]),'CTEF':([0,5,13,15,16,18,20,21,],[8,8,8,-15,-16,8,-17,-18,]),'CTEC':([0,5,13,15,16,18,20,21,],[9,9,9,-15,-16,9,-17,-18,]),'TRUE':([0,5,13,15,16,18,20,21,],[10,10,10,-15,-16,10,-17,-18,]),'FALSE':([0,5,13,15,16,18,20,21,],[11,11,11,-15,-16,11,-17,-18,]),'$end':([1,2,3,4,6,7,8,9,10,11,12,14,17,19,23,24,25,],[0,-19,-19,-7,-9,-10,-11,-12,-13,-14,-1,-3,-4,-6,-2,-5,-8,]),'MINUS':([2,3,4,6,7,8,9,10,11,17,19,24,25,],[15,-19,-7,-9,-10,-11,-12,-13,-14,-4,-6,-5,-8,]),'PLUS':([2,3,4,6,7,8,9,10,11,17,19,24,25,],[16,-19,-7,-9,-10,-11,-12,-13,-14,-4,-6,-5,-8,]),'CLOSEPAR':([2,3,4,6,7,8,9,10,11,12,14,17,19,22,23,24,25,],[-19,-19,-7,-9,-10,-11,-12,-13,-14,-1,-3,-4,-6,25,-2,-5,-8,]),'TIMES':([3,4,6,7,8,9,10,11,25,],[20,-7,-9,-10,-11,-12,-13,-14,-8,]),'DIVIDE':([3,4,6,7,8,9,10,11,25,],[21,-7,-9,-10,-11,-12,-13,-14,-8,]),}
+_lr_action_items = {'OPENPAR':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[7,7,7,-21,-22,7,-23,-24,-25,-26,-27,-28,7,-29,-30,7,-31,-32,]),'ID':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[8,8,8,-21,-22,8,-23,-24,-25,-26,-27,-28,8,-29,-30,8,-31,-32,]),'CTEI':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[9,9,9,-21,-22,9,-23,-24,-25,-26,-27,-28,9,-29,-30,9,-31,-32,]),'CTEF':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[10,10,10,-21,-22,10,-23,-24,-25,-26,-27,-28,10,-29,-30,10,-31,-32,]),'CTEC':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[11,11,11,-21,-22,11,-23,-24,-25,-26,-27,-28,11,-29,-30,11,-31,-32,]),'TRUE':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[12,12,12,-21,-22,12,-23,-24,-25,-26,-27,-28,12,-29,-30,12,-31,-32,]),'FALSE':([0,7,15,17,18,20,22,23,24,25,26,27,29,31,32,34,36,37,],[13,13,13,-21,-22,13,-23,-24,-25,-26,-27,-28,13,-29,-30,13,-31,-32,]),'$end':([1,2,3,4,5,6,8,9,10,11,12,13,14,16,19,21,28,30,33,35,39,40,41,42,43,],[0,-33,-33,-33,-33,-13,-15,-16,-17,-18,-19,-20,-1,-3,-4,-6,-7,-9,-10,-12,-2,-5,-8,-11,-14,]),'OR':([2,3,4,5,6,8,9,10,11,12,13,19,21,28,30,33,35,40,41,42,43,],[17,-33,-33,-33,-13,-15,-16,-17,-18,-19,-20,-4,-6,-7,-9,-10,-12,-5,-8,-11,-14,]),'AND':([2,3,4,5,6,8,9,10,11,12,13,19,21,28,30,33,35,40,41,42,43,],[18,-33,-33,-33,-13,-15,-16,-17,-18,-19,-20,-4,-6,-7,-9,-10,-12,-5,-8,-11,-14,]),'CLOSEPAR':([2,3,4,5,6,8,9,10,11,12,13,14,16,19,21,28,30,33,35,38,39,40,41,42,43,],[-33,-33,-33,-33,-13,-15,-16,-17,-18,-19,-20,-1,-3,-4,-6,-7,-9,-10,-12,43,-2,-5,-8,-11,-14,]),'GT':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[22,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'GTE':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[23,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'LT':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[24,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'LTE':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[25,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'NEQ':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[26,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'EQ':([3,4,5,6,8,9,10,11,12,13,28,30,33,35,41,42,43,],[27,-33,-33,-13,-15,-16,-17,-18,-19,-20,-7,-9,-10,-12,-8,-11,-14,]),'MINUS':([4,5,6,8,9,10,11,12,13,33,35,42,43,],[31,-33,-13,-15,-16,-17,-18,-19,-20,-10,-12,-11,-14,]),'PLUS':([4,5,6,8,9,10,11,12,13,33,35,42,43,],[32,-33,-13,-15,-16,-17,-18,-19,-20,-10,-12,-11,-14,]),'TIMES':([5,6,8,9,10,11,12,13,43,],[36,-13,-15,-16,-17,-18,-19,-20,-14,]),'DIVIDE':([5,6,8,9,10,11,12,13,43,],[37,-13,-15,-16,-17,-18,-19,-20,-14,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'exp':([0,5,13,],[1,22,23,]),'termino':([0,5,13,18,],[2,2,2,24,]),'factor':([0,5,13,18,],[3,3,3,3,]),'vcte':([0,5,13,18,],[4,4,4,4,]),'exp2':([2,],[12,]),'sums':([2,],[13,]),'empty':([2,3,],[14,19,]),'termino2':([3,],[17,]),'multdiv':([3,],[18,]),}
+_lr_goto_items = {'megaexp':([0,7,15,],[1,38,39,]),'superexp':([0,7,15,20,],[2,2,2,40,]),'exp':([0,7,15,20,29,],[3,3,3,3,41,]),'termino':([0,7,15,20,29,34,],[4,4,4,4,4,42,]),'factor':([0,7,15,20,29,34,],[5,5,5,5,5,5,]),'vcte':([0,7,15,20,29,34,],[6,6,6,6,6,6,]),'megaexp2':([2,],[14,]),'blooean_op':([2,],[15,]),'empty':([2,3,4,5,],[16,21,30,35,]),'superexp2':([3,],[19,]),'logical_op':([3,],[20,]),'exp2':([4,],[28,]),'sums':([4,],[29,]),'termino2':([5,],[33,]),'multdiv':([5,],[34,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,24 +26,38 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> exp","S'",1,None,None,None),
-  ('exp -> termino exp2','exp',2,'p_exp','test.py',15),
-  ('exp2 -> sums exp','exp2',2,'p_exp2','test.py',18),
-  ('exp2 -> empty','exp2',1,'p_exp2','test.py',19),
-  ('termino -> factor termino2','termino',2,'p_termino','test.py',24),
-  ('termino2 -> multdiv termino','termino2',2,'p_termino2','test.py',27),
-  ('termino2 -> empty','termino2',1,'p_termino2','test.py',28),
-  ('factor -> vcte','factor',1,'p_factor','test.py',33),
-  ('factor -> OPENPAR exp CLOSEPAR','factor',3,'p_factor','test.py',34),
-  ('vcte -> ID','vcte',1,'p_vcte','test.py',37),
-  ('vcte -> CTEI','vcte',1,'p_vcte','test.py',38),
-  ('vcte -> CTEF','vcte',1,'p_vcte','test.py',39),
-  ('vcte -> CTEC','vcte',1,'p_vcte','test.py',40),
-  ('vcte -> TRUE','vcte',1,'p_vcte','test.py',41),
-  ('vcte -> FALSE','vcte',1,'p_vcte','test.py',42),
-  ('sums -> MINUS','sums',1,'p_sums','test.py',45),
-  ('sums -> PLUS','sums',1,'p_sums','test.py',46),
-  ('multdiv -> TIMES','multdiv',1,'p_multdiv','test.py',49),
-  ('multdiv -> DIVIDE','multdiv',1,'p_multdiv','test.py',50),
-  ('empty -> <empty>','empty',0,'p_empty','test.py',53),
+  ("S' -> megaexp","S'",1,None,None,None),
+  ('megaexp -> superexp megaexp2','megaexp',2,'p_megaexp','test.py',13),
+  ('megaexp2 -> blooean_op megaexp','megaexp2',2,'p_megaexp2','test.py',16),
+  ('megaexp2 -> empty','megaexp2',1,'p_megaexp2','test.py',17),
+  ('superexp -> exp superexp2','superexp',2,'p_superexp','test.py',24),
+  ('superexp2 -> logical_op superexp','superexp2',2,'p_superexp2','test.py',27),
+  ('superexp2 -> empty','superexp2',1,'p_superexp2','test.py',28),
+  ('exp -> termino exp2','exp',2,'p_exp','test.py',35),
+  ('exp2 -> sums exp','exp2',2,'p_exp2','test.py',38),
+  ('exp2 -> empty','exp2',1,'p_exp2','test.py',39),
+  ('termino -> factor termino2','termino',2,'p_termino','test.py',47),
+  ('termino2 -> multdiv termino','termino2',2,'p_termino2','test.py',50),
+  ('termino2 -> empty','termino2',1,'p_termino2','test.py',51),
+  ('factor -> vcte','factor',1,'p_factor','test.py',58),
+  ('factor -> OPENPAR megaexp CLOSEPAR','factor',3,'p_factor','test.py',59),
+  ('vcte -> ID','vcte',1,'p_vcte','test.py',62),
+  ('vcte -> CTEI','vcte',1,'p_vcte','test.py',63),
+  ('vcte -> CTEF','vcte',1,'p_vcte','test.py',64),
+  ('vcte -> CTEC','vcte',1,'p_vcte','test.py',65),
+  ('vcte -> TRUE','vcte',1,'p_vcte','test.py',66),
+  ('vcte -> FALSE','vcte',1,'p_vcte','test.py',67),
+  ('blooean_op -> OR','blooean_op',1,'p_boolean_op','test.py',73),
+  ('blooean_op -> AND','blooean_op',1,'p_boolean_op','test.py',74),
+  ('logical_op -> GT','logical_op',1,'p_logical_op','test.py',79),
+  ('logical_op -> GTE','logical_op',1,'p_logical_op','test.py',80),
+  ('logical_op -> LT','logical_op',1,'p_logical_op','test.py',81),
+  ('logical_op -> LTE','logical_op',1,'p_logical_op','test.py',82),
+  ('logical_op -> NEQ','logical_op',1,'p_logical_op','test.py',83),
+  ('logical_op -> EQ','logical_op',1,'p_logical_op','test.py',84),
+  ('sums -> MINUS','sums',1,'p_sums','test.py',89),
+  ('sums -> PLUS','sums',1,'p_sums','test.py',90),
+  ('multdiv -> TIMES','multdiv',1,'p_multdiv','test.py',95),
+  ('multdiv -> DIVIDE','multdiv',1,'p_multdiv','test.py',96),
+  ('empty -> <empty>','empty',0,'p_empty','test.py',101),
 ]

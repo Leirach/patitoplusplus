@@ -2,7 +2,6 @@ Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    AND
     ASSIGN
     BOOL
     CHAR
@@ -12,24 +11,17 @@ Unused terminals:
     CTES
     DESDE
     ENTONCES
-    EQ
     ESCRIBE
     FLOAT
     FUNCION
-    GT
-    GTE
     HACER
     HASTA
     HAZ
     INT
     LCURLYB
     LEE
-    LT
-    LTE
     MIENTRAS
-    NEQ
     OPENBRAC
-    OR
     PRINCIPAL
     PROGRAMA
     RCURLYB
@@ -41,67 +33,81 @@ Unused terminals:
 
 Grammar
 
-Rule 0     S' -> exp
-Rule 1     exp -> termino exp2
-Rule 2     exp2 -> sums exp
-Rule 3     exp2 -> empty
-Rule 4     termino -> factor termino2
-Rule 5     termino2 -> multdiv termino
-Rule 6     termino2 -> empty
-Rule 7     factor -> vcte
-Rule 8     factor -> OPENPAR exp CLOSEPAR
-Rule 9     vcte -> ID
-Rule 10    vcte -> CTEI
-Rule 11    vcte -> CTEF
-Rule 12    vcte -> CTEC
-Rule 13    vcte -> TRUE
-Rule 14    vcte -> FALSE
-Rule 15    sums -> MINUS
-Rule 16    sums -> PLUS
-Rule 17    multdiv -> TIMES
-Rule 18    multdiv -> DIVIDE
-Rule 19    empty -> <empty>
+Rule 0     S' -> megaexp
+Rule 1     megaexp -> superexp megaexp2
+Rule 2     megaexp2 -> blooean_op megaexp
+Rule 3     megaexp2 -> empty
+Rule 4     superexp -> exp superexp2
+Rule 5     superexp2 -> logical_op superexp
+Rule 6     superexp2 -> empty
+Rule 7     exp -> termino exp2
+Rule 8     exp2 -> sums exp
+Rule 9     exp2 -> empty
+Rule 10    termino -> factor termino2
+Rule 11    termino2 -> multdiv termino
+Rule 12    termino2 -> empty
+Rule 13    factor -> vcte
+Rule 14    factor -> OPENPAR megaexp CLOSEPAR
+Rule 15    vcte -> ID
+Rule 16    vcte -> CTEI
+Rule 17    vcte -> CTEF
+Rule 18    vcte -> CTEC
+Rule 19    vcte -> TRUE
+Rule 20    vcte -> FALSE
+Rule 21    blooean_op -> OR
+Rule 22    blooean_op -> AND
+Rule 23    logical_op -> GT
+Rule 24    logical_op -> GTE
+Rule 25    logical_op -> LT
+Rule 26    logical_op -> LTE
+Rule 27    logical_op -> NEQ
+Rule 28    logical_op -> EQ
+Rule 29    sums -> MINUS
+Rule 30    sums -> PLUS
+Rule 31    multdiv -> TIMES
+Rule 32    multdiv -> DIVIDE
+Rule 33    empty -> <empty>
 
 Terminals, with rules where they appear
 
-AND                  : 
+AND                  : 22
 ASSIGN               : 
 BOOL                 : 
 CHAR                 : 
 CLOSEBRAC            : 
-CLOSEPAR             : 8
+CLOSEPAR             : 14
 COLON                : 
 COMMA                : 
-CTEC                 : 12
-CTEF                 : 11
-CTEI                 : 10
+CTEC                 : 18
+CTEF                 : 17
+CTEI                 : 16
 CTES                 : 
 DESDE                : 
-DIVIDE               : 18
+DIVIDE               : 32
 ENTONCES             : 
-EQ                   : 
+EQ                   : 28
 ESCRIBE              : 
-FALSE                : 14
+FALSE                : 20
 FLOAT                : 
 FUNCION              : 
-GT                   : 
-GTE                  : 
+GT                   : 23
+GTE                  : 24
 HACER                : 
 HASTA                : 
 HAZ                  : 
-ID                   : 9
+ID                   : 15
 INT                  : 
 LCURLYB              : 
 LEE                  : 
-LT                   : 
-LTE                  : 
+LT                   : 25
+LTE                  : 26
 MIENTRAS             : 
-MINUS                : 15
-NEQ                  : 
+MINUS                : 29
+NEQ                  : 27
 OPENBRAC             : 
-OPENPAR              : 8
-OR                   : 
-PLUS                 : 16
+OPENPAR              : 14
+OR                   : 21
+PLUS                 : 30
 PRINCIPAL            : 
 PROGRAMA             : 
 RCURLYB              : 
@@ -109,380 +115,786 @@ RETORNO              :
 SEMICOLON            : 
 SI                   : 
 SINO                 : 
-TIMES                : 17
-TRUE                 : 13
+TIMES                : 31
+TRUE                 : 19
 VAR                  : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-empty                : 3 6
-exp                  : 2 8 0
-exp2                 : 1
-factor               : 4
-multdiv              : 5
-sums                 : 2
-termino              : 1 5
-termino2             : 4
-vcte                 : 7
+blooean_op           : 2
+empty                : 3 6 9 12
+exp                  : 4 8
+exp2                 : 7
+factor               : 10
+logical_op           : 5
+megaexp              : 2 14 0
+megaexp2             : 1
+multdiv              : 11
+sums                 : 8
+superexp             : 1 5
+superexp2            : 4
+termino              : 7 11
+termino2             : 10
+vcte                 : 13
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . exp
-    (1) exp -> . termino exp2
-    (4) termino -> . factor termino2
-    (7) factor -> . vcte
-    (8) factor -> . OPENPAR exp CLOSEPAR
-    (9) vcte -> . ID
-    (10) vcte -> . CTEI
-    (11) vcte -> . CTEF
-    (12) vcte -> . CTEC
-    (13) vcte -> . TRUE
-    (14) vcte -> . FALSE
+    (0) S' -> . megaexp
+    (1) megaexp -> . superexp megaexp2
+    (4) superexp -> . exp superexp2
+    (7) exp -> . termino exp2
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
 
-    OPENPAR         shift and go to state 5
-    ID              shift and go to state 6
-    CTEI            shift and go to state 7
-    CTEF            shift and go to state 8
-    CTEC            shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
 
-    exp                            shift and go to state 1
-    termino                        shift and go to state 2
-    factor                         shift and go to state 3
-    vcte                           shift and go to state 4
+    megaexp                        shift and go to state 1
+    superexp                       shift and go to state 2
+    exp                            shift and go to state 3
+    termino                        shift and go to state 4
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
 
 state 1
 
-    (0) S' -> exp .
+    (0) S' -> megaexp .
 
 
 
 state 2
 
-    (1) exp -> termino . exp2
-    (2) exp2 -> . sums exp
-    (3) exp2 -> . empty
-    (15) sums -> . MINUS
-    (16) sums -> . PLUS
-    (19) empty -> .
+    (1) megaexp -> superexp . megaexp2
+    (2) megaexp2 -> . blooean_op megaexp
+    (3) megaexp2 -> . empty
+    (21) blooean_op -> . OR
+    (22) blooean_op -> . AND
+    (33) empty -> .
 
-    MINUS           shift and go to state 15
-    PLUS            shift and go to state 16
-    $end            reduce using rule 19 (empty -> .)
-    CLOSEPAR        reduce using rule 19 (empty -> .)
+    OR              shift and go to state 17
+    AND             shift and go to state 18
+    $end            reduce using rule 33 (empty -> .)
+    CLOSEPAR        reduce using rule 33 (empty -> .)
 
-    exp2                           shift and go to state 12
-    sums                           shift and go to state 13
-    empty                          shift and go to state 14
+    megaexp2                       shift and go to state 14
+    blooean_op                     shift and go to state 15
+    empty                          shift and go to state 16
 
 state 3
 
-    (4) termino -> factor . termino2
-    (5) termino2 -> . multdiv termino
-    (6) termino2 -> . empty
-    (17) multdiv -> . TIMES
-    (18) multdiv -> . DIVIDE
-    (19) empty -> .
+    (4) superexp -> exp . superexp2
+    (5) superexp2 -> . logical_op superexp
+    (6) superexp2 -> . empty
+    (23) logical_op -> . GT
+    (24) logical_op -> . GTE
+    (25) logical_op -> . LT
+    (26) logical_op -> . LTE
+    (27) logical_op -> . NEQ
+    (28) logical_op -> . EQ
+    (33) empty -> .
 
-    TIMES           shift and go to state 20
-    DIVIDE          shift and go to state 21
-    MINUS           reduce using rule 19 (empty -> .)
-    PLUS            reduce using rule 19 (empty -> .)
-    $end            reduce using rule 19 (empty -> .)
-    CLOSEPAR        reduce using rule 19 (empty -> .)
+    GT              shift and go to state 22
+    GTE             shift and go to state 23
+    LT              shift and go to state 24
+    LTE             shift and go to state 25
+    NEQ             shift and go to state 26
+    EQ              shift and go to state 27
+    OR              reduce using rule 33 (empty -> .)
+    AND             reduce using rule 33 (empty -> .)
+    $end            reduce using rule 33 (empty -> .)
+    CLOSEPAR        reduce using rule 33 (empty -> .)
 
-    termino2                       shift and go to state 17
-    multdiv                        shift and go to state 18
-    empty                          shift and go to state 19
+    superexp2                      shift and go to state 19
+    logical_op                     shift and go to state 20
+    empty                          shift and go to state 21
 
 state 4
 
-    (7) factor -> vcte .
+    (7) exp -> termino . exp2
+    (8) exp2 -> . sums exp
+    (9) exp2 -> . empty
+    (29) sums -> . MINUS
+    (30) sums -> . PLUS
+    (33) empty -> .
 
-    TIMES           reduce using rule 7 (factor -> vcte .)
-    DIVIDE          reduce using rule 7 (factor -> vcte .)
-    MINUS           reduce using rule 7 (factor -> vcte .)
-    PLUS            reduce using rule 7 (factor -> vcte .)
-    $end            reduce using rule 7 (factor -> vcte .)
-    CLOSEPAR        reduce using rule 7 (factor -> vcte .)
+    MINUS           shift and go to state 31
+    PLUS            shift and go to state 32
+    GT              reduce using rule 33 (empty -> .)
+    GTE             reduce using rule 33 (empty -> .)
+    LT              reduce using rule 33 (empty -> .)
+    LTE             reduce using rule 33 (empty -> .)
+    NEQ             reduce using rule 33 (empty -> .)
+    EQ              reduce using rule 33 (empty -> .)
+    OR              reduce using rule 33 (empty -> .)
+    AND             reduce using rule 33 (empty -> .)
+    $end            reduce using rule 33 (empty -> .)
+    CLOSEPAR        reduce using rule 33 (empty -> .)
 
+    exp2                           shift and go to state 28
+    sums                           shift and go to state 29
+    empty                          shift and go to state 30
 
 state 5
 
-    (8) factor -> OPENPAR . exp CLOSEPAR
-    (1) exp -> . termino exp2
-    (4) termino -> . factor termino2
-    (7) factor -> . vcte
-    (8) factor -> . OPENPAR exp CLOSEPAR
-    (9) vcte -> . ID
-    (10) vcte -> . CTEI
-    (11) vcte -> . CTEF
-    (12) vcte -> . CTEC
-    (13) vcte -> . TRUE
-    (14) vcte -> . FALSE
+    (10) termino -> factor . termino2
+    (11) termino2 -> . multdiv termino
+    (12) termino2 -> . empty
+    (31) multdiv -> . TIMES
+    (32) multdiv -> . DIVIDE
+    (33) empty -> .
 
-    OPENPAR         shift and go to state 5
-    ID              shift and go to state 6
-    CTEI            shift and go to state 7
-    CTEF            shift and go to state 8
-    CTEC            shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
+    TIMES           shift and go to state 36
+    DIVIDE          shift and go to state 37
+    MINUS           reduce using rule 33 (empty -> .)
+    PLUS            reduce using rule 33 (empty -> .)
+    GT              reduce using rule 33 (empty -> .)
+    GTE             reduce using rule 33 (empty -> .)
+    LT              reduce using rule 33 (empty -> .)
+    LTE             reduce using rule 33 (empty -> .)
+    NEQ             reduce using rule 33 (empty -> .)
+    EQ              reduce using rule 33 (empty -> .)
+    OR              reduce using rule 33 (empty -> .)
+    AND             reduce using rule 33 (empty -> .)
+    $end            reduce using rule 33 (empty -> .)
+    CLOSEPAR        reduce using rule 33 (empty -> .)
 
-    exp                            shift and go to state 22
-    termino                        shift and go to state 2
-    factor                         shift and go to state 3
-    vcte                           shift and go to state 4
+    termino2                       shift and go to state 33
+    multdiv                        shift and go to state 34
+    empty                          shift and go to state 35
 
 state 6
 
-    (9) vcte -> ID .
+    (13) factor -> vcte .
 
-    TIMES           reduce using rule 9 (vcte -> ID .)
-    DIVIDE          reduce using rule 9 (vcte -> ID .)
-    MINUS           reduce using rule 9 (vcte -> ID .)
-    PLUS            reduce using rule 9 (vcte -> ID .)
-    $end            reduce using rule 9 (vcte -> ID .)
-    CLOSEPAR        reduce using rule 9 (vcte -> ID .)
+    TIMES           reduce using rule 13 (factor -> vcte .)
+    DIVIDE          reduce using rule 13 (factor -> vcte .)
+    MINUS           reduce using rule 13 (factor -> vcte .)
+    PLUS            reduce using rule 13 (factor -> vcte .)
+    GT              reduce using rule 13 (factor -> vcte .)
+    GTE             reduce using rule 13 (factor -> vcte .)
+    LT              reduce using rule 13 (factor -> vcte .)
+    LTE             reduce using rule 13 (factor -> vcte .)
+    NEQ             reduce using rule 13 (factor -> vcte .)
+    EQ              reduce using rule 13 (factor -> vcte .)
+    OR              reduce using rule 13 (factor -> vcte .)
+    AND             reduce using rule 13 (factor -> vcte .)
+    $end            reduce using rule 13 (factor -> vcte .)
+    CLOSEPAR        reduce using rule 13 (factor -> vcte .)
 
 
 state 7
 
-    (10) vcte -> CTEI .
+    (14) factor -> OPENPAR . megaexp CLOSEPAR
+    (1) megaexp -> . superexp megaexp2
+    (4) superexp -> . exp superexp2
+    (7) exp -> . termino exp2
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
 
-    TIMES           reduce using rule 10 (vcte -> CTEI .)
-    DIVIDE          reduce using rule 10 (vcte -> CTEI .)
-    MINUS           reduce using rule 10 (vcte -> CTEI .)
-    PLUS            reduce using rule 10 (vcte -> CTEI .)
-    $end            reduce using rule 10 (vcte -> CTEI .)
-    CLOSEPAR        reduce using rule 10 (vcte -> CTEI .)
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
 
+    megaexp                        shift and go to state 38
+    superexp                       shift and go to state 2
+    exp                            shift and go to state 3
+    termino                        shift and go to state 4
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
 
 state 8
 
-    (11) vcte -> CTEF .
+    (15) vcte -> ID .
 
-    TIMES           reduce using rule 11 (vcte -> CTEF .)
-    DIVIDE          reduce using rule 11 (vcte -> CTEF .)
-    MINUS           reduce using rule 11 (vcte -> CTEF .)
-    PLUS            reduce using rule 11 (vcte -> CTEF .)
-    $end            reduce using rule 11 (vcte -> CTEF .)
-    CLOSEPAR        reduce using rule 11 (vcte -> CTEF .)
+    TIMES           reduce using rule 15 (vcte -> ID .)
+    DIVIDE          reduce using rule 15 (vcte -> ID .)
+    MINUS           reduce using rule 15 (vcte -> ID .)
+    PLUS            reduce using rule 15 (vcte -> ID .)
+    GT              reduce using rule 15 (vcte -> ID .)
+    GTE             reduce using rule 15 (vcte -> ID .)
+    LT              reduce using rule 15 (vcte -> ID .)
+    LTE             reduce using rule 15 (vcte -> ID .)
+    NEQ             reduce using rule 15 (vcte -> ID .)
+    EQ              reduce using rule 15 (vcte -> ID .)
+    OR              reduce using rule 15 (vcte -> ID .)
+    AND             reduce using rule 15 (vcte -> ID .)
+    $end            reduce using rule 15 (vcte -> ID .)
+    CLOSEPAR        reduce using rule 15 (vcte -> ID .)
 
 
 state 9
 
-    (12) vcte -> CTEC .
+    (16) vcte -> CTEI .
 
-    TIMES           reduce using rule 12 (vcte -> CTEC .)
-    DIVIDE          reduce using rule 12 (vcte -> CTEC .)
-    MINUS           reduce using rule 12 (vcte -> CTEC .)
-    PLUS            reduce using rule 12 (vcte -> CTEC .)
-    $end            reduce using rule 12 (vcte -> CTEC .)
-    CLOSEPAR        reduce using rule 12 (vcte -> CTEC .)
+    TIMES           reduce using rule 16 (vcte -> CTEI .)
+    DIVIDE          reduce using rule 16 (vcte -> CTEI .)
+    MINUS           reduce using rule 16 (vcte -> CTEI .)
+    PLUS            reduce using rule 16 (vcte -> CTEI .)
+    GT              reduce using rule 16 (vcte -> CTEI .)
+    GTE             reduce using rule 16 (vcte -> CTEI .)
+    LT              reduce using rule 16 (vcte -> CTEI .)
+    LTE             reduce using rule 16 (vcte -> CTEI .)
+    NEQ             reduce using rule 16 (vcte -> CTEI .)
+    EQ              reduce using rule 16 (vcte -> CTEI .)
+    OR              reduce using rule 16 (vcte -> CTEI .)
+    AND             reduce using rule 16 (vcte -> CTEI .)
+    $end            reduce using rule 16 (vcte -> CTEI .)
+    CLOSEPAR        reduce using rule 16 (vcte -> CTEI .)
 
 
 state 10
 
-    (13) vcte -> TRUE .
+    (17) vcte -> CTEF .
 
-    TIMES           reduce using rule 13 (vcte -> TRUE .)
-    DIVIDE          reduce using rule 13 (vcte -> TRUE .)
-    MINUS           reduce using rule 13 (vcte -> TRUE .)
-    PLUS            reduce using rule 13 (vcte -> TRUE .)
-    $end            reduce using rule 13 (vcte -> TRUE .)
-    CLOSEPAR        reduce using rule 13 (vcte -> TRUE .)
+    TIMES           reduce using rule 17 (vcte -> CTEF .)
+    DIVIDE          reduce using rule 17 (vcte -> CTEF .)
+    MINUS           reduce using rule 17 (vcte -> CTEF .)
+    PLUS            reduce using rule 17 (vcte -> CTEF .)
+    GT              reduce using rule 17 (vcte -> CTEF .)
+    GTE             reduce using rule 17 (vcte -> CTEF .)
+    LT              reduce using rule 17 (vcte -> CTEF .)
+    LTE             reduce using rule 17 (vcte -> CTEF .)
+    NEQ             reduce using rule 17 (vcte -> CTEF .)
+    EQ              reduce using rule 17 (vcte -> CTEF .)
+    OR              reduce using rule 17 (vcte -> CTEF .)
+    AND             reduce using rule 17 (vcte -> CTEF .)
+    $end            reduce using rule 17 (vcte -> CTEF .)
+    CLOSEPAR        reduce using rule 17 (vcte -> CTEF .)
 
 
 state 11
 
-    (14) vcte -> FALSE .
+    (18) vcte -> CTEC .
 
-    TIMES           reduce using rule 14 (vcte -> FALSE .)
-    DIVIDE          reduce using rule 14 (vcte -> FALSE .)
-    MINUS           reduce using rule 14 (vcte -> FALSE .)
-    PLUS            reduce using rule 14 (vcte -> FALSE .)
-    $end            reduce using rule 14 (vcte -> FALSE .)
-    CLOSEPAR        reduce using rule 14 (vcte -> FALSE .)
+    TIMES           reduce using rule 18 (vcte -> CTEC .)
+    DIVIDE          reduce using rule 18 (vcte -> CTEC .)
+    MINUS           reduce using rule 18 (vcte -> CTEC .)
+    PLUS            reduce using rule 18 (vcte -> CTEC .)
+    GT              reduce using rule 18 (vcte -> CTEC .)
+    GTE             reduce using rule 18 (vcte -> CTEC .)
+    LT              reduce using rule 18 (vcte -> CTEC .)
+    LTE             reduce using rule 18 (vcte -> CTEC .)
+    NEQ             reduce using rule 18 (vcte -> CTEC .)
+    EQ              reduce using rule 18 (vcte -> CTEC .)
+    OR              reduce using rule 18 (vcte -> CTEC .)
+    AND             reduce using rule 18 (vcte -> CTEC .)
+    $end            reduce using rule 18 (vcte -> CTEC .)
+    CLOSEPAR        reduce using rule 18 (vcte -> CTEC .)
 
 
 state 12
 
-    (1) exp -> termino exp2 .
+    (19) vcte -> TRUE .
 
-    $end            reduce using rule 1 (exp -> termino exp2 .)
-    CLOSEPAR        reduce using rule 1 (exp -> termino exp2 .)
+    TIMES           reduce using rule 19 (vcte -> TRUE .)
+    DIVIDE          reduce using rule 19 (vcte -> TRUE .)
+    MINUS           reduce using rule 19 (vcte -> TRUE .)
+    PLUS            reduce using rule 19 (vcte -> TRUE .)
+    GT              reduce using rule 19 (vcte -> TRUE .)
+    GTE             reduce using rule 19 (vcte -> TRUE .)
+    LT              reduce using rule 19 (vcte -> TRUE .)
+    LTE             reduce using rule 19 (vcte -> TRUE .)
+    NEQ             reduce using rule 19 (vcte -> TRUE .)
+    EQ              reduce using rule 19 (vcte -> TRUE .)
+    OR              reduce using rule 19 (vcte -> TRUE .)
+    AND             reduce using rule 19 (vcte -> TRUE .)
+    $end            reduce using rule 19 (vcte -> TRUE .)
+    CLOSEPAR        reduce using rule 19 (vcte -> TRUE .)
 
 
 state 13
 
-    (2) exp2 -> sums . exp
-    (1) exp -> . termino exp2
-    (4) termino -> . factor termino2
-    (7) factor -> . vcte
-    (8) factor -> . OPENPAR exp CLOSEPAR
-    (9) vcte -> . ID
-    (10) vcte -> . CTEI
-    (11) vcte -> . CTEF
-    (12) vcte -> . CTEC
-    (13) vcte -> . TRUE
-    (14) vcte -> . FALSE
+    (20) vcte -> FALSE .
 
-    OPENPAR         shift and go to state 5
-    ID              shift and go to state 6
-    CTEI            shift and go to state 7
-    CTEF            shift and go to state 8
-    CTEC            shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
+    TIMES           reduce using rule 20 (vcte -> FALSE .)
+    DIVIDE          reduce using rule 20 (vcte -> FALSE .)
+    MINUS           reduce using rule 20 (vcte -> FALSE .)
+    PLUS            reduce using rule 20 (vcte -> FALSE .)
+    GT              reduce using rule 20 (vcte -> FALSE .)
+    GTE             reduce using rule 20 (vcte -> FALSE .)
+    LT              reduce using rule 20 (vcte -> FALSE .)
+    LTE             reduce using rule 20 (vcte -> FALSE .)
+    NEQ             reduce using rule 20 (vcte -> FALSE .)
+    EQ              reduce using rule 20 (vcte -> FALSE .)
+    OR              reduce using rule 20 (vcte -> FALSE .)
+    AND             reduce using rule 20 (vcte -> FALSE .)
+    $end            reduce using rule 20 (vcte -> FALSE .)
+    CLOSEPAR        reduce using rule 20 (vcte -> FALSE .)
 
-    exp                            shift and go to state 23
-    termino                        shift and go to state 2
-    factor                         shift and go to state 3
-    vcte                           shift and go to state 4
 
 state 14
 
-    (3) exp2 -> empty .
+    (1) megaexp -> superexp megaexp2 .
 
-    $end            reduce using rule 3 (exp2 -> empty .)
-    CLOSEPAR        reduce using rule 3 (exp2 -> empty .)
+    $end            reduce using rule 1 (megaexp -> superexp megaexp2 .)
+    CLOSEPAR        reduce using rule 1 (megaexp -> superexp megaexp2 .)
 
 
 state 15
 
-    (15) sums -> MINUS .
+    (2) megaexp2 -> blooean_op . megaexp
+    (1) megaexp -> . superexp megaexp2
+    (4) superexp -> . exp superexp2
+    (7) exp -> . termino exp2
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
 
-    OPENPAR         reduce using rule 15 (sums -> MINUS .)
-    ID              reduce using rule 15 (sums -> MINUS .)
-    CTEI            reduce using rule 15 (sums -> MINUS .)
-    CTEF            reduce using rule 15 (sums -> MINUS .)
-    CTEC            reduce using rule 15 (sums -> MINUS .)
-    TRUE            reduce using rule 15 (sums -> MINUS .)
-    FALSE           reduce using rule 15 (sums -> MINUS .)
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
 
+    megaexp                        shift and go to state 39
+    superexp                       shift and go to state 2
+    exp                            shift and go to state 3
+    termino                        shift and go to state 4
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
 
 state 16
 
-    (16) sums -> PLUS .
+    (3) megaexp2 -> empty .
 
-    OPENPAR         reduce using rule 16 (sums -> PLUS .)
-    ID              reduce using rule 16 (sums -> PLUS .)
-    CTEI            reduce using rule 16 (sums -> PLUS .)
-    CTEF            reduce using rule 16 (sums -> PLUS .)
-    CTEC            reduce using rule 16 (sums -> PLUS .)
-    TRUE            reduce using rule 16 (sums -> PLUS .)
-    FALSE           reduce using rule 16 (sums -> PLUS .)
+    $end            reduce using rule 3 (megaexp2 -> empty .)
+    CLOSEPAR        reduce using rule 3 (megaexp2 -> empty .)
 
 
 state 17
 
-    (4) termino -> factor termino2 .
+    (21) blooean_op -> OR .
 
-    MINUS           reduce using rule 4 (termino -> factor termino2 .)
-    PLUS            reduce using rule 4 (termino -> factor termino2 .)
-    $end            reduce using rule 4 (termino -> factor termino2 .)
-    CLOSEPAR        reduce using rule 4 (termino -> factor termino2 .)
+    OPENPAR         reduce using rule 21 (blooean_op -> OR .)
+    ID              reduce using rule 21 (blooean_op -> OR .)
+    CTEI            reduce using rule 21 (blooean_op -> OR .)
+    CTEF            reduce using rule 21 (blooean_op -> OR .)
+    CTEC            reduce using rule 21 (blooean_op -> OR .)
+    TRUE            reduce using rule 21 (blooean_op -> OR .)
+    FALSE           reduce using rule 21 (blooean_op -> OR .)
 
 
 state 18
 
-    (5) termino2 -> multdiv . termino
-    (4) termino -> . factor termino2
-    (7) factor -> . vcte
-    (8) factor -> . OPENPAR exp CLOSEPAR
-    (9) vcte -> . ID
-    (10) vcte -> . CTEI
-    (11) vcte -> . CTEF
-    (12) vcte -> . CTEC
-    (13) vcte -> . TRUE
-    (14) vcte -> . FALSE
+    (22) blooean_op -> AND .
 
-    OPENPAR         shift and go to state 5
-    ID              shift and go to state 6
-    CTEI            shift and go to state 7
-    CTEF            shift and go to state 8
-    CTEC            shift and go to state 9
-    TRUE            shift and go to state 10
-    FALSE           shift and go to state 11
+    OPENPAR         reduce using rule 22 (blooean_op -> AND .)
+    ID              reduce using rule 22 (blooean_op -> AND .)
+    CTEI            reduce using rule 22 (blooean_op -> AND .)
+    CTEF            reduce using rule 22 (blooean_op -> AND .)
+    CTEC            reduce using rule 22 (blooean_op -> AND .)
+    TRUE            reduce using rule 22 (blooean_op -> AND .)
+    FALSE           reduce using rule 22 (blooean_op -> AND .)
 
-    termino                        shift and go to state 24
-    factor                         shift and go to state 3
-    vcte                           shift and go to state 4
 
 state 19
 
-    (6) termino2 -> empty .
+    (4) superexp -> exp superexp2 .
 
-    MINUS           reduce using rule 6 (termino2 -> empty .)
-    PLUS            reduce using rule 6 (termino2 -> empty .)
-    $end            reduce using rule 6 (termino2 -> empty .)
-    CLOSEPAR        reduce using rule 6 (termino2 -> empty .)
+    OR              reduce using rule 4 (superexp -> exp superexp2 .)
+    AND             reduce using rule 4 (superexp -> exp superexp2 .)
+    $end            reduce using rule 4 (superexp -> exp superexp2 .)
+    CLOSEPAR        reduce using rule 4 (superexp -> exp superexp2 .)
 
 
 state 20
 
-    (17) multdiv -> TIMES .
+    (5) superexp2 -> logical_op . superexp
+    (4) superexp -> . exp superexp2
+    (7) exp -> . termino exp2
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
 
-    OPENPAR         reduce using rule 17 (multdiv -> TIMES .)
-    ID              reduce using rule 17 (multdiv -> TIMES .)
-    CTEI            reduce using rule 17 (multdiv -> TIMES .)
-    CTEF            reduce using rule 17 (multdiv -> TIMES .)
-    CTEC            reduce using rule 17 (multdiv -> TIMES .)
-    TRUE            reduce using rule 17 (multdiv -> TIMES .)
-    FALSE           reduce using rule 17 (multdiv -> TIMES .)
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
 
+    superexp                       shift and go to state 40
+    exp                            shift and go to state 3
+    termino                        shift and go to state 4
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
 
 state 21
 
-    (18) multdiv -> DIVIDE .
+    (6) superexp2 -> empty .
 
-    OPENPAR         reduce using rule 18 (multdiv -> DIVIDE .)
-    ID              reduce using rule 18 (multdiv -> DIVIDE .)
-    CTEI            reduce using rule 18 (multdiv -> DIVIDE .)
-    CTEF            reduce using rule 18 (multdiv -> DIVIDE .)
-    CTEC            reduce using rule 18 (multdiv -> DIVIDE .)
-    TRUE            reduce using rule 18 (multdiv -> DIVIDE .)
-    FALSE           reduce using rule 18 (multdiv -> DIVIDE .)
+    OR              reduce using rule 6 (superexp2 -> empty .)
+    AND             reduce using rule 6 (superexp2 -> empty .)
+    $end            reduce using rule 6 (superexp2 -> empty .)
+    CLOSEPAR        reduce using rule 6 (superexp2 -> empty .)
 
 
 state 22
 
-    (8) factor -> OPENPAR exp . CLOSEPAR
+    (23) logical_op -> GT .
 
-    CLOSEPAR        shift and go to state 25
+    OPENPAR         reduce using rule 23 (logical_op -> GT .)
+    ID              reduce using rule 23 (logical_op -> GT .)
+    CTEI            reduce using rule 23 (logical_op -> GT .)
+    CTEF            reduce using rule 23 (logical_op -> GT .)
+    CTEC            reduce using rule 23 (logical_op -> GT .)
+    TRUE            reduce using rule 23 (logical_op -> GT .)
+    FALSE           reduce using rule 23 (logical_op -> GT .)
 
 
 state 23
 
-    (2) exp2 -> sums exp .
+    (24) logical_op -> GTE .
 
-    $end            reduce using rule 2 (exp2 -> sums exp .)
-    CLOSEPAR        reduce using rule 2 (exp2 -> sums exp .)
+    OPENPAR         reduce using rule 24 (logical_op -> GTE .)
+    ID              reduce using rule 24 (logical_op -> GTE .)
+    CTEI            reduce using rule 24 (logical_op -> GTE .)
+    CTEF            reduce using rule 24 (logical_op -> GTE .)
+    CTEC            reduce using rule 24 (logical_op -> GTE .)
+    TRUE            reduce using rule 24 (logical_op -> GTE .)
+    FALSE           reduce using rule 24 (logical_op -> GTE .)
 
 
 state 24
 
-    (5) termino2 -> multdiv termino .
+    (25) logical_op -> LT .
 
-    MINUS           reduce using rule 5 (termino2 -> multdiv termino .)
-    PLUS            reduce using rule 5 (termino2 -> multdiv termino .)
-    $end            reduce using rule 5 (termino2 -> multdiv termino .)
-    CLOSEPAR        reduce using rule 5 (termino2 -> multdiv termino .)
+    OPENPAR         reduce using rule 25 (logical_op -> LT .)
+    ID              reduce using rule 25 (logical_op -> LT .)
+    CTEI            reduce using rule 25 (logical_op -> LT .)
+    CTEF            reduce using rule 25 (logical_op -> LT .)
+    CTEC            reduce using rule 25 (logical_op -> LT .)
+    TRUE            reduce using rule 25 (logical_op -> LT .)
+    FALSE           reduce using rule 25 (logical_op -> LT .)
 
 
 state 25
 
-    (8) factor -> OPENPAR exp CLOSEPAR .
+    (26) logical_op -> LTE .
 
-    TIMES           reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
-    DIVIDE          reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
-    MINUS           reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
-    PLUS            reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
-    $end            reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
-    CLOSEPAR        reduce using rule 8 (factor -> OPENPAR exp CLOSEPAR .)
+    OPENPAR         reduce using rule 26 (logical_op -> LTE .)
+    ID              reduce using rule 26 (logical_op -> LTE .)
+    CTEI            reduce using rule 26 (logical_op -> LTE .)
+    CTEF            reduce using rule 26 (logical_op -> LTE .)
+    CTEC            reduce using rule 26 (logical_op -> LTE .)
+    TRUE            reduce using rule 26 (logical_op -> LTE .)
+    FALSE           reduce using rule 26 (logical_op -> LTE .)
+
+
+state 26
+
+    (27) logical_op -> NEQ .
+
+    OPENPAR         reduce using rule 27 (logical_op -> NEQ .)
+    ID              reduce using rule 27 (logical_op -> NEQ .)
+    CTEI            reduce using rule 27 (logical_op -> NEQ .)
+    CTEF            reduce using rule 27 (logical_op -> NEQ .)
+    CTEC            reduce using rule 27 (logical_op -> NEQ .)
+    TRUE            reduce using rule 27 (logical_op -> NEQ .)
+    FALSE           reduce using rule 27 (logical_op -> NEQ .)
+
+
+state 27
+
+    (28) logical_op -> EQ .
+
+    OPENPAR         reduce using rule 28 (logical_op -> EQ .)
+    ID              reduce using rule 28 (logical_op -> EQ .)
+    CTEI            reduce using rule 28 (logical_op -> EQ .)
+    CTEF            reduce using rule 28 (logical_op -> EQ .)
+    CTEC            reduce using rule 28 (logical_op -> EQ .)
+    TRUE            reduce using rule 28 (logical_op -> EQ .)
+    FALSE           reduce using rule 28 (logical_op -> EQ .)
+
+
+state 28
+
+    (7) exp -> termino exp2 .
+
+    GT              reduce using rule 7 (exp -> termino exp2 .)
+    GTE             reduce using rule 7 (exp -> termino exp2 .)
+    LT              reduce using rule 7 (exp -> termino exp2 .)
+    LTE             reduce using rule 7 (exp -> termino exp2 .)
+    NEQ             reduce using rule 7 (exp -> termino exp2 .)
+    EQ              reduce using rule 7 (exp -> termino exp2 .)
+    OR              reduce using rule 7 (exp -> termino exp2 .)
+    AND             reduce using rule 7 (exp -> termino exp2 .)
+    $end            reduce using rule 7 (exp -> termino exp2 .)
+    CLOSEPAR        reduce using rule 7 (exp -> termino exp2 .)
+
+
+state 29
+
+    (8) exp2 -> sums . exp
+    (7) exp -> . termino exp2
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
+
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
+
+    exp                            shift and go to state 41
+    termino                        shift and go to state 4
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
+
+state 30
+
+    (9) exp2 -> empty .
+
+    GT              reduce using rule 9 (exp2 -> empty .)
+    GTE             reduce using rule 9 (exp2 -> empty .)
+    LT              reduce using rule 9 (exp2 -> empty .)
+    LTE             reduce using rule 9 (exp2 -> empty .)
+    NEQ             reduce using rule 9 (exp2 -> empty .)
+    EQ              reduce using rule 9 (exp2 -> empty .)
+    OR              reduce using rule 9 (exp2 -> empty .)
+    AND             reduce using rule 9 (exp2 -> empty .)
+    $end            reduce using rule 9 (exp2 -> empty .)
+    CLOSEPAR        reduce using rule 9 (exp2 -> empty .)
+
+
+state 31
+
+    (29) sums -> MINUS .
+
+    OPENPAR         reduce using rule 29 (sums -> MINUS .)
+    ID              reduce using rule 29 (sums -> MINUS .)
+    CTEI            reduce using rule 29 (sums -> MINUS .)
+    CTEF            reduce using rule 29 (sums -> MINUS .)
+    CTEC            reduce using rule 29 (sums -> MINUS .)
+    TRUE            reduce using rule 29 (sums -> MINUS .)
+    FALSE           reduce using rule 29 (sums -> MINUS .)
+
+
+state 32
+
+    (30) sums -> PLUS .
+
+    OPENPAR         reduce using rule 30 (sums -> PLUS .)
+    ID              reduce using rule 30 (sums -> PLUS .)
+    CTEI            reduce using rule 30 (sums -> PLUS .)
+    CTEF            reduce using rule 30 (sums -> PLUS .)
+    CTEC            reduce using rule 30 (sums -> PLUS .)
+    TRUE            reduce using rule 30 (sums -> PLUS .)
+    FALSE           reduce using rule 30 (sums -> PLUS .)
+
+
+state 33
+
+    (10) termino -> factor termino2 .
+
+    MINUS           reduce using rule 10 (termino -> factor termino2 .)
+    PLUS            reduce using rule 10 (termino -> factor termino2 .)
+    GT              reduce using rule 10 (termino -> factor termino2 .)
+    GTE             reduce using rule 10 (termino -> factor termino2 .)
+    LT              reduce using rule 10 (termino -> factor termino2 .)
+    LTE             reduce using rule 10 (termino -> factor termino2 .)
+    NEQ             reduce using rule 10 (termino -> factor termino2 .)
+    EQ              reduce using rule 10 (termino -> factor termino2 .)
+    OR              reduce using rule 10 (termino -> factor termino2 .)
+    AND             reduce using rule 10 (termino -> factor termino2 .)
+    $end            reduce using rule 10 (termino -> factor termino2 .)
+    CLOSEPAR        reduce using rule 10 (termino -> factor termino2 .)
+
+
+state 34
+
+    (11) termino2 -> multdiv . termino
+    (10) termino -> . factor termino2
+    (13) factor -> . vcte
+    (14) factor -> . OPENPAR megaexp CLOSEPAR
+    (15) vcte -> . ID
+    (16) vcte -> . CTEI
+    (17) vcte -> . CTEF
+    (18) vcte -> . CTEC
+    (19) vcte -> . TRUE
+    (20) vcte -> . FALSE
+
+    OPENPAR         shift and go to state 7
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
+
+    termino                        shift and go to state 42
+    factor                         shift and go to state 5
+    vcte                           shift and go to state 6
+
+state 35
+
+    (12) termino2 -> empty .
+
+    MINUS           reduce using rule 12 (termino2 -> empty .)
+    PLUS            reduce using rule 12 (termino2 -> empty .)
+    GT              reduce using rule 12 (termino2 -> empty .)
+    GTE             reduce using rule 12 (termino2 -> empty .)
+    LT              reduce using rule 12 (termino2 -> empty .)
+    LTE             reduce using rule 12 (termino2 -> empty .)
+    NEQ             reduce using rule 12 (termino2 -> empty .)
+    EQ              reduce using rule 12 (termino2 -> empty .)
+    OR              reduce using rule 12 (termino2 -> empty .)
+    AND             reduce using rule 12 (termino2 -> empty .)
+    $end            reduce using rule 12 (termino2 -> empty .)
+    CLOSEPAR        reduce using rule 12 (termino2 -> empty .)
+
+
+state 36
+
+    (31) multdiv -> TIMES .
+
+    OPENPAR         reduce using rule 31 (multdiv -> TIMES .)
+    ID              reduce using rule 31 (multdiv -> TIMES .)
+    CTEI            reduce using rule 31 (multdiv -> TIMES .)
+    CTEF            reduce using rule 31 (multdiv -> TIMES .)
+    CTEC            reduce using rule 31 (multdiv -> TIMES .)
+    TRUE            reduce using rule 31 (multdiv -> TIMES .)
+    FALSE           reduce using rule 31 (multdiv -> TIMES .)
+
+
+state 37
+
+    (32) multdiv -> DIVIDE .
+
+    OPENPAR         reduce using rule 32 (multdiv -> DIVIDE .)
+    ID              reduce using rule 32 (multdiv -> DIVIDE .)
+    CTEI            reduce using rule 32 (multdiv -> DIVIDE .)
+    CTEF            reduce using rule 32 (multdiv -> DIVIDE .)
+    CTEC            reduce using rule 32 (multdiv -> DIVIDE .)
+    TRUE            reduce using rule 32 (multdiv -> DIVIDE .)
+    FALSE           reduce using rule 32 (multdiv -> DIVIDE .)
+
+
+state 38
+
+    (14) factor -> OPENPAR megaexp . CLOSEPAR
+
+    CLOSEPAR        shift and go to state 43
+
+
+state 39
+
+    (2) megaexp2 -> blooean_op megaexp .
+
+    $end            reduce using rule 2 (megaexp2 -> blooean_op megaexp .)
+    CLOSEPAR        reduce using rule 2 (megaexp2 -> blooean_op megaexp .)
+
+
+state 40
+
+    (5) superexp2 -> logical_op superexp .
+
+    OR              reduce using rule 5 (superexp2 -> logical_op superexp .)
+    AND             reduce using rule 5 (superexp2 -> logical_op superexp .)
+    $end            reduce using rule 5 (superexp2 -> logical_op superexp .)
+    CLOSEPAR        reduce using rule 5 (superexp2 -> logical_op superexp .)
+
+
+state 41
+
+    (8) exp2 -> sums exp .
+
+    GT              reduce using rule 8 (exp2 -> sums exp .)
+    GTE             reduce using rule 8 (exp2 -> sums exp .)
+    LT              reduce using rule 8 (exp2 -> sums exp .)
+    LTE             reduce using rule 8 (exp2 -> sums exp .)
+    NEQ             reduce using rule 8 (exp2 -> sums exp .)
+    EQ              reduce using rule 8 (exp2 -> sums exp .)
+    OR              reduce using rule 8 (exp2 -> sums exp .)
+    AND             reduce using rule 8 (exp2 -> sums exp .)
+    $end            reduce using rule 8 (exp2 -> sums exp .)
+    CLOSEPAR        reduce using rule 8 (exp2 -> sums exp .)
+
+
+state 42
+
+    (11) termino2 -> multdiv termino .
+
+    MINUS           reduce using rule 11 (termino2 -> multdiv termino .)
+    PLUS            reduce using rule 11 (termino2 -> multdiv termino .)
+    GT              reduce using rule 11 (termino2 -> multdiv termino .)
+    GTE             reduce using rule 11 (termino2 -> multdiv termino .)
+    LT              reduce using rule 11 (termino2 -> multdiv termino .)
+    LTE             reduce using rule 11 (termino2 -> multdiv termino .)
+    NEQ             reduce using rule 11 (termino2 -> multdiv termino .)
+    EQ              reduce using rule 11 (termino2 -> multdiv termino .)
+    OR              reduce using rule 11 (termino2 -> multdiv termino .)
+    AND             reduce using rule 11 (termino2 -> multdiv termino .)
+    $end            reduce using rule 11 (termino2 -> multdiv termino .)
+    CLOSEPAR        reduce using rule 11 (termino2 -> multdiv termino .)
+
+
+state 43
+
+    (14) factor -> OPENPAR megaexp CLOSEPAR .
+
+    TIMES           reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    DIVIDE          reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    MINUS           reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    PLUS            reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    GT              reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    GTE             reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    LT              reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    LTE             reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    NEQ             reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    EQ              reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    OR              reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    AND             reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    $end            reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
+    CLOSEPAR        reduce using rule 14 (factor -> OPENPAR megaexp CLOSEPAR .)
 

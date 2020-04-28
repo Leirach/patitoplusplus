@@ -8,16 +8,32 @@ tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
 
 # -- Expresiones
+
+def p_megaexp(p):
+    '''megaexp : superexp megaexp2'''
+
+def p_megaexp2(p):
+    '''megaexp2 : blooean_op megaexp
+                | empty'''
+
+def p_superexp(p):
+    '''superexp : exp superexp2'''
+
+def p_superexp2(p):
+    '''superexp2 : logical_op superexp
+                 | empty''' 
+
 def p_exp(p):
     '''exp : termino exp2'''
 
 def p_exp2(p):
     '''exp2 : sums exp
             | empty'''
-    if(p[1] is not None): 
-        code.generate()
-    # sale y resuelve sumas/restas pendientes osea esta bien
-    #como se arregla xddd
+    if (p[1] is not None):
+        nextOp = code.peek(code.opStack) 
+        if (nextOp == '+' or nextOp == '-'):
+            code.generate()
+
 
 def p_termino(p):
     '''termino : factor termino2'''
@@ -25,18 +41,10 @@ def p_termino(p):
 def p_termino2(p):
     '''termino2 : multdiv termino
                 | empty'''
-    if(p[1] is not None): 
-        code.generate()
-        #pasé esto a codeGenerator??
-        #popDer = code.idStack.pop()
-        #popIzq = code.idStack.pop()
-        #popOper = code.opStack.pop()
-        #print("popDer", popDer)
-        #print("popIzq", popIzq)
-        #print("popOper", popOper) #checar si es * o / y resolver, sino no, iwal arriba supongo
-        #print("t"+str(code.cont))
-        #code.generate(popOper, popIzq, popDer, "t"+str(code.cont))
-        #code.cont += 1
+    if (p[1] is not None):
+        nextOp = code.peek(code.opStack) 
+        if (nextOp == '*' or nextOp == '/'):
+            code.generate()
 
 def p_factor(p):
     '''factor : vcte
@@ -52,21 +60,31 @@ def p_vcte(p):
             | FALSE'''
     p[0] = p[1]
     code.idStack.append(p[1])
-    print("factor", p[1])
 
+# -- Operadores --
+def p_boolean_op(p):
+    '''blooean_op : OR 
+                  | AND'''
+
+def p_logical_op(p):
+    '''logical_op : GT
+                  | GTE
+                  | LT
+                  | LTE
+                  | NEQ
+                  | EQ'''
+                  
 def p_sums(p):
     '''sums : MINUS 
             | PLUS '''
     p[0] = p[1]
     code.opStack.append(p[1])
-    print("sums", p[1])
-
+    
 def p_multdiv(p):
     '''multdiv : TIMES 
                | DIVIDE '''
-    code.opStack.append(p[1])
     p[0] = p[1]
-    print("mult", p[1])
+    code.opStack.append(p[1])
 
 def p_empty(p):
     'empty :'
@@ -82,4 +100,4 @@ while True:
         s = input('test > ')
     except EOFError:
         break
-    parser.parse(s, debug=1)
+    parser.parse(s)

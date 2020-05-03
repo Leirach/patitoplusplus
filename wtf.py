@@ -15,6 +15,8 @@ def p_exp(p):
     nextOp = code.peek(code.opStack) 
     if (nextOp == '+' or nextOp == '-'):
         code.generate()
+    elif nextOp is not None:
+        print("pending operation @exp", nextOp)
 
 def p_termino(p):
     '''termino : factor
@@ -22,12 +24,12 @@ def p_termino(p):
     nextOp = code.peek(code.opStack) 
     if (nextOp == '*' or nextOp == '/'):
         code.generate()
+    elif nextOp is not None:
+        print("pending operation @termino", nextOp)
 
 def p_factor(p):
     '''factor : vcte
-              | OPENPAR exp CLOSEPAR'''
-    if p[1] == '(':
-        print("when why even at the end")
+              | openpar exp closepar'''
 
 def p_vcte(p):
     '''vcte : ID
@@ -49,6 +51,17 @@ def p_multdiv(p):
     p[0] = p[1]
     code.opStack.append(p[1])
 
+# agregar fondo falso a opstack
+def p_openpar(p): 
+    'openpar : OPENPAR'
+    code.opStack.append(p[1])
+
+# quitar fondo falso
+def p_closepar(p): 
+    'closepar : CLOSEPAR'
+    code.opStack.pop()
+
+
 def p_empty(p):
     'empty :'
     pass
@@ -63,4 +76,4 @@ while True:
         s = input('test > ')
     except EOFError:
         break
-    parser.parse(s, debug=1)
+    parser.parse(s, debug=0)

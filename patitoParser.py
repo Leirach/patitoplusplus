@@ -49,7 +49,11 @@ def p_tipo(p):
     p[0] = p[1]
 
 def p_bloque(p):
-    'bloque : LCURLYB estatuto RCURLYB'
+    'bloque : LCURLYB estatutos_rec RCURLYB'
+
+def p_estatutos_rec(p):
+    '''estatutos_rec : estatuto estatutos_rec
+                     | empty''' 
 
 def p_estatuto(p):
     '''estatuto : asignacion 
@@ -68,11 +72,23 @@ def p_asignacion(p):
 
 # -- Condicion --
 def p_condicion(p):
-    "condicion : SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino"
+    "condicion : SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces"
+
+def p_entonces(p):
+    'entonces : ENTONCES'
+    code.startIf()
+
+def p_condicion_entonces(p):
+    "bloque_entonces : bloque bloque_sino"
 
 def p_bloque_sino(p):
-    '''bloque_sino : SINO bloque 
-              | empty'''
+    '''bloque_sino : sino bloque 
+                   | empty'''
+    code.endIf()
+
+def p_condicion_sino(p):
+    'sino : SINO'
+    code.elseIf()
 
 # -- Funcion void --
 def p_func_call_params(p):

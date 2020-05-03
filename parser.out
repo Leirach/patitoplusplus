@@ -1,2662 +1,1359 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    ASSIGN
+    BOOL
+    CHAR
+    CLOSEBRAC
+    COMMA
+    CTES
+    DESDE
+    ESCRIBE
+    FLOAT
+    FUNCION
+    HACER
+    HASTA
+    HAZ
+    INT
+    LEE
+    MIENTRAS
+    OPENBRAC
+    PRINCIPAL
+    PROGRAMA
+    RETORNO
+    SEMICOLON
+    VAR
+
 Grammar
 
-Rule 0     S' -> program_declaration
-Rule 1     program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
-Rule 2     declare_vars -> VAR vars
-Rule 3     declare_vars -> empty
-Rule 4     vars -> tipo ID dimensions more_vars SEMICOLON vars
-Rule 5     vars -> empty
-Rule 6     more_vars -> COMMA ID dimensions more_vars
-Rule 7     more_vars -> empty
-Rule 8     dimensions -> OPENBRAC CTEI CLOSEBRAC
-Rule 9     dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
-Rule 10    dimensions -> empty
-Rule 11    declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
-Rule 12    declare_func -> empty
-Rule 13    declare_func_params -> tipo ID more_params
-Rule 14    declare_func_params -> empty
-Rule 15    more_params -> COMMA tipo ID more_params
-Rule 16    more_params -> empty
-Rule 17    tipo -> INT
-Rule 18    tipo -> FLOAT
-Rule 19    tipo -> CHAR
-Rule 20    tipo -> BOOL
-Rule 21    bloque -> LCURLYB estatuto RCURLYB
-Rule 22    estatuto -> asignacion
-Rule 23    estatuto -> condicion
-Rule 24    estatuto -> func_void
-Rule 25    estatuto -> retorno
-Rule 26    estatuto -> escribe
-Rule 27    estatuto -> lee
-Rule 28    estatuto -> desde
-Rule 29    estatuto -> mientras
-Rule 30    estatuto -> empty
-Rule 31    asignacion -> id ASSIGN megaexp SEMICOLON
-Rule 32    condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino
-Rule 33    bloque_sino -> SINO bloque
-Rule 34    bloque_sino -> empty
-Rule 35    func_call_params -> megaexp more_call_params
-Rule 36    func_call_params -> empty
-Rule 37    more_call_params -> COMMA megaexp
-Rule 38    more_call_params -> empty
-Rule 39    func_void -> ID OPENPAR CLOSEPAR func_call_params SEMICOLON
-Rule 40    escribe -> ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON
-Rule 41    print_options -> CTES more_print
-Rule 42    print_options -> megaexp more_print
-Rule 43    more_print -> COMMA CTES
-Rule 44    more_print -> COMMA megaexp
-Rule 45    more_print -> empty
-Rule 46    lee -> LEE OPENPAR ID read_more CLOSEPAR SEMICOLON
-Rule 47    read_more -> COMMA ID read_more
-Rule 48    read_more -> empty
-Rule 49    retorno -> RETORNO OPENPAR ID CLOSEPAR
-Rule 50    desde -> DESDE ID ASSIGN exp HASTA exp HACER bloque
-Rule 51    mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque
-Rule 52    id -> ID
-Rule 53    id -> ID OPENBRAC exp CLOSEBRAC
-Rule 54    id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-Rule 55    boolean_op -> OR
-Rule 56    boolean_op -> AND
-Rule 57    logical_op -> GT
-Rule 58    logical_op -> GTE
-Rule 59    logical_op -> LT
-Rule 60    logical_op -> LTE
-Rule 61    logical_op -> NEQ
-Rule 62    logical_op -> EQ
-Rule 63    sums -> MINUS
-Rule 64    sums -> PLUS
-Rule 65    multdiv -> TIMES
-Rule 66    multdiv -> DIVIDE
-Rule 67    megaexp -> superexp
-Rule 68    megaexp -> megaexp boolean_op superexp
-Rule 69    superexp -> exp
-Rule 70    superexp -> superexp logical_op exp
-Rule 71    exp -> termino
-Rule 72    exp -> exp sums termino
-Rule 73    termino -> factor
-Rule 74    termino -> termino multdiv factor
-Rule 75    factor -> vcte
-Rule 76    factor -> openpar megaexp closepar
-Rule 77    openpar -> OPENPAR
-Rule 78    closepar -> CLOSEPAR
-Rule 79    vcte -> id
-Rule 80    vcte -> CTEI
-Rule 81    vcte -> CTEF
-Rule 82    vcte -> CTEC
-Rule 83    vcte -> TRUE
-Rule 84    vcte -> FALSE
-Rule 85    empty -> <empty>
+Rule 0     S' -> condicion
+Rule 1     condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
+Rule 2     entonces -> ENTONCES
+Rule 3     bloque_entonces -> bloque bloque_sino
+Rule 4     bloque_sino -> sino bloque
+Rule 5     bloque_sino -> empty
+Rule 6     sino -> SINO
+Rule 7     bloque -> LCURLYB estatutos_rec RCURLYB
+Rule 8     estatutos_rec -> estatuto estatutos_rec
+Rule 9     estatutos_rec -> empty
+Rule 10    estatuto -> condicion
+Rule 11    estatuto -> megaexp
+Rule 12    boolean_op -> OR
+Rule 13    boolean_op -> AND
+Rule 14    logical_op -> GT
+Rule 15    logical_op -> GTE
+Rule 16    logical_op -> LT
+Rule 17    logical_op -> LTE
+Rule 18    logical_op -> NEQ
+Rule 19    logical_op -> EQ
+Rule 20    sums -> MINUS
+Rule 21    sums -> PLUS
+Rule 22    multdiv -> TIMES
+Rule 23    multdiv -> DIVIDE
+Rule 24    megaexp -> superexp
+Rule 25    megaexp -> megaexp boolean_op superexp
+Rule 26    superexp -> exp
+Rule 27    superexp -> superexp logical_op exp
+Rule 28    exp -> termino
+Rule 29    exp -> exp sums termino
+Rule 30    termino -> factor
+Rule 31    termino -> termino multdiv factor
+Rule 32    factor -> vcte
+Rule 33    factor -> openpar megaexp closepar
+Rule 34    openpar -> OPENPAR
+Rule 35    closepar -> CLOSEPAR
+Rule 36    vcte -> ID
+Rule 37    vcte -> CTEI
+Rule 38    vcte -> CTEF
+Rule 39    vcte -> CTEC
+Rule 40    vcte -> TRUE
+Rule 41    vcte -> FALSE
+Rule 42    empty -> <empty>
 
 Terminals, with rules where they appear
 
-AND                  : 56
-ASSIGN               : 31 50
-BOOL                 : 20
-CHAR                 : 19
-CLOSEBRAC            : 8 9 9 53 54 54
-CLOSEPAR             : 1 11 32 39 40 46 49 51 78
-COMMA                : 6 15 37 43 44 47
-CTEC                 : 82
-CTEF                 : 81
-CTEI                 : 8 9 9 80
-CTES                 : 41 43
-DESDE                : 50
-DIVIDE               : 66
-ENTONCES             : 32
-EQ                   : 62
-ESCRIBE              : 40
-FALSE                : 84
-FLOAT                : 18
-FUNCION              : 11
-GT                   : 57
-GTE                  : 58
-HACER                : 50
-HASTA                : 50
-HAZ                  : 51
-ID                   : 1 4 6 11 13 15 39 46 47 49 50 52 53 54
-INT                  : 17
-LCURLYB              : 21
-LEE                  : 46
-LT                   : 59
-LTE                  : 60
-MIENTRAS             : 51
-MINUS                : 63
-NEQ                  : 61
-OPENBRAC             : 8 9 9 53 54 54
-OPENPAR              : 1 11 32 39 40 46 49 51 77
-OR                   : 55
-PLUS                 : 64
-PRINCIPAL            : 1
-PROGRAMA             : 1
-RCURLYB              : 21
-RETORNO              : 49
-SEMICOLON            : 1 4 31 39 40 46
-SI                   : 32
-SINO                 : 33
-TIMES                : 65
-TRUE                 : 83
-VAR                  : 2
+AND                  : 13
+ASSIGN               : 
+BOOL                 : 
+CHAR                 : 
+CLOSEBRAC            : 
+CLOSEPAR             : 1 35
+COMMA                : 
+CTEC                 : 39
+CTEF                 : 38
+CTEI                 : 37
+CTES                 : 
+DESDE                : 
+DIVIDE               : 23
+ENTONCES             : 2
+EQ                   : 19
+ESCRIBE              : 
+FALSE                : 41
+FLOAT                : 
+FUNCION              : 
+GT                   : 14
+GTE                  : 15
+HACER                : 
+HASTA                : 
+HAZ                  : 
+ID                   : 36
+INT                  : 
+LCURLYB              : 7
+LEE                  : 
+LT                   : 16
+LTE                  : 17
+MIENTRAS             : 
+MINUS                : 20
+NEQ                  : 18
+OPENBRAC             : 
+OPENPAR              : 1 34
+OR                   : 12
+PLUS                 : 21
+PRINCIPAL            : 
+PROGRAMA             : 
+RCURLYB              : 7
+RETORNO              : 
+SEMICOLON            : 
+SI                   : 1
+SINO                 : 6
+TIMES                : 22
+TRUE                 : 40
+VAR                  : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-asignacion           : 22
-bloque               : 1 11 32 33 50 51
-bloque_sino          : 32
-boolean_op           : 68
-closepar             : 76
-condicion            : 23
-declare_func         : 1
-declare_func_params  : 11
-declare_vars         : 1 11
-desde                : 28
-dimensions           : 4 6
-empty                : 3 5 7 10 12 14 16 30 34 36 38 45 48
-escribe              : 26
-estatuto             : 21
-exp                  : 50 50 53 54 54 69 70 72
-factor               : 73 74
-func_call_params     : 39
-func_void            : 24
-id                   : 31 79
-lee                  : 27
-logical_op           : 70
-megaexp              : 31 32 35 37 42 44 51 68 76
-mientras             : 29
-more_call_params     : 35
-more_params          : 13 15
-more_print           : 41 42
-more_vars            : 4 6
-multdiv              : 74
-openpar              : 76
-print_options        : 40
-program_declaration  : 0
-read_more            : 46 47
-retorno              : 25
-sums                 : 72
-superexp             : 67 68 70
-termino              : 71 72 74
-tipo                 : 4 11 13 15
-vars                 : 2 4
-vcte                 : 75
+bloque               : 3 4
+bloque_entonces      : 1
+bloque_sino          : 3
+boolean_op           : 25
+closepar             : 33
+condicion            : 10 0
+empty                : 5 9
+entonces             : 1
+estatuto             : 8
+estatutos_rec        : 7 8
+exp                  : 26 27 29
+factor               : 30 31
+logical_op           : 27
+megaexp              : 1 11 25 33
+multdiv              : 31
+openpar              : 33
+sino                 : 4
+sums                 : 29
+superexp             : 24 25 27
+termino              : 28 29 31
+vcte                 : 32
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . program_declaration
-    (1) program_declaration -> . PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
+    (0) S' -> . condicion
+    (1) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
 
-    PROGRAMA        shift and go to state 2
+    SI              shift and go to state 2
 
-    program_declaration            shift and go to state 1
+    condicion                      shift and go to state 1
 
 state 1
 
-    (0) S' -> program_declaration .
+    (0) S' -> condicion .
 
 
 
 state 2
 
-    (1) program_declaration -> PROGRAMA . ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
+    (1) condicion -> SI . OPENPAR megaexp CLOSEPAR entonces bloque_entonces
 
-    ID              shift and go to state 3
+    OPENPAR         shift and go to state 3
 
 
 state 3
 
-    (1) program_declaration -> PROGRAMA ID . SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
+    (1) condicion -> SI OPENPAR . megaexp CLOSEPAR entonces bloque_entonces
+    (24) megaexp -> . superexp
+    (25) megaexp -> . megaexp boolean_op superexp
+    (26) superexp -> . exp
+    (27) superexp -> . superexp logical_op exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    SEMICOLON       shift and go to state 4
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    megaexp                        shift and go to state 5
+    superexp                       shift and go to state 6
+    exp                            shift and go to state 7
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 4
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON . declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
-    (2) declare_vars -> . VAR vars
-    (3) declare_vars -> . empty
-    (85) empty -> .
+    (34) openpar -> OPENPAR .
 
-    VAR             shift and go to state 6
-    FUNCION         reduce using rule 85 (empty -> .)
-    PRINCIPAL       reduce using rule 85 (empty -> .)
+    ID              reduce using rule 34 (openpar -> OPENPAR .)
+    CTEI            reduce using rule 34 (openpar -> OPENPAR .)
+    CTEF            reduce using rule 34 (openpar -> OPENPAR .)
+    CTEC            reduce using rule 34 (openpar -> OPENPAR .)
+    TRUE            reduce using rule 34 (openpar -> OPENPAR .)
+    FALSE           reduce using rule 34 (openpar -> OPENPAR .)
+    OPENPAR         reduce using rule 34 (openpar -> OPENPAR .)
 
-    declare_vars                   shift and go to state 5
-    empty                          shift and go to state 7
 
 state 5
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars . declare_func PRINCIPAL OPENPAR CLOSEPAR bloque
-    (11) declare_func -> . FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
-    (12) declare_func -> . empty
-    (85) empty -> .
+    (1) condicion -> SI OPENPAR megaexp . CLOSEPAR entonces bloque_entonces
+    (25) megaexp -> megaexp . boolean_op superexp
+    (12) boolean_op -> . OR
+    (13) boolean_op -> . AND
 
-    FUNCION         shift and go to state 9
-    PRINCIPAL       reduce using rule 85 (empty -> .)
+    CLOSEPAR        shift and go to state 18
+    OR              shift and go to state 20
+    AND             shift and go to state 21
 
-    declare_func                   shift and go to state 8
-    empty                          shift and go to state 10
+    boolean_op                     shift and go to state 19
 
 state 6
 
-    (2) declare_vars -> VAR . vars
-    (4) vars -> . tipo ID dimensions more_vars SEMICOLON vars
-    (5) vars -> . empty
-    (17) tipo -> . INT
-    (18) tipo -> . FLOAT
-    (19) tipo -> . CHAR
-    (20) tipo -> . BOOL
-    (85) empty -> .
+    (24) megaexp -> superexp .
+    (27) superexp -> superexp . logical_op exp
+    (14) logical_op -> . GT
+    (15) logical_op -> . GTE
+    (16) logical_op -> . LT
+    (17) logical_op -> . LTE
+    (18) logical_op -> . NEQ
+    (19) logical_op -> . EQ
 
-    INT             shift and go to state 14
-    FLOAT           shift and go to state 15
-    CHAR            shift and go to state 16
-    BOOL            shift and go to state 17
-    FUNCION         reduce using rule 85 (empty -> .)
-    PRINCIPAL       reduce using rule 85 (empty -> .)
-    LCURLYB         reduce using rule 85 (empty -> .)
+    CLOSEPAR        reduce using rule 24 (megaexp -> superexp .)
+    OR              reduce using rule 24 (megaexp -> superexp .)
+    AND             reduce using rule 24 (megaexp -> superexp .)
+    SI              reduce using rule 24 (megaexp -> superexp .)
+    ID              reduce using rule 24 (megaexp -> superexp .)
+    CTEI            reduce using rule 24 (megaexp -> superexp .)
+    CTEF            reduce using rule 24 (megaexp -> superexp .)
+    CTEC            reduce using rule 24 (megaexp -> superexp .)
+    TRUE            reduce using rule 24 (megaexp -> superexp .)
+    FALSE           reduce using rule 24 (megaexp -> superexp .)
+    OPENPAR         reduce using rule 24 (megaexp -> superexp .)
+    RCURLYB         reduce using rule 24 (megaexp -> superexp .)
+    GT              shift and go to state 23
+    GTE             shift and go to state 24
+    LT              shift and go to state 25
+    LTE             shift and go to state 26
+    NEQ             shift and go to state 27
+    EQ              shift and go to state 28
 
-    vars                           shift and go to state 11
-    tipo                           shift and go to state 12
-    empty                          shift and go to state 13
+    logical_op                     shift and go to state 22
 
 state 7
 
-    (3) declare_vars -> empty .
+    (26) superexp -> exp .
+    (29) exp -> exp . sums termino
+    (20) sums -> . MINUS
+    (21) sums -> . PLUS
 
-    FUNCION         reduce using rule 3 (declare_vars -> empty .)
-    PRINCIPAL       reduce using rule 3 (declare_vars -> empty .)
-    LCURLYB         reduce using rule 3 (declare_vars -> empty .)
+    GT              reduce using rule 26 (superexp -> exp .)
+    GTE             reduce using rule 26 (superexp -> exp .)
+    LT              reduce using rule 26 (superexp -> exp .)
+    LTE             reduce using rule 26 (superexp -> exp .)
+    NEQ             reduce using rule 26 (superexp -> exp .)
+    EQ              reduce using rule 26 (superexp -> exp .)
+    CLOSEPAR        reduce using rule 26 (superexp -> exp .)
+    OR              reduce using rule 26 (superexp -> exp .)
+    AND             reduce using rule 26 (superexp -> exp .)
+    SI              reduce using rule 26 (superexp -> exp .)
+    ID              reduce using rule 26 (superexp -> exp .)
+    CTEI            reduce using rule 26 (superexp -> exp .)
+    CTEF            reduce using rule 26 (superexp -> exp .)
+    CTEC            reduce using rule 26 (superexp -> exp .)
+    TRUE            reduce using rule 26 (superexp -> exp .)
+    FALSE           reduce using rule 26 (superexp -> exp .)
+    OPENPAR         reduce using rule 26 (superexp -> exp .)
+    RCURLYB         reduce using rule 26 (superexp -> exp .)
+    MINUS           shift and go to state 30
+    PLUS            shift and go to state 31
 
+    sums                           shift and go to state 29
 
 state 8
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func . PRINCIPAL OPENPAR CLOSEPAR bloque
+    (28) exp -> termino .
+    (31) termino -> termino . multdiv factor
+    (22) multdiv -> . TIMES
+    (23) multdiv -> . DIVIDE
 
-    PRINCIPAL       shift and go to state 18
+    MINUS           reduce using rule 28 (exp -> termino .)
+    PLUS            reduce using rule 28 (exp -> termino .)
+    GT              reduce using rule 28 (exp -> termino .)
+    GTE             reduce using rule 28 (exp -> termino .)
+    LT              reduce using rule 28 (exp -> termino .)
+    LTE             reduce using rule 28 (exp -> termino .)
+    NEQ             reduce using rule 28 (exp -> termino .)
+    EQ              reduce using rule 28 (exp -> termino .)
+    CLOSEPAR        reduce using rule 28 (exp -> termino .)
+    OR              reduce using rule 28 (exp -> termino .)
+    AND             reduce using rule 28 (exp -> termino .)
+    SI              reduce using rule 28 (exp -> termino .)
+    ID              reduce using rule 28 (exp -> termino .)
+    CTEI            reduce using rule 28 (exp -> termino .)
+    CTEF            reduce using rule 28 (exp -> termino .)
+    CTEC            reduce using rule 28 (exp -> termino .)
+    TRUE            reduce using rule 28 (exp -> termino .)
+    FALSE           reduce using rule 28 (exp -> termino .)
+    OPENPAR         reduce using rule 28 (exp -> termino .)
+    RCURLYB         reduce using rule 28 (exp -> termino .)
+    TIMES           shift and go to state 33
+    DIVIDE          shift and go to state 34
 
+    multdiv                        shift and go to state 32
 
 state 9
 
-    (11) declare_func -> FUNCION . tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
-    (17) tipo -> . INT
-    (18) tipo -> . FLOAT
-    (19) tipo -> . CHAR
-    (20) tipo -> . BOOL
+    (30) termino -> factor .
 
-    INT             shift and go to state 14
-    FLOAT           shift and go to state 15
-    CHAR            shift and go to state 16
-    BOOL            shift and go to state 17
+    TIMES           reduce using rule 30 (termino -> factor .)
+    DIVIDE          reduce using rule 30 (termino -> factor .)
+    MINUS           reduce using rule 30 (termino -> factor .)
+    PLUS            reduce using rule 30 (termino -> factor .)
+    GT              reduce using rule 30 (termino -> factor .)
+    GTE             reduce using rule 30 (termino -> factor .)
+    LT              reduce using rule 30 (termino -> factor .)
+    LTE             reduce using rule 30 (termino -> factor .)
+    NEQ             reduce using rule 30 (termino -> factor .)
+    EQ              reduce using rule 30 (termino -> factor .)
+    CLOSEPAR        reduce using rule 30 (termino -> factor .)
+    OR              reduce using rule 30 (termino -> factor .)
+    AND             reduce using rule 30 (termino -> factor .)
+    SI              reduce using rule 30 (termino -> factor .)
+    ID              reduce using rule 30 (termino -> factor .)
+    CTEI            reduce using rule 30 (termino -> factor .)
+    CTEF            reduce using rule 30 (termino -> factor .)
+    CTEC            reduce using rule 30 (termino -> factor .)
+    TRUE            reduce using rule 30 (termino -> factor .)
+    FALSE           reduce using rule 30 (termino -> factor .)
+    OPENPAR         reduce using rule 30 (termino -> factor .)
+    RCURLYB         reduce using rule 30 (termino -> factor .)
 
-    tipo                           shift and go to state 19
 
 state 10
 
-    (12) declare_func -> empty .
+    (32) factor -> vcte .
 
-    PRINCIPAL       reduce using rule 12 (declare_func -> empty .)
+    TIMES           reduce using rule 32 (factor -> vcte .)
+    DIVIDE          reduce using rule 32 (factor -> vcte .)
+    MINUS           reduce using rule 32 (factor -> vcte .)
+    PLUS            reduce using rule 32 (factor -> vcte .)
+    GT              reduce using rule 32 (factor -> vcte .)
+    GTE             reduce using rule 32 (factor -> vcte .)
+    LT              reduce using rule 32 (factor -> vcte .)
+    LTE             reduce using rule 32 (factor -> vcte .)
+    NEQ             reduce using rule 32 (factor -> vcte .)
+    EQ              reduce using rule 32 (factor -> vcte .)
+    CLOSEPAR        reduce using rule 32 (factor -> vcte .)
+    OR              reduce using rule 32 (factor -> vcte .)
+    AND             reduce using rule 32 (factor -> vcte .)
+    SI              reduce using rule 32 (factor -> vcte .)
+    ID              reduce using rule 32 (factor -> vcte .)
+    CTEI            reduce using rule 32 (factor -> vcte .)
+    CTEF            reduce using rule 32 (factor -> vcte .)
+    CTEC            reduce using rule 32 (factor -> vcte .)
+    TRUE            reduce using rule 32 (factor -> vcte .)
+    FALSE           reduce using rule 32 (factor -> vcte .)
+    OPENPAR         reduce using rule 32 (factor -> vcte .)
+    RCURLYB         reduce using rule 32 (factor -> vcte .)
 
 
 state 11
 
-    (2) declare_vars -> VAR vars .
+    (33) factor -> openpar . megaexp closepar
+    (24) megaexp -> . superexp
+    (25) megaexp -> . megaexp boolean_op superexp
+    (26) superexp -> . exp
+    (27) superexp -> . superexp logical_op exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    FUNCION         reduce using rule 2 (declare_vars -> VAR vars .)
-    PRINCIPAL       reduce using rule 2 (declare_vars -> VAR vars .)
-    LCURLYB         reduce using rule 2 (declare_vars -> VAR vars .)
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    openpar                        shift and go to state 11
+    megaexp                        shift and go to state 35
+    superexp                       shift and go to state 6
+    exp                            shift and go to state 7
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
 
 state 12
 
-    (4) vars -> tipo . ID dimensions more_vars SEMICOLON vars
+    (36) vcte -> ID .
 
-    ID              shift and go to state 20
+    TIMES           reduce using rule 36 (vcte -> ID .)
+    DIVIDE          reduce using rule 36 (vcte -> ID .)
+    MINUS           reduce using rule 36 (vcte -> ID .)
+    PLUS            reduce using rule 36 (vcte -> ID .)
+    GT              reduce using rule 36 (vcte -> ID .)
+    GTE             reduce using rule 36 (vcte -> ID .)
+    LT              reduce using rule 36 (vcte -> ID .)
+    LTE             reduce using rule 36 (vcte -> ID .)
+    NEQ             reduce using rule 36 (vcte -> ID .)
+    EQ              reduce using rule 36 (vcte -> ID .)
+    CLOSEPAR        reduce using rule 36 (vcte -> ID .)
+    OR              reduce using rule 36 (vcte -> ID .)
+    AND             reduce using rule 36 (vcte -> ID .)
+    SI              reduce using rule 36 (vcte -> ID .)
+    ID              reduce using rule 36 (vcte -> ID .)
+    CTEI            reduce using rule 36 (vcte -> ID .)
+    CTEF            reduce using rule 36 (vcte -> ID .)
+    CTEC            reduce using rule 36 (vcte -> ID .)
+    TRUE            reduce using rule 36 (vcte -> ID .)
+    FALSE           reduce using rule 36 (vcte -> ID .)
+    OPENPAR         reduce using rule 36 (vcte -> ID .)
+    RCURLYB         reduce using rule 36 (vcte -> ID .)
 
 
 state 13
 
-    (5) vars -> empty .
+    (37) vcte -> CTEI .
 
-    FUNCION         reduce using rule 5 (vars -> empty .)
-    PRINCIPAL       reduce using rule 5 (vars -> empty .)
-    LCURLYB         reduce using rule 5 (vars -> empty .)
+    TIMES           reduce using rule 37 (vcte -> CTEI .)
+    DIVIDE          reduce using rule 37 (vcte -> CTEI .)
+    MINUS           reduce using rule 37 (vcte -> CTEI .)
+    PLUS            reduce using rule 37 (vcte -> CTEI .)
+    GT              reduce using rule 37 (vcte -> CTEI .)
+    GTE             reduce using rule 37 (vcte -> CTEI .)
+    LT              reduce using rule 37 (vcte -> CTEI .)
+    LTE             reduce using rule 37 (vcte -> CTEI .)
+    NEQ             reduce using rule 37 (vcte -> CTEI .)
+    EQ              reduce using rule 37 (vcte -> CTEI .)
+    CLOSEPAR        reduce using rule 37 (vcte -> CTEI .)
+    OR              reduce using rule 37 (vcte -> CTEI .)
+    AND             reduce using rule 37 (vcte -> CTEI .)
+    SI              reduce using rule 37 (vcte -> CTEI .)
+    ID              reduce using rule 37 (vcte -> CTEI .)
+    CTEI            reduce using rule 37 (vcte -> CTEI .)
+    CTEF            reduce using rule 37 (vcte -> CTEI .)
+    CTEC            reduce using rule 37 (vcte -> CTEI .)
+    TRUE            reduce using rule 37 (vcte -> CTEI .)
+    FALSE           reduce using rule 37 (vcte -> CTEI .)
+    OPENPAR         reduce using rule 37 (vcte -> CTEI .)
+    RCURLYB         reduce using rule 37 (vcte -> CTEI .)
 
 
 state 14
 
-    (17) tipo -> INT .
+    (38) vcte -> CTEF .
 
-    ID              reduce using rule 17 (tipo -> INT .)
+    TIMES           reduce using rule 38 (vcte -> CTEF .)
+    DIVIDE          reduce using rule 38 (vcte -> CTEF .)
+    MINUS           reduce using rule 38 (vcte -> CTEF .)
+    PLUS            reduce using rule 38 (vcte -> CTEF .)
+    GT              reduce using rule 38 (vcte -> CTEF .)
+    GTE             reduce using rule 38 (vcte -> CTEF .)
+    LT              reduce using rule 38 (vcte -> CTEF .)
+    LTE             reduce using rule 38 (vcte -> CTEF .)
+    NEQ             reduce using rule 38 (vcte -> CTEF .)
+    EQ              reduce using rule 38 (vcte -> CTEF .)
+    CLOSEPAR        reduce using rule 38 (vcte -> CTEF .)
+    OR              reduce using rule 38 (vcte -> CTEF .)
+    AND             reduce using rule 38 (vcte -> CTEF .)
+    SI              reduce using rule 38 (vcte -> CTEF .)
+    ID              reduce using rule 38 (vcte -> CTEF .)
+    CTEI            reduce using rule 38 (vcte -> CTEF .)
+    CTEF            reduce using rule 38 (vcte -> CTEF .)
+    CTEC            reduce using rule 38 (vcte -> CTEF .)
+    TRUE            reduce using rule 38 (vcte -> CTEF .)
+    FALSE           reduce using rule 38 (vcte -> CTEF .)
+    OPENPAR         reduce using rule 38 (vcte -> CTEF .)
+    RCURLYB         reduce using rule 38 (vcte -> CTEF .)
 
 
 state 15
 
-    (18) tipo -> FLOAT .
+    (39) vcte -> CTEC .
 
-    ID              reduce using rule 18 (tipo -> FLOAT .)
+    TIMES           reduce using rule 39 (vcte -> CTEC .)
+    DIVIDE          reduce using rule 39 (vcte -> CTEC .)
+    MINUS           reduce using rule 39 (vcte -> CTEC .)
+    PLUS            reduce using rule 39 (vcte -> CTEC .)
+    GT              reduce using rule 39 (vcte -> CTEC .)
+    GTE             reduce using rule 39 (vcte -> CTEC .)
+    LT              reduce using rule 39 (vcte -> CTEC .)
+    LTE             reduce using rule 39 (vcte -> CTEC .)
+    NEQ             reduce using rule 39 (vcte -> CTEC .)
+    EQ              reduce using rule 39 (vcte -> CTEC .)
+    CLOSEPAR        reduce using rule 39 (vcte -> CTEC .)
+    OR              reduce using rule 39 (vcte -> CTEC .)
+    AND             reduce using rule 39 (vcte -> CTEC .)
+    SI              reduce using rule 39 (vcte -> CTEC .)
+    ID              reduce using rule 39 (vcte -> CTEC .)
+    CTEI            reduce using rule 39 (vcte -> CTEC .)
+    CTEF            reduce using rule 39 (vcte -> CTEC .)
+    CTEC            reduce using rule 39 (vcte -> CTEC .)
+    TRUE            reduce using rule 39 (vcte -> CTEC .)
+    FALSE           reduce using rule 39 (vcte -> CTEC .)
+    OPENPAR         reduce using rule 39 (vcte -> CTEC .)
+    RCURLYB         reduce using rule 39 (vcte -> CTEC .)
 
 
 state 16
 
-    (19) tipo -> CHAR .
+    (40) vcte -> TRUE .
 
-    ID              reduce using rule 19 (tipo -> CHAR .)
+    TIMES           reduce using rule 40 (vcte -> TRUE .)
+    DIVIDE          reduce using rule 40 (vcte -> TRUE .)
+    MINUS           reduce using rule 40 (vcte -> TRUE .)
+    PLUS            reduce using rule 40 (vcte -> TRUE .)
+    GT              reduce using rule 40 (vcte -> TRUE .)
+    GTE             reduce using rule 40 (vcte -> TRUE .)
+    LT              reduce using rule 40 (vcte -> TRUE .)
+    LTE             reduce using rule 40 (vcte -> TRUE .)
+    NEQ             reduce using rule 40 (vcte -> TRUE .)
+    EQ              reduce using rule 40 (vcte -> TRUE .)
+    CLOSEPAR        reduce using rule 40 (vcte -> TRUE .)
+    OR              reduce using rule 40 (vcte -> TRUE .)
+    AND             reduce using rule 40 (vcte -> TRUE .)
+    SI              reduce using rule 40 (vcte -> TRUE .)
+    ID              reduce using rule 40 (vcte -> TRUE .)
+    CTEI            reduce using rule 40 (vcte -> TRUE .)
+    CTEF            reduce using rule 40 (vcte -> TRUE .)
+    CTEC            reduce using rule 40 (vcte -> TRUE .)
+    TRUE            reduce using rule 40 (vcte -> TRUE .)
+    FALSE           reduce using rule 40 (vcte -> TRUE .)
+    OPENPAR         reduce using rule 40 (vcte -> TRUE .)
+    RCURLYB         reduce using rule 40 (vcte -> TRUE .)
 
 
 state 17
 
-    (20) tipo -> BOOL .
+    (41) vcte -> FALSE .
 
-    ID              reduce using rule 20 (tipo -> BOOL .)
+    TIMES           reduce using rule 41 (vcte -> FALSE .)
+    DIVIDE          reduce using rule 41 (vcte -> FALSE .)
+    MINUS           reduce using rule 41 (vcte -> FALSE .)
+    PLUS            reduce using rule 41 (vcte -> FALSE .)
+    GT              reduce using rule 41 (vcte -> FALSE .)
+    GTE             reduce using rule 41 (vcte -> FALSE .)
+    LT              reduce using rule 41 (vcte -> FALSE .)
+    LTE             reduce using rule 41 (vcte -> FALSE .)
+    NEQ             reduce using rule 41 (vcte -> FALSE .)
+    EQ              reduce using rule 41 (vcte -> FALSE .)
+    CLOSEPAR        reduce using rule 41 (vcte -> FALSE .)
+    OR              reduce using rule 41 (vcte -> FALSE .)
+    AND             reduce using rule 41 (vcte -> FALSE .)
+    SI              reduce using rule 41 (vcte -> FALSE .)
+    ID              reduce using rule 41 (vcte -> FALSE .)
+    CTEI            reduce using rule 41 (vcte -> FALSE .)
+    CTEF            reduce using rule 41 (vcte -> FALSE .)
+    CTEC            reduce using rule 41 (vcte -> FALSE .)
+    TRUE            reduce using rule 41 (vcte -> FALSE .)
+    FALSE           reduce using rule 41 (vcte -> FALSE .)
+    OPENPAR         reduce using rule 41 (vcte -> FALSE .)
+    RCURLYB         reduce using rule 41 (vcte -> FALSE .)
 
 
 state 18
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL . OPENPAR CLOSEPAR bloque
+    (1) condicion -> SI OPENPAR megaexp CLOSEPAR . entonces bloque_entonces
+    (2) entonces -> . ENTONCES
 
-    OPENPAR         shift and go to state 21
+    ENTONCES        shift and go to state 37
 
+    entonces                       shift and go to state 36
 
 state 19
 
-    (11) declare_func -> FUNCION tipo . ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    (25) megaexp -> megaexp boolean_op . superexp
+    (26) superexp -> . exp
+    (27) superexp -> . superexp logical_op exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    ID              shift and go to state 22
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    superexp                       shift and go to state 38
+    exp                            shift and go to state 7
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 20
 
-    (4) vars -> tipo ID . dimensions more_vars SEMICOLON vars
-    (8) dimensions -> . OPENBRAC CTEI CLOSEBRAC
-    (9) dimensions -> . OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
-    (10) dimensions -> . empty
-    (85) empty -> .
+    (12) boolean_op -> OR .
 
-    OPENBRAC        shift and go to state 24
-    COMMA           reduce using rule 85 (empty -> .)
-    SEMICOLON       reduce using rule 85 (empty -> .)
+    ID              reduce using rule 12 (boolean_op -> OR .)
+    CTEI            reduce using rule 12 (boolean_op -> OR .)
+    CTEF            reduce using rule 12 (boolean_op -> OR .)
+    CTEC            reduce using rule 12 (boolean_op -> OR .)
+    TRUE            reduce using rule 12 (boolean_op -> OR .)
+    FALSE           reduce using rule 12 (boolean_op -> OR .)
+    OPENPAR         reduce using rule 12 (boolean_op -> OR .)
 
-    dimensions                     shift and go to state 23
-    empty                          shift and go to state 25
 
 state 21
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR . CLOSEPAR bloque
+    (13) boolean_op -> AND .
 
-    CLOSEPAR        shift and go to state 26
+    ID              reduce using rule 13 (boolean_op -> AND .)
+    CTEI            reduce using rule 13 (boolean_op -> AND .)
+    CTEF            reduce using rule 13 (boolean_op -> AND .)
+    CTEC            reduce using rule 13 (boolean_op -> AND .)
+    TRUE            reduce using rule 13 (boolean_op -> AND .)
+    FALSE           reduce using rule 13 (boolean_op -> AND .)
+    OPENPAR         reduce using rule 13 (boolean_op -> AND .)
 
 
 state 22
 
-    (11) declare_func -> FUNCION tipo ID . OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    (27) superexp -> superexp logical_op . exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    OPENPAR         shift and go to state 27
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    exp                            shift and go to state 39
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 23
 
-    (4) vars -> tipo ID dimensions . more_vars SEMICOLON vars
-    (6) more_vars -> . COMMA ID dimensions more_vars
-    (7) more_vars -> . empty
-    (85) empty -> .
+    (14) logical_op -> GT .
 
-    COMMA           shift and go to state 29
-    SEMICOLON       reduce using rule 85 (empty -> .)
+    ID              reduce using rule 14 (logical_op -> GT .)
+    CTEI            reduce using rule 14 (logical_op -> GT .)
+    CTEF            reduce using rule 14 (logical_op -> GT .)
+    CTEC            reduce using rule 14 (logical_op -> GT .)
+    TRUE            reduce using rule 14 (logical_op -> GT .)
+    FALSE           reduce using rule 14 (logical_op -> GT .)
+    OPENPAR         reduce using rule 14 (logical_op -> GT .)
 
-    more_vars                      shift and go to state 28
-    empty                          shift and go to state 30
 
 state 24
 
-    (8) dimensions -> OPENBRAC . CTEI CLOSEBRAC
-    (9) dimensions -> OPENBRAC . CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
+    (15) logical_op -> GTE .
 
-    CTEI            shift and go to state 31
+    ID              reduce using rule 15 (logical_op -> GTE .)
+    CTEI            reduce using rule 15 (logical_op -> GTE .)
+    CTEF            reduce using rule 15 (logical_op -> GTE .)
+    CTEC            reduce using rule 15 (logical_op -> GTE .)
+    TRUE            reduce using rule 15 (logical_op -> GTE .)
+    FALSE           reduce using rule 15 (logical_op -> GTE .)
+    OPENPAR         reduce using rule 15 (logical_op -> GTE .)
 
 
 state 25
 
-    (10) dimensions -> empty .
+    (16) logical_op -> LT .
 
-    COMMA           reduce using rule 10 (dimensions -> empty .)
-    SEMICOLON       reduce using rule 10 (dimensions -> empty .)
+    ID              reduce using rule 16 (logical_op -> LT .)
+    CTEI            reduce using rule 16 (logical_op -> LT .)
+    CTEF            reduce using rule 16 (logical_op -> LT .)
+    CTEC            reduce using rule 16 (logical_op -> LT .)
+    TRUE            reduce using rule 16 (logical_op -> LT .)
+    FALSE           reduce using rule 16 (logical_op -> LT .)
+    OPENPAR         reduce using rule 16 (logical_op -> LT .)
 
 
 state 26
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR . bloque
-    (21) bloque -> . LCURLYB estatuto RCURLYB
+    (17) logical_op -> LTE .
 
-    LCURLYB         shift and go to state 33
+    ID              reduce using rule 17 (logical_op -> LTE .)
+    CTEI            reduce using rule 17 (logical_op -> LTE .)
+    CTEF            reduce using rule 17 (logical_op -> LTE .)
+    CTEC            reduce using rule 17 (logical_op -> LTE .)
+    TRUE            reduce using rule 17 (logical_op -> LTE .)
+    FALSE           reduce using rule 17 (logical_op -> LTE .)
+    OPENPAR         reduce using rule 17 (logical_op -> LTE .)
 
-    bloque                         shift and go to state 32
 
 state 27
 
-    (11) declare_func -> FUNCION tipo ID OPENPAR . declare_func_params CLOSEPAR declare_vars bloque
-    (13) declare_func_params -> . tipo ID more_params
-    (14) declare_func_params -> . empty
-    (17) tipo -> . INT
-    (18) tipo -> . FLOAT
-    (19) tipo -> . CHAR
-    (20) tipo -> . BOOL
-    (85) empty -> .
+    (18) logical_op -> NEQ .
 
-    INT             shift and go to state 14
-    FLOAT           shift and go to state 15
-    CHAR            shift and go to state 16
-    BOOL            shift and go to state 17
-    CLOSEPAR        reduce using rule 85 (empty -> .)
+    ID              reduce using rule 18 (logical_op -> NEQ .)
+    CTEI            reduce using rule 18 (logical_op -> NEQ .)
+    CTEF            reduce using rule 18 (logical_op -> NEQ .)
+    CTEC            reduce using rule 18 (logical_op -> NEQ .)
+    TRUE            reduce using rule 18 (logical_op -> NEQ .)
+    FALSE           reduce using rule 18 (logical_op -> NEQ .)
+    OPENPAR         reduce using rule 18 (logical_op -> NEQ .)
 
-    tipo                           shift and go to state 34
-    declare_func_params            shift and go to state 35
-    empty                          shift and go to state 36
 
 state 28
 
-    (4) vars -> tipo ID dimensions more_vars . SEMICOLON vars
+    (19) logical_op -> EQ .
 
-    SEMICOLON       shift and go to state 37
+    ID              reduce using rule 19 (logical_op -> EQ .)
+    CTEI            reduce using rule 19 (logical_op -> EQ .)
+    CTEF            reduce using rule 19 (logical_op -> EQ .)
+    CTEC            reduce using rule 19 (logical_op -> EQ .)
+    TRUE            reduce using rule 19 (logical_op -> EQ .)
+    FALSE           reduce using rule 19 (logical_op -> EQ .)
+    OPENPAR         reduce using rule 19 (logical_op -> EQ .)
 
 
 state 29
 
-    (6) more_vars -> COMMA . ID dimensions more_vars
+    (29) exp -> exp sums . termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    ID              shift and go to state 38
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    termino                        shift and go to state 40
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 30
 
-    (7) more_vars -> empty .
+    (20) sums -> MINUS .
 
-    SEMICOLON       reduce using rule 7 (more_vars -> empty .)
+    ID              reduce using rule 20 (sums -> MINUS .)
+    CTEI            reduce using rule 20 (sums -> MINUS .)
+    CTEF            reduce using rule 20 (sums -> MINUS .)
+    CTEC            reduce using rule 20 (sums -> MINUS .)
+    TRUE            reduce using rule 20 (sums -> MINUS .)
+    FALSE           reduce using rule 20 (sums -> MINUS .)
+    OPENPAR         reduce using rule 20 (sums -> MINUS .)
 
 
 state 31
 
-    (8) dimensions -> OPENBRAC CTEI . CLOSEBRAC
-    (9) dimensions -> OPENBRAC CTEI . CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
+    (21) sums -> PLUS .
 
-    CLOSEBRAC       shift and go to state 39
+    ID              reduce using rule 21 (sums -> PLUS .)
+    CTEI            reduce using rule 21 (sums -> PLUS .)
+    CTEF            reduce using rule 21 (sums -> PLUS .)
+    CTEC            reduce using rule 21 (sums -> PLUS .)
+    TRUE            reduce using rule 21 (sums -> PLUS .)
+    FALSE           reduce using rule 21 (sums -> PLUS .)
+    OPENPAR         reduce using rule 21 (sums -> PLUS .)
 
 
 state 32
 
-    (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque .
+    (31) termino -> termino multdiv . factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    $end            reduce using rule 1 (program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque .)
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    factor                         shift and go to state 41
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 33
 
-    (21) bloque -> LCURLYB . estatuto RCURLYB
-    (22) estatuto -> . asignacion
-    (23) estatuto -> . condicion
-    (24) estatuto -> . func_void
-    (25) estatuto -> . retorno
-    (26) estatuto -> . escribe
-    (27) estatuto -> . lee
-    (28) estatuto -> . desde
-    (29) estatuto -> . mientras
-    (30) estatuto -> . empty
-    (31) asignacion -> . id ASSIGN megaexp SEMICOLON
-    (32) condicion -> . SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino
-    (39) func_void -> . ID OPENPAR CLOSEPAR func_call_params SEMICOLON
-    (49) retorno -> . RETORNO OPENPAR ID CLOSEPAR
-    (40) escribe -> . ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON
-    (46) lee -> . LEE OPENPAR ID read_more CLOSEPAR SEMICOLON
-    (50) desde -> . DESDE ID ASSIGN exp HASTA exp HACER bloque
-    (51) mientras -> . MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque
-    (85) empty -> .
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
+    (22) multdiv -> TIMES .
 
-    SI              shift and go to state 51
-    ID              shift and go to state 52
-    RETORNO         shift and go to state 53
-    ESCRIBE         shift and go to state 54
-    LEE             shift and go to state 55
-    DESDE           shift and go to state 56
-    MIENTRAS        shift and go to state 57
-    RCURLYB         reduce using rule 85 (empty -> .)
+    ID              reduce using rule 22 (multdiv -> TIMES .)
+    CTEI            reduce using rule 22 (multdiv -> TIMES .)
+    CTEF            reduce using rule 22 (multdiv -> TIMES .)
+    CTEC            reduce using rule 22 (multdiv -> TIMES .)
+    TRUE            reduce using rule 22 (multdiv -> TIMES .)
+    FALSE           reduce using rule 22 (multdiv -> TIMES .)
+    OPENPAR         reduce using rule 22 (multdiv -> TIMES .)
 
-    estatuto                       shift and go to state 40
-    asignacion                     shift and go to state 41
-    condicion                      shift and go to state 42
-    func_void                      shift and go to state 43
-    retorno                        shift and go to state 44
-    escribe                        shift and go to state 45
-    lee                            shift and go to state 46
-    desde                          shift and go to state 47
-    mientras                       shift and go to state 48
-    empty                          shift and go to state 49
-    id                             shift and go to state 50
 
 state 34
 
-    (13) declare_func_params -> tipo . ID more_params
+    (23) multdiv -> DIVIDE .
 
-    ID              shift and go to state 58
+    ID              reduce using rule 23 (multdiv -> DIVIDE .)
+    CTEI            reduce using rule 23 (multdiv -> DIVIDE .)
+    CTEF            reduce using rule 23 (multdiv -> DIVIDE .)
+    CTEC            reduce using rule 23 (multdiv -> DIVIDE .)
+    TRUE            reduce using rule 23 (multdiv -> DIVIDE .)
+    FALSE           reduce using rule 23 (multdiv -> DIVIDE .)
+    OPENPAR         reduce using rule 23 (multdiv -> DIVIDE .)
 
 
 state 35
 
-    (11) declare_func -> FUNCION tipo ID OPENPAR declare_func_params . CLOSEPAR declare_vars bloque
+    (33) factor -> openpar megaexp . closepar
+    (25) megaexp -> megaexp . boolean_op superexp
+    (35) closepar -> . CLOSEPAR
+    (12) boolean_op -> . OR
+    (13) boolean_op -> . AND
 
-    CLOSEPAR        shift and go to state 59
+    CLOSEPAR        shift and go to state 43
+    OR              shift and go to state 20
+    AND             shift and go to state 21
 
+    closepar                       shift and go to state 42
+    boolean_op                     shift and go to state 19
 
 state 36
 
-    (14) declare_func_params -> empty .
+    (1) condicion -> SI OPENPAR megaexp CLOSEPAR entonces . bloque_entonces
+    (3) bloque_entonces -> . bloque bloque_sino
+    (7) bloque -> . LCURLYB estatutos_rec RCURLYB
 
-    CLOSEPAR        reduce using rule 14 (declare_func_params -> empty .)
+    LCURLYB         shift and go to state 46
 
+    bloque_entonces                shift and go to state 44
+    bloque                         shift and go to state 45
 
 state 37
 
-    (4) vars -> tipo ID dimensions more_vars SEMICOLON . vars
-    (4) vars -> . tipo ID dimensions more_vars SEMICOLON vars
-    (5) vars -> . empty
-    (17) tipo -> . INT
-    (18) tipo -> . FLOAT
-    (19) tipo -> . CHAR
-    (20) tipo -> . BOOL
-    (85) empty -> .
+    (2) entonces -> ENTONCES .
 
-    INT             shift and go to state 14
-    FLOAT           shift and go to state 15
-    CHAR            shift and go to state 16
-    BOOL            shift and go to state 17
-    FUNCION         reduce using rule 85 (empty -> .)
-    PRINCIPAL       reduce using rule 85 (empty -> .)
-    LCURLYB         reduce using rule 85 (empty -> .)
+    LCURLYB         reduce using rule 2 (entonces -> ENTONCES .)
 
-    tipo                           shift and go to state 12
-    vars                           shift and go to state 60
-    empty                          shift and go to state 13
 
 state 38
 
-    (6) more_vars -> COMMA ID . dimensions more_vars
-    (8) dimensions -> . OPENBRAC CTEI CLOSEBRAC
-    (9) dimensions -> . OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
-    (10) dimensions -> . empty
-    (85) empty -> .
+    (25) megaexp -> megaexp boolean_op superexp .
+    (27) superexp -> superexp . logical_op exp
+    (14) logical_op -> . GT
+    (15) logical_op -> . GTE
+    (16) logical_op -> . LT
+    (17) logical_op -> . LTE
+    (18) logical_op -> . NEQ
+    (19) logical_op -> . EQ
 
-    OPENBRAC        shift and go to state 24
-    COMMA           reduce using rule 85 (empty -> .)
-    SEMICOLON       reduce using rule 85 (empty -> .)
+    CLOSEPAR        reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    OR              reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    AND             reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    SI              reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    ID              reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    CTEI            reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    CTEF            reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    CTEC            reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    TRUE            reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    FALSE           reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    OPENPAR         reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    RCURLYB         reduce using rule 25 (megaexp -> megaexp boolean_op superexp .)
+    GT              shift and go to state 23
+    GTE             shift and go to state 24
+    LT              shift and go to state 25
+    LTE             shift and go to state 26
+    NEQ             shift and go to state 27
+    EQ              shift and go to state 28
 
-    dimensions                     shift and go to state 61
-    empty                          shift and go to state 25
+    logical_op                     shift and go to state 22
 
 state 39
 
-    (8) dimensions -> OPENBRAC CTEI CLOSEBRAC .
-    (9) dimensions -> OPENBRAC CTEI CLOSEBRAC . OPENBRAC CTEI CLOSEBRAC
+    (27) superexp -> superexp logical_op exp .
+    (29) exp -> exp . sums termino
+    (20) sums -> . MINUS
+    (21) sums -> . PLUS
 
-    COMMA           reduce using rule 8 (dimensions -> OPENBRAC CTEI CLOSEBRAC .)
-    SEMICOLON       reduce using rule 8 (dimensions -> OPENBRAC CTEI CLOSEBRAC .)
-    OPENBRAC        shift and go to state 62
+    GT              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    GTE             reduce using rule 27 (superexp -> superexp logical_op exp .)
+    LT              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    LTE             reduce using rule 27 (superexp -> superexp logical_op exp .)
+    NEQ             reduce using rule 27 (superexp -> superexp logical_op exp .)
+    EQ              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    CLOSEPAR        reduce using rule 27 (superexp -> superexp logical_op exp .)
+    OR              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    AND             reduce using rule 27 (superexp -> superexp logical_op exp .)
+    SI              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    ID              reduce using rule 27 (superexp -> superexp logical_op exp .)
+    CTEI            reduce using rule 27 (superexp -> superexp logical_op exp .)
+    CTEF            reduce using rule 27 (superexp -> superexp logical_op exp .)
+    CTEC            reduce using rule 27 (superexp -> superexp logical_op exp .)
+    TRUE            reduce using rule 27 (superexp -> superexp logical_op exp .)
+    FALSE           reduce using rule 27 (superexp -> superexp logical_op exp .)
+    OPENPAR         reduce using rule 27 (superexp -> superexp logical_op exp .)
+    RCURLYB         reduce using rule 27 (superexp -> superexp logical_op exp .)
+    MINUS           shift and go to state 30
+    PLUS            shift and go to state 31
 
+    sums                           shift and go to state 29
 
 state 40
 
-    (21) bloque -> LCURLYB estatuto . RCURLYB
+    (29) exp -> exp sums termino .
+    (31) termino -> termino . multdiv factor
+    (22) multdiv -> . TIMES
+    (23) multdiv -> . DIVIDE
 
-    RCURLYB         shift and go to state 63
+    MINUS           reduce using rule 29 (exp -> exp sums termino .)
+    PLUS            reduce using rule 29 (exp -> exp sums termino .)
+    GT              reduce using rule 29 (exp -> exp sums termino .)
+    GTE             reduce using rule 29 (exp -> exp sums termino .)
+    LT              reduce using rule 29 (exp -> exp sums termino .)
+    LTE             reduce using rule 29 (exp -> exp sums termino .)
+    NEQ             reduce using rule 29 (exp -> exp sums termino .)
+    EQ              reduce using rule 29 (exp -> exp sums termino .)
+    CLOSEPAR        reduce using rule 29 (exp -> exp sums termino .)
+    OR              reduce using rule 29 (exp -> exp sums termino .)
+    AND             reduce using rule 29 (exp -> exp sums termino .)
+    SI              reduce using rule 29 (exp -> exp sums termino .)
+    ID              reduce using rule 29 (exp -> exp sums termino .)
+    CTEI            reduce using rule 29 (exp -> exp sums termino .)
+    CTEF            reduce using rule 29 (exp -> exp sums termino .)
+    CTEC            reduce using rule 29 (exp -> exp sums termino .)
+    TRUE            reduce using rule 29 (exp -> exp sums termino .)
+    FALSE           reduce using rule 29 (exp -> exp sums termino .)
+    OPENPAR         reduce using rule 29 (exp -> exp sums termino .)
+    RCURLYB         reduce using rule 29 (exp -> exp sums termino .)
+    TIMES           shift and go to state 33
+    DIVIDE          shift and go to state 34
 
+    multdiv                        shift and go to state 32
 
 state 41
 
-    (22) estatuto -> asignacion .
+    (31) termino -> termino multdiv factor .
 
-    RCURLYB         reduce using rule 22 (estatuto -> asignacion .)
+    TIMES           reduce using rule 31 (termino -> termino multdiv factor .)
+    DIVIDE          reduce using rule 31 (termino -> termino multdiv factor .)
+    MINUS           reduce using rule 31 (termino -> termino multdiv factor .)
+    PLUS            reduce using rule 31 (termino -> termino multdiv factor .)
+    GT              reduce using rule 31 (termino -> termino multdiv factor .)
+    GTE             reduce using rule 31 (termino -> termino multdiv factor .)
+    LT              reduce using rule 31 (termino -> termino multdiv factor .)
+    LTE             reduce using rule 31 (termino -> termino multdiv factor .)
+    NEQ             reduce using rule 31 (termino -> termino multdiv factor .)
+    EQ              reduce using rule 31 (termino -> termino multdiv factor .)
+    CLOSEPAR        reduce using rule 31 (termino -> termino multdiv factor .)
+    OR              reduce using rule 31 (termino -> termino multdiv factor .)
+    AND             reduce using rule 31 (termino -> termino multdiv factor .)
+    SI              reduce using rule 31 (termino -> termino multdiv factor .)
+    ID              reduce using rule 31 (termino -> termino multdiv factor .)
+    CTEI            reduce using rule 31 (termino -> termino multdiv factor .)
+    CTEF            reduce using rule 31 (termino -> termino multdiv factor .)
+    CTEC            reduce using rule 31 (termino -> termino multdiv factor .)
+    TRUE            reduce using rule 31 (termino -> termino multdiv factor .)
+    FALSE           reduce using rule 31 (termino -> termino multdiv factor .)
+    OPENPAR         reduce using rule 31 (termino -> termino multdiv factor .)
+    RCURLYB         reduce using rule 31 (termino -> termino multdiv factor .)
 
 
 state 42
 
-    (23) estatuto -> condicion .
+    (33) factor -> openpar megaexp closepar .
 
-    RCURLYB         reduce using rule 23 (estatuto -> condicion .)
+    TIMES           reduce using rule 33 (factor -> openpar megaexp closepar .)
+    DIVIDE          reduce using rule 33 (factor -> openpar megaexp closepar .)
+    MINUS           reduce using rule 33 (factor -> openpar megaexp closepar .)
+    PLUS            reduce using rule 33 (factor -> openpar megaexp closepar .)
+    GT              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    GTE             reduce using rule 33 (factor -> openpar megaexp closepar .)
+    LT              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    LTE             reduce using rule 33 (factor -> openpar megaexp closepar .)
+    NEQ             reduce using rule 33 (factor -> openpar megaexp closepar .)
+    EQ              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    CLOSEPAR        reduce using rule 33 (factor -> openpar megaexp closepar .)
+    OR              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    AND             reduce using rule 33 (factor -> openpar megaexp closepar .)
+    SI              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    ID              reduce using rule 33 (factor -> openpar megaexp closepar .)
+    CTEI            reduce using rule 33 (factor -> openpar megaexp closepar .)
+    CTEF            reduce using rule 33 (factor -> openpar megaexp closepar .)
+    CTEC            reduce using rule 33 (factor -> openpar megaexp closepar .)
+    TRUE            reduce using rule 33 (factor -> openpar megaexp closepar .)
+    FALSE           reduce using rule 33 (factor -> openpar megaexp closepar .)
+    OPENPAR         reduce using rule 33 (factor -> openpar megaexp closepar .)
+    RCURLYB         reduce using rule 33 (factor -> openpar megaexp closepar .)
 
 
 state 43
 
-    (24) estatuto -> func_void .
+    (35) closepar -> CLOSEPAR .
 
-    RCURLYB         reduce using rule 24 (estatuto -> func_void .)
+    TIMES           reduce using rule 35 (closepar -> CLOSEPAR .)
+    DIVIDE          reduce using rule 35 (closepar -> CLOSEPAR .)
+    MINUS           reduce using rule 35 (closepar -> CLOSEPAR .)
+    PLUS            reduce using rule 35 (closepar -> CLOSEPAR .)
+    GT              reduce using rule 35 (closepar -> CLOSEPAR .)
+    GTE             reduce using rule 35 (closepar -> CLOSEPAR .)
+    LT              reduce using rule 35 (closepar -> CLOSEPAR .)
+    LTE             reduce using rule 35 (closepar -> CLOSEPAR .)
+    NEQ             reduce using rule 35 (closepar -> CLOSEPAR .)
+    EQ              reduce using rule 35 (closepar -> CLOSEPAR .)
+    CLOSEPAR        reduce using rule 35 (closepar -> CLOSEPAR .)
+    OR              reduce using rule 35 (closepar -> CLOSEPAR .)
+    AND             reduce using rule 35 (closepar -> CLOSEPAR .)
+    SI              reduce using rule 35 (closepar -> CLOSEPAR .)
+    ID              reduce using rule 35 (closepar -> CLOSEPAR .)
+    CTEI            reduce using rule 35 (closepar -> CLOSEPAR .)
+    CTEF            reduce using rule 35 (closepar -> CLOSEPAR .)
+    CTEC            reduce using rule 35 (closepar -> CLOSEPAR .)
+    TRUE            reduce using rule 35 (closepar -> CLOSEPAR .)
+    FALSE           reduce using rule 35 (closepar -> CLOSEPAR .)
+    OPENPAR         reduce using rule 35 (closepar -> CLOSEPAR .)
+    RCURLYB         reduce using rule 35 (closepar -> CLOSEPAR .)
 
 
 state 44
 
-    (25) estatuto -> retorno .
+    (1) condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .
 
-    RCURLYB         reduce using rule 25 (estatuto -> retorno .)
+    $end            reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    SI              reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    ID              reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    CTEI            reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    CTEF            reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    CTEC            reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    TRUE            reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    FALSE           reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    OPENPAR         reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    RCURLYB         reduce using rule 1 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
 
 
 state 45
 
-    (26) estatuto -> escribe .
+    (3) bloque_entonces -> bloque . bloque_sino
+    (4) bloque_sino -> . sino bloque
+    (5) bloque_sino -> . empty
+    (6) sino -> . SINO
+    (42) empty -> .
 
-    RCURLYB         reduce using rule 26 (estatuto -> escribe .)
+    SINO            shift and go to state 50
+    $end            reduce using rule 42 (empty -> .)
+    SI              reduce using rule 42 (empty -> .)
+    ID              reduce using rule 42 (empty -> .)
+    CTEI            reduce using rule 42 (empty -> .)
+    CTEF            reduce using rule 42 (empty -> .)
+    CTEC            reduce using rule 42 (empty -> .)
+    TRUE            reduce using rule 42 (empty -> .)
+    FALSE           reduce using rule 42 (empty -> .)
+    OPENPAR         reduce using rule 42 (empty -> .)
+    RCURLYB         reduce using rule 42 (empty -> .)
 
+    bloque_sino                    shift and go to state 47
+    sino                           shift and go to state 48
+    empty                          shift and go to state 49
 
 state 46
 
-    (27) estatuto -> lee .
+    (7) bloque -> LCURLYB . estatutos_rec RCURLYB
+    (8) estatutos_rec -> . estatuto estatutos_rec
+    (9) estatutos_rec -> . empty
+    (10) estatuto -> . condicion
+    (11) estatuto -> . megaexp
+    (42) empty -> .
+    (1) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
+    (24) megaexp -> . superexp
+    (25) megaexp -> . megaexp boolean_op superexp
+    (26) superexp -> . exp
+    (27) superexp -> . superexp logical_op exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    RCURLYB         reduce using rule 27 (estatuto -> lee .)
+    RCURLYB         reduce using rule 42 (empty -> .)
+    SI              shift and go to state 2
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    estatutos_rec                  shift and go to state 51
+    estatuto                       shift and go to state 52
+    empty                          shift and go to state 53
+    condicion                      shift and go to state 54
+    megaexp                        shift and go to state 55
+    superexp                       shift and go to state 6
+    exp                            shift and go to state 7
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 47
 
-    (28) estatuto -> desde .
+    (3) bloque_entonces -> bloque bloque_sino .
 
-    RCURLYB         reduce using rule 28 (estatuto -> desde .)
+    $end            reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    SI              reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    ID              reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    CTEI            reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    CTEF            reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    CTEC            reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    TRUE            reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    FALSE           reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    OPENPAR         reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
+    RCURLYB         reduce using rule 3 (bloque_entonces -> bloque bloque_sino .)
 
 
 state 48
 
-    (29) estatuto -> mientras .
+    (4) bloque_sino -> sino . bloque
+    (7) bloque -> . LCURLYB estatutos_rec RCURLYB
 
-    RCURLYB         reduce using rule 29 (estatuto -> mientras .)
+    LCURLYB         shift and go to state 46
 
+    bloque                         shift and go to state 56
 
 state 49
 
-    (30) estatuto -> empty .
+    (5) bloque_sino -> empty .
 
-    RCURLYB         reduce using rule 30 (estatuto -> empty .)
+    $end            reduce using rule 5 (bloque_sino -> empty .)
+    SI              reduce using rule 5 (bloque_sino -> empty .)
+    ID              reduce using rule 5 (bloque_sino -> empty .)
+    CTEI            reduce using rule 5 (bloque_sino -> empty .)
+    CTEF            reduce using rule 5 (bloque_sino -> empty .)
+    CTEC            reduce using rule 5 (bloque_sino -> empty .)
+    TRUE            reduce using rule 5 (bloque_sino -> empty .)
+    FALSE           reduce using rule 5 (bloque_sino -> empty .)
+    OPENPAR         reduce using rule 5 (bloque_sino -> empty .)
+    RCURLYB         reduce using rule 5 (bloque_sino -> empty .)
 
 
 state 50
 
-    (31) asignacion -> id . ASSIGN megaexp SEMICOLON
+    (6) sino -> SINO .
 
-    ASSIGN          shift and go to state 64
+    LCURLYB         reduce using rule 6 (sino -> SINO .)
 
 
 state 51
 
-    (32) condicion -> SI . OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino
+    (7) bloque -> LCURLYB estatutos_rec . RCURLYB
 
-    OPENPAR         shift and go to state 65
+    RCURLYB         shift and go to state 57
 
 
 state 52
 
-    (39) func_void -> ID . OPENPAR CLOSEPAR func_call_params SEMICOLON
-    (52) id -> ID .
-    (53) id -> ID . OPENBRAC exp CLOSEBRAC
-    (54) id -> ID . OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
+    (8) estatutos_rec -> estatuto . estatutos_rec
+    (8) estatutos_rec -> . estatuto estatutos_rec
+    (9) estatutos_rec -> . empty
+    (10) estatuto -> . condicion
+    (11) estatuto -> . megaexp
+    (42) empty -> .
+    (1) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
+    (24) megaexp -> . superexp
+    (25) megaexp -> . megaexp boolean_op superexp
+    (26) superexp -> . exp
+    (27) superexp -> . superexp logical_op exp
+    (28) exp -> . termino
+    (29) exp -> . exp sums termino
+    (30) termino -> . factor
+    (31) termino -> . termino multdiv factor
+    (32) factor -> . vcte
+    (33) factor -> . openpar megaexp closepar
+    (36) vcte -> . ID
+    (37) vcte -> . CTEI
+    (38) vcte -> . CTEF
+    (39) vcte -> . CTEC
+    (40) vcte -> . TRUE
+    (41) vcte -> . FALSE
+    (34) openpar -> . OPENPAR
 
-    OPENPAR         shift and go to state 66
-    ASSIGN          reduce using rule 52 (id -> ID .)
-    OPENBRAC        shift and go to state 67
+    RCURLYB         reduce using rule 42 (empty -> .)
+    SI              shift and go to state 2
+    ID              shift and go to state 12
+    CTEI            shift and go to state 13
+    CTEF            shift and go to state 14
+    CTEC            shift and go to state 15
+    TRUE            shift and go to state 16
+    FALSE           shift and go to state 17
+    OPENPAR         shift and go to state 4
 
+    estatuto                       shift and go to state 52
+    estatutos_rec                  shift and go to state 58
+    empty                          shift and go to state 53
+    condicion                      shift and go to state 54
+    megaexp                        shift and go to state 55
+    superexp                       shift and go to state 6
+    exp                            shift and go to state 7
+    termino                        shift and go to state 8
+    factor                         shift and go to state 9
+    vcte                           shift and go to state 10
+    openpar                        shift and go to state 11
 
 state 53
 
-    (49) retorno -> RETORNO . OPENPAR ID CLOSEPAR
+    (9) estatutos_rec -> empty .
 
-    OPENPAR         shift and go to state 68
+    RCURLYB         reduce using rule 9 (estatutos_rec -> empty .)
 
 
 state 54
 
-    (40) escribe -> ESCRIBE . OPENPAR print_options CLOSEPAR SEMICOLON
+    (10) estatuto -> condicion .
 
-    OPENPAR         shift and go to state 69
+    SI              reduce using rule 10 (estatuto -> condicion .)
+    ID              reduce using rule 10 (estatuto -> condicion .)
+    CTEI            reduce using rule 10 (estatuto -> condicion .)
+    CTEF            reduce using rule 10 (estatuto -> condicion .)
+    CTEC            reduce using rule 10 (estatuto -> condicion .)
+    TRUE            reduce using rule 10 (estatuto -> condicion .)
+    FALSE           reduce using rule 10 (estatuto -> condicion .)
+    OPENPAR         reduce using rule 10 (estatuto -> condicion .)
+    RCURLYB         reduce using rule 10 (estatuto -> condicion .)
 
 
 state 55
 
-    (46) lee -> LEE . OPENPAR ID read_more CLOSEPAR SEMICOLON
+    (11) estatuto -> megaexp .
+    (25) megaexp -> megaexp . boolean_op superexp
+    (12) boolean_op -> . OR
+    (13) boolean_op -> . AND
 
-    OPENPAR         shift and go to state 70
+    SI              reduce using rule 11 (estatuto -> megaexp .)
+    ID              reduce using rule 11 (estatuto -> megaexp .)
+    CTEI            reduce using rule 11 (estatuto -> megaexp .)
+    CTEF            reduce using rule 11 (estatuto -> megaexp .)
+    CTEC            reduce using rule 11 (estatuto -> megaexp .)
+    TRUE            reduce using rule 11 (estatuto -> megaexp .)
+    FALSE           reduce using rule 11 (estatuto -> megaexp .)
+    OPENPAR         reduce using rule 11 (estatuto -> megaexp .)
+    RCURLYB         reduce using rule 11 (estatuto -> megaexp .)
+    OR              shift and go to state 20
+    AND             shift and go to state 21
 
+    boolean_op                     shift and go to state 19
 
 state 56
 
-    (50) desde -> DESDE . ID ASSIGN exp HASTA exp HACER bloque
+    (4) bloque_sino -> sino bloque .
 
-    ID              shift and go to state 71
+    $end            reduce using rule 4 (bloque_sino -> sino bloque .)
+    SI              reduce using rule 4 (bloque_sino -> sino bloque .)
+    ID              reduce using rule 4 (bloque_sino -> sino bloque .)
+    CTEI            reduce using rule 4 (bloque_sino -> sino bloque .)
+    CTEF            reduce using rule 4 (bloque_sino -> sino bloque .)
+    CTEC            reduce using rule 4 (bloque_sino -> sino bloque .)
+    TRUE            reduce using rule 4 (bloque_sino -> sino bloque .)
+    FALSE           reduce using rule 4 (bloque_sino -> sino bloque .)
+    OPENPAR         reduce using rule 4 (bloque_sino -> sino bloque .)
+    RCURLYB         reduce using rule 4 (bloque_sino -> sino bloque .)
 
 
 state 57
 
-    (51) mientras -> MIENTRAS . OPENPAR megaexp CLOSEPAR HAZ bloque
+    (7) bloque -> LCURLYB estatutos_rec RCURLYB .
 
-    OPENPAR         shift and go to state 72
+    SINO            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    $end            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    SI              reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    ID              reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    CTEI            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    CTEF            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    CTEC            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    TRUE            reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    FALSE           reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    OPENPAR         reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    RCURLYB         reduce using rule 7 (bloque -> LCURLYB estatutos_rec RCURLYB .)
 
 
 state 58
 
-    (13) declare_func_params -> tipo ID . more_params
-    (15) more_params -> . COMMA tipo ID more_params
-    (16) more_params -> . empty
-    (85) empty -> .
+    (8) estatutos_rec -> estatuto estatutos_rec .
 
-    COMMA           shift and go to state 74
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    more_params                    shift and go to state 73
-    empty                          shift and go to state 75
-
-state 59
-
-    (11) declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR . declare_vars bloque
-    (2) declare_vars -> . VAR vars
-    (3) declare_vars -> . empty
-    (85) empty -> .
-
-    VAR             shift and go to state 6
-    LCURLYB         reduce using rule 85 (empty -> .)
-
-    declare_vars                   shift and go to state 76
-    empty                          shift and go to state 7
-
-state 60
-
-    (4) vars -> tipo ID dimensions more_vars SEMICOLON vars .
-
-    FUNCION         reduce using rule 4 (vars -> tipo ID dimensions more_vars SEMICOLON vars .)
-    PRINCIPAL       reduce using rule 4 (vars -> tipo ID dimensions more_vars SEMICOLON vars .)
-    LCURLYB         reduce using rule 4 (vars -> tipo ID dimensions more_vars SEMICOLON vars .)
-
-
-state 61
-
-    (6) more_vars -> COMMA ID dimensions . more_vars
-    (6) more_vars -> . COMMA ID dimensions more_vars
-    (7) more_vars -> . empty
-    (85) empty -> .
-
-    COMMA           shift and go to state 29
-    SEMICOLON       reduce using rule 85 (empty -> .)
-
-    more_vars                      shift and go to state 77
-    empty                          shift and go to state 30
-
-state 62
-
-    (9) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC . CTEI CLOSEBRAC
-
-    CTEI            shift and go to state 78
-
-
-state 63
-
-    (21) bloque -> LCURLYB estatuto RCURLYB .
-
-    $end            reduce using rule 21 (bloque -> LCURLYB estatuto RCURLYB .)
-    PRINCIPAL       reduce using rule 21 (bloque -> LCURLYB estatuto RCURLYB .)
-    SINO            reduce using rule 21 (bloque -> LCURLYB estatuto RCURLYB .)
-    RCURLYB         reduce using rule 21 (bloque -> LCURLYB estatuto RCURLYB .)
-
-
-state 64
-
-    (31) asignacion -> id ASSIGN . megaexp SEMICOLON
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    id                             shift and go to state 79
-    megaexp                        shift and go to state 80
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-
-state 65
-
-    (32) condicion -> SI OPENPAR . megaexp CLOSEPAR ENTONCES bloque bloque_sino
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    megaexp                        shift and go to state 94
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 66
-
-    (39) func_void -> ID OPENPAR . CLOSEPAR func_call_params SEMICOLON
-
-    CLOSEPAR        shift and go to state 95
-
-
-state 67
-
-    (53) id -> ID OPENBRAC . exp CLOSEBRAC
-    (54) id -> ID OPENBRAC . exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    exp                            shift and go to state 96
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 68
-
-    (49) retorno -> RETORNO OPENPAR . ID CLOSEPAR
-
-    ID              shift and go to state 97
-
-
-state 69
-
-    (40) escribe -> ESCRIBE OPENPAR . print_options CLOSEPAR SEMICOLON
-    (41) print_options -> . CTES more_print
-    (42) print_options -> . megaexp more_print
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTES            shift and go to state 99
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    print_options                  shift and go to state 98
-    megaexp                        shift and go to state 100
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 70
-
-    (46) lee -> LEE OPENPAR . ID read_more CLOSEPAR SEMICOLON
-
-    ID              shift and go to state 101
-
-
-state 71
-
-    (50) desde -> DESDE ID . ASSIGN exp HASTA exp HACER bloque
-
-    ASSIGN          shift and go to state 102
-
-
-state 72
-
-    (51) mientras -> MIENTRAS OPENPAR . megaexp CLOSEPAR HAZ bloque
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    megaexp                        shift and go to state 103
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 73
-
-    (13) declare_func_params -> tipo ID more_params .
-
-    CLOSEPAR        reduce using rule 13 (declare_func_params -> tipo ID more_params .)
-
-
-state 74
-
-    (15) more_params -> COMMA . tipo ID more_params
-    (17) tipo -> . INT
-    (18) tipo -> . FLOAT
-    (19) tipo -> . CHAR
-    (20) tipo -> . BOOL
-
-    INT             shift and go to state 14
-    FLOAT           shift and go to state 15
-    CHAR            shift and go to state 16
-    BOOL            shift and go to state 17
-
-    tipo                           shift and go to state 104
-
-state 75
-
-    (16) more_params -> empty .
-
-    CLOSEPAR        reduce using rule 16 (more_params -> empty .)
-
-
-state 76
-
-    (11) declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars . bloque
-    (21) bloque -> . LCURLYB estatuto RCURLYB
-
-    LCURLYB         shift and go to state 33
-
-    bloque                         shift and go to state 105
-
-state 77
-
-    (6) more_vars -> COMMA ID dimensions more_vars .
-
-    SEMICOLON       reduce using rule 6 (more_vars -> COMMA ID dimensions more_vars .)
-
-
-state 78
-
-    (9) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI . CLOSEBRAC
-
-    CLOSEBRAC       shift and go to state 106
-
-
-state 79
-
-    (79) vcte -> id .
-
-    TIMES           reduce using rule 79 (vcte -> id .)
-    DIVIDE          reduce using rule 79 (vcte -> id .)
-    MINUS           reduce using rule 79 (vcte -> id .)
-    PLUS            reduce using rule 79 (vcte -> id .)
-    GT              reduce using rule 79 (vcte -> id .)
-    GTE             reduce using rule 79 (vcte -> id .)
-    LT              reduce using rule 79 (vcte -> id .)
-    LTE             reduce using rule 79 (vcte -> id .)
-    NEQ             reduce using rule 79 (vcte -> id .)
-    EQ              reduce using rule 79 (vcte -> id .)
-    SEMICOLON       reduce using rule 79 (vcte -> id .)
-    OR              reduce using rule 79 (vcte -> id .)
-    AND             reduce using rule 79 (vcte -> id .)
-    CLOSEPAR        reduce using rule 79 (vcte -> id .)
-    CLOSEBRAC       reduce using rule 79 (vcte -> id .)
-    COMMA           reduce using rule 79 (vcte -> id .)
-    HASTA           reduce using rule 79 (vcte -> id .)
-    HACER           reduce using rule 79 (vcte -> id .)
-
-
-state 80
-
-    (31) asignacion -> id ASSIGN megaexp . SEMICOLON
-    (68) megaexp -> megaexp . boolean_op superexp
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    SEMICOLON       shift and go to state 107
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    boolean_op                     shift and go to state 108
-
-state 81
-
-    (67) megaexp -> superexp .
-    (70) superexp -> superexp . logical_op exp
-    (57) logical_op -> . GT
-    (58) logical_op -> . GTE
-    (59) logical_op -> . LT
-    (60) logical_op -> . LTE
-    (61) logical_op -> . NEQ
-    (62) logical_op -> . EQ
-
-    SEMICOLON       reduce using rule 67 (megaexp -> superexp .)
-    OR              reduce using rule 67 (megaexp -> superexp .)
-    AND             reduce using rule 67 (megaexp -> superexp .)
-    CLOSEPAR        reduce using rule 67 (megaexp -> superexp .)
-    COMMA           reduce using rule 67 (megaexp -> superexp .)
-    GT              shift and go to state 112
-    GTE             shift and go to state 113
-    LT              shift and go to state 114
-    LTE             shift and go to state 115
-    NEQ             shift and go to state 116
-    EQ              shift and go to state 117
-
-    logical_op                     shift and go to state 111
-
-state 82
-
-    (69) superexp -> exp .
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    GT              reduce using rule 69 (superexp -> exp .)
-    GTE             reduce using rule 69 (superexp -> exp .)
-    LT              reduce using rule 69 (superexp -> exp .)
-    LTE             reduce using rule 69 (superexp -> exp .)
-    NEQ             reduce using rule 69 (superexp -> exp .)
-    EQ              reduce using rule 69 (superexp -> exp .)
-    SEMICOLON       reduce using rule 69 (superexp -> exp .)
-    OR              reduce using rule 69 (superexp -> exp .)
-    AND             reduce using rule 69 (superexp -> exp .)
-    CLOSEPAR        reduce using rule 69 (superexp -> exp .)
-    COMMA           reduce using rule 69 (superexp -> exp .)
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 83
-
-    (71) exp -> termino .
-    (74) termino -> termino . multdiv factor
-    (65) multdiv -> . TIMES
-    (66) multdiv -> . DIVIDE
-
-    MINUS           reduce using rule 71 (exp -> termino .)
-    PLUS            reduce using rule 71 (exp -> termino .)
-    GT              reduce using rule 71 (exp -> termino .)
-    GTE             reduce using rule 71 (exp -> termino .)
-    LT              reduce using rule 71 (exp -> termino .)
-    LTE             reduce using rule 71 (exp -> termino .)
-    NEQ             reduce using rule 71 (exp -> termino .)
-    EQ              reduce using rule 71 (exp -> termino .)
-    SEMICOLON       reduce using rule 71 (exp -> termino .)
-    OR              reduce using rule 71 (exp -> termino .)
-    AND             reduce using rule 71 (exp -> termino .)
-    CLOSEPAR        reduce using rule 71 (exp -> termino .)
-    CLOSEBRAC       reduce using rule 71 (exp -> termino .)
-    COMMA           reduce using rule 71 (exp -> termino .)
-    HASTA           reduce using rule 71 (exp -> termino .)
-    HACER           reduce using rule 71 (exp -> termino .)
-    TIMES           shift and go to state 122
-    DIVIDE          shift and go to state 123
-
-    multdiv                        shift and go to state 121
-
-state 84
-
-    (73) termino -> factor .
-
-    TIMES           reduce using rule 73 (termino -> factor .)
-    DIVIDE          reduce using rule 73 (termino -> factor .)
-    MINUS           reduce using rule 73 (termino -> factor .)
-    PLUS            reduce using rule 73 (termino -> factor .)
-    GT              reduce using rule 73 (termino -> factor .)
-    GTE             reduce using rule 73 (termino -> factor .)
-    LT              reduce using rule 73 (termino -> factor .)
-    LTE             reduce using rule 73 (termino -> factor .)
-    NEQ             reduce using rule 73 (termino -> factor .)
-    EQ              reduce using rule 73 (termino -> factor .)
-    SEMICOLON       reduce using rule 73 (termino -> factor .)
-    OR              reduce using rule 73 (termino -> factor .)
-    AND             reduce using rule 73 (termino -> factor .)
-    CLOSEPAR        reduce using rule 73 (termino -> factor .)
-    CLOSEBRAC       reduce using rule 73 (termino -> factor .)
-    COMMA           reduce using rule 73 (termino -> factor .)
-    HASTA           reduce using rule 73 (termino -> factor .)
-    HACER           reduce using rule 73 (termino -> factor .)
-
-
-state 85
-
-    (75) factor -> vcte .
-
-    TIMES           reduce using rule 75 (factor -> vcte .)
-    DIVIDE          reduce using rule 75 (factor -> vcte .)
-    MINUS           reduce using rule 75 (factor -> vcte .)
-    PLUS            reduce using rule 75 (factor -> vcte .)
-    GT              reduce using rule 75 (factor -> vcte .)
-    GTE             reduce using rule 75 (factor -> vcte .)
-    LT              reduce using rule 75 (factor -> vcte .)
-    LTE             reduce using rule 75 (factor -> vcte .)
-    NEQ             reduce using rule 75 (factor -> vcte .)
-    EQ              reduce using rule 75 (factor -> vcte .)
-    SEMICOLON       reduce using rule 75 (factor -> vcte .)
-    OR              reduce using rule 75 (factor -> vcte .)
-    AND             reduce using rule 75 (factor -> vcte .)
-    CLOSEPAR        reduce using rule 75 (factor -> vcte .)
-    CLOSEBRAC       reduce using rule 75 (factor -> vcte .)
-    COMMA           reduce using rule 75 (factor -> vcte .)
-    HASTA           reduce using rule 75 (factor -> vcte .)
-    HACER           reduce using rule 75 (factor -> vcte .)
-
-
-state 86
-
-    (76) factor -> openpar . megaexp closepar
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    openpar                        shift and go to state 86
-    megaexp                        shift and go to state 124
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    id                             shift and go to state 79
-
-state 87
-
-    (80) vcte -> CTEI .
-
-    TIMES           reduce using rule 80 (vcte -> CTEI .)
-    DIVIDE          reduce using rule 80 (vcte -> CTEI .)
-    MINUS           reduce using rule 80 (vcte -> CTEI .)
-    PLUS            reduce using rule 80 (vcte -> CTEI .)
-    GT              reduce using rule 80 (vcte -> CTEI .)
-    GTE             reduce using rule 80 (vcte -> CTEI .)
-    LT              reduce using rule 80 (vcte -> CTEI .)
-    LTE             reduce using rule 80 (vcte -> CTEI .)
-    NEQ             reduce using rule 80 (vcte -> CTEI .)
-    EQ              reduce using rule 80 (vcte -> CTEI .)
-    SEMICOLON       reduce using rule 80 (vcte -> CTEI .)
-    OR              reduce using rule 80 (vcte -> CTEI .)
-    AND             reduce using rule 80 (vcte -> CTEI .)
-    CLOSEPAR        reduce using rule 80 (vcte -> CTEI .)
-    CLOSEBRAC       reduce using rule 80 (vcte -> CTEI .)
-    COMMA           reduce using rule 80 (vcte -> CTEI .)
-    HASTA           reduce using rule 80 (vcte -> CTEI .)
-    HACER           reduce using rule 80 (vcte -> CTEI .)
-
-
-state 88
-
-    (81) vcte -> CTEF .
-
-    TIMES           reduce using rule 81 (vcte -> CTEF .)
-    DIVIDE          reduce using rule 81 (vcte -> CTEF .)
-    MINUS           reduce using rule 81 (vcte -> CTEF .)
-    PLUS            reduce using rule 81 (vcte -> CTEF .)
-    GT              reduce using rule 81 (vcte -> CTEF .)
-    GTE             reduce using rule 81 (vcte -> CTEF .)
-    LT              reduce using rule 81 (vcte -> CTEF .)
-    LTE             reduce using rule 81 (vcte -> CTEF .)
-    NEQ             reduce using rule 81 (vcte -> CTEF .)
-    EQ              reduce using rule 81 (vcte -> CTEF .)
-    SEMICOLON       reduce using rule 81 (vcte -> CTEF .)
-    OR              reduce using rule 81 (vcte -> CTEF .)
-    AND             reduce using rule 81 (vcte -> CTEF .)
-    CLOSEPAR        reduce using rule 81 (vcte -> CTEF .)
-    CLOSEBRAC       reduce using rule 81 (vcte -> CTEF .)
-    COMMA           reduce using rule 81 (vcte -> CTEF .)
-    HASTA           reduce using rule 81 (vcte -> CTEF .)
-    HACER           reduce using rule 81 (vcte -> CTEF .)
-
-
-state 89
-
-    (82) vcte -> CTEC .
-
-    TIMES           reduce using rule 82 (vcte -> CTEC .)
-    DIVIDE          reduce using rule 82 (vcte -> CTEC .)
-    MINUS           reduce using rule 82 (vcte -> CTEC .)
-    PLUS            reduce using rule 82 (vcte -> CTEC .)
-    GT              reduce using rule 82 (vcte -> CTEC .)
-    GTE             reduce using rule 82 (vcte -> CTEC .)
-    LT              reduce using rule 82 (vcte -> CTEC .)
-    LTE             reduce using rule 82 (vcte -> CTEC .)
-    NEQ             reduce using rule 82 (vcte -> CTEC .)
-    EQ              reduce using rule 82 (vcte -> CTEC .)
-    SEMICOLON       reduce using rule 82 (vcte -> CTEC .)
-    OR              reduce using rule 82 (vcte -> CTEC .)
-    AND             reduce using rule 82 (vcte -> CTEC .)
-    CLOSEPAR        reduce using rule 82 (vcte -> CTEC .)
-    CLOSEBRAC       reduce using rule 82 (vcte -> CTEC .)
-    COMMA           reduce using rule 82 (vcte -> CTEC .)
-    HASTA           reduce using rule 82 (vcte -> CTEC .)
-    HACER           reduce using rule 82 (vcte -> CTEC .)
-
-
-state 90
-
-    (83) vcte -> TRUE .
-
-    TIMES           reduce using rule 83 (vcte -> TRUE .)
-    DIVIDE          reduce using rule 83 (vcte -> TRUE .)
-    MINUS           reduce using rule 83 (vcte -> TRUE .)
-    PLUS            reduce using rule 83 (vcte -> TRUE .)
-    GT              reduce using rule 83 (vcte -> TRUE .)
-    GTE             reduce using rule 83 (vcte -> TRUE .)
-    LT              reduce using rule 83 (vcte -> TRUE .)
-    LTE             reduce using rule 83 (vcte -> TRUE .)
-    NEQ             reduce using rule 83 (vcte -> TRUE .)
-    EQ              reduce using rule 83 (vcte -> TRUE .)
-    SEMICOLON       reduce using rule 83 (vcte -> TRUE .)
-    OR              reduce using rule 83 (vcte -> TRUE .)
-    AND             reduce using rule 83 (vcte -> TRUE .)
-    CLOSEPAR        reduce using rule 83 (vcte -> TRUE .)
-    CLOSEBRAC       reduce using rule 83 (vcte -> TRUE .)
-    COMMA           reduce using rule 83 (vcte -> TRUE .)
-    HASTA           reduce using rule 83 (vcte -> TRUE .)
-    HACER           reduce using rule 83 (vcte -> TRUE .)
-
-
-state 91
-
-    (84) vcte -> FALSE .
-
-    TIMES           reduce using rule 84 (vcte -> FALSE .)
-    DIVIDE          reduce using rule 84 (vcte -> FALSE .)
-    MINUS           reduce using rule 84 (vcte -> FALSE .)
-    PLUS            reduce using rule 84 (vcte -> FALSE .)
-    GT              reduce using rule 84 (vcte -> FALSE .)
-    GTE             reduce using rule 84 (vcte -> FALSE .)
-    LT              reduce using rule 84 (vcte -> FALSE .)
-    LTE             reduce using rule 84 (vcte -> FALSE .)
-    NEQ             reduce using rule 84 (vcte -> FALSE .)
-    EQ              reduce using rule 84 (vcte -> FALSE .)
-    SEMICOLON       reduce using rule 84 (vcte -> FALSE .)
-    OR              reduce using rule 84 (vcte -> FALSE .)
-    AND             reduce using rule 84 (vcte -> FALSE .)
-    CLOSEPAR        reduce using rule 84 (vcte -> FALSE .)
-    CLOSEBRAC       reduce using rule 84 (vcte -> FALSE .)
-    COMMA           reduce using rule 84 (vcte -> FALSE .)
-    HASTA           reduce using rule 84 (vcte -> FALSE .)
-    HACER           reduce using rule 84 (vcte -> FALSE .)
-
-
-state 92
-
-    (77) openpar -> OPENPAR .
-
-    CTEI            reduce using rule 77 (openpar -> OPENPAR .)
-    CTEF            reduce using rule 77 (openpar -> OPENPAR .)
-    CTEC            reduce using rule 77 (openpar -> OPENPAR .)
-    TRUE            reduce using rule 77 (openpar -> OPENPAR .)
-    FALSE           reduce using rule 77 (openpar -> OPENPAR .)
-    OPENPAR         reduce using rule 77 (openpar -> OPENPAR .)
-    ID              reduce using rule 77 (openpar -> OPENPAR .)
-
-
-state 93
-
-    (52) id -> ID .
-    (53) id -> ID . OPENBRAC exp CLOSEBRAC
-    (54) id -> ID . OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    TIMES           reduce using rule 52 (id -> ID .)
-    DIVIDE          reduce using rule 52 (id -> ID .)
-    MINUS           reduce using rule 52 (id -> ID .)
-    PLUS            reduce using rule 52 (id -> ID .)
-    GT              reduce using rule 52 (id -> ID .)
-    GTE             reduce using rule 52 (id -> ID .)
-    LT              reduce using rule 52 (id -> ID .)
-    LTE             reduce using rule 52 (id -> ID .)
-    NEQ             reduce using rule 52 (id -> ID .)
-    EQ              reduce using rule 52 (id -> ID .)
-    SEMICOLON       reduce using rule 52 (id -> ID .)
-    OR              reduce using rule 52 (id -> ID .)
-    AND             reduce using rule 52 (id -> ID .)
-    CLOSEPAR        reduce using rule 52 (id -> ID .)
-    CLOSEBRAC       reduce using rule 52 (id -> ID .)
-    COMMA           reduce using rule 52 (id -> ID .)
-    HASTA           reduce using rule 52 (id -> ID .)
-    HACER           reduce using rule 52 (id -> ID .)
-    OPENBRAC        shift and go to state 67
-
-
-state 94
-
-    (32) condicion -> SI OPENPAR megaexp . CLOSEPAR ENTONCES bloque bloque_sino
-    (68) megaexp -> megaexp . boolean_op superexp
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    CLOSEPAR        shift and go to state 125
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    boolean_op                     shift and go to state 108
-
-state 95
-
-    (39) func_void -> ID OPENPAR CLOSEPAR . func_call_params SEMICOLON
-    (35) func_call_params -> . megaexp more_call_params
-    (36) func_call_params -> . empty
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (85) empty -> .
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    SEMICOLON       reduce using rule 85 (empty -> .)
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    func_call_params               shift and go to state 126
-    megaexp                        shift and go to state 127
-    empty                          shift and go to state 128
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 96
-
-    (53) id -> ID OPENBRAC exp . CLOSEBRAC
-    (54) id -> ID OPENBRAC exp . CLOSEBRAC OPENBRAC exp CLOSEBRAC
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    CLOSEBRAC       shift and go to state 129
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 97
-
-    (49) retorno -> RETORNO OPENPAR ID . CLOSEPAR
-
-    CLOSEPAR        shift and go to state 130
-
-
-state 98
-
-    (40) escribe -> ESCRIBE OPENPAR print_options . CLOSEPAR SEMICOLON
-
-    CLOSEPAR        shift and go to state 131
-
-
-state 99
-
-    (41) print_options -> CTES . more_print
-    (43) more_print -> . COMMA CTES
-    (44) more_print -> . COMMA megaexp
-    (45) more_print -> . empty
-    (85) empty -> .
-
-    COMMA           shift and go to state 133
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    more_print                     shift and go to state 132
-    empty                          shift and go to state 134
-
-state 100
-
-    (42) print_options -> megaexp . more_print
-    (68) megaexp -> megaexp . boolean_op superexp
-    (43) more_print -> . COMMA CTES
-    (44) more_print -> . COMMA megaexp
-    (45) more_print -> . empty
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-    (85) empty -> .
-
-    COMMA           shift and go to state 133
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    more_print                     shift and go to state 135
-    boolean_op                     shift and go to state 108
-    empty                          shift and go to state 134
-
-state 101
-
-    (46) lee -> LEE OPENPAR ID . read_more CLOSEPAR SEMICOLON
-    (47) read_more -> . COMMA ID read_more
-    (48) read_more -> . empty
-    (85) empty -> .
-
-    COMMA           shift and go to state 137
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    read_more                      shift and go to state 136
-    empty                          shift and go to state 138
-
-state 102
-
-    (50) desde -> DESDE ID ASSIGN . exp HASTA exp HACER bloque
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    exp                            shift and go to state 139
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 103
-
-    (51) mientras -> MIENTRAS OPENPAR megaexp . CLOSEPAR HAZ bloque
-    (68) megaexp -> megaexp . boolean_op superexp
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    CLOSEPAR        shift and go to state 140
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    boolean_op                     shift and go to state 108
-
-state 104
-
-    (15) more_params -> COMMA tipo . ID more_params
-
-    ID              shift and go to state 141
-
-
-state 105
-
-    (11) declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque .
-
-    PRINCIPAL       reduce using rule 11 (declare_func -> FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque .)
-
-
-state 106
-
-    (9) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .
-
-    COMMA           reduce using rule 9 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
-    SEMICOLON       reduce using rule 9 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
-
-
-state 107
-
-    (31) asignacion -> id ASSIGN megaexp SEMICOLON .
-
-    RCURLYB         reduce using rule 31 (asignacion -> id ASSIGN megaexp SEMICOLON .)
-
-
-state 108
-
-    (68) megaexp -> megaexp boolean_op . superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    superexp                       shift and go to state 142
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 109
-
-    (55) boolean_op -> OR .
-
-    CTEI            reduce using rule 55 (boolean_op -> OR .)
-    CTEF            reduce using rule 55 (boolean_op -> OR .)
-    CTEC            reduce using rule 55 (boolean_op -> OR .)
-    TRUE            reduce using rule 55 (boolean_op -> OR .)
-    FALSE           reduce using rule 55 (boolean_op -> OR .)
-    OPENPAR         reduce using rule 55 (boolean_op -> OR .)
-    ID              reduce using rule 55 (boolean_op -> OR .)
-
-
-state 110
-
-    (56) boolean_op -> AND .
-
-    CTEI            reduce using rule 56 (boolean_op -> AND .)
-    CTEF            reduce using rule 56 (boolean_op -> AND .)
-    CTEC            reduce using rule 56 (boolean_op -> AND .)
-    TRUE            reduce using rule 56 (boolean_op -> AND .)
-    FALSE           reduce using rule 56 (boolean_op -> AND .)
-    OPENPAR         reduce using rule 56 (boolean_op -> AND .)
-    ID              reduce using rule 56 (boolean_op -> AND .)
-
-
-state 111
-
-    (70) superexp -> superexp logical_op . exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    exp                            shift and go to state 143
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 112
-
-    (57) logical_op -> GT .
-
-    CTEI            reduce using rule 57 (logical_op -> GT .)
-    CTEF            reduce using rule 57 (logical_op -> GT .)
-    CTEC            reduce using rule 57 (logical_op -> GT .)
-    TRUE            reduce using rule 57 (logical_op -> GT .)
-    FALSE           reduce using rule 57 (logical_op -> GT .)
-    OPENPAR         reduce using rule 57 (logical_op -> GT .)
-    ID              reduce using rule 57 (logical_op -> GT .)
-
-
-state 113
-
-    (58) logical_op -> GTE .
-
-    CTEI            reduce using rule 58 (logical_op -> GTE .)
-    CTEF            reduce using rule 58 (logical_op -> GTE .)
-    CTEC            reduce using rule 58 (logical_op -> GTE .)
-    TRUE            reduce using rule 58 (logical_op -> GTE .)
-    FALSE           reduce using rule 58 (logical_op -> GTE .)
-    OPENPAR         reduce using rule 58 (logical_op -> GTE .)
-    ID              reduce using rule 58 (logical_op -> GTE .)
-
-
-state 114
-
-    (59) logical_op -> LT .
-
-    CTEI            reduce using rule 59 (logical_op -> LT .)
-    CTEF            reduce using rule 59 (logical_op -> LT .)
-    CTEC            reduce using rule 59 (logical_op -> LT .)
-    TRUE            reduce using rule 59 (logical_op -> LT .)
-    FALSE           reduce using rule 59 (logical_op -> LT .)
-    OPENPAR         reduce using rule 59 (logical_op -> LT .)
-    ID              reduce using rule 59 (logical_op -> LT .)
-
-
-state 115
-
-    (60) logical_op -> LTE .
-
-    CTEI            reduce using rule 60 (logical_op -> LTE .)
-    CTEF            reduce using rule 60 (logical_op -> LTE .)
-    CTEC            reduce using rule 60 (logical_op -> LTE .)
-    TRUE            reduce using rule 60 (logical_op -> LTE .)
-    FALSE           reduce using rule 60 (logical_op -> LTE .)
-    OPENPAR         reduce using rule 60 (logical_op -> LTE .)
-    ID              reduce using rule 60 (logical_op -> LTE .)
-
-
-state 116
-
-    (61) logical_op -> NEQ .
-
-    CTEI            reduce using rule 61 (logical_op -> NEQ .)
-    CTEF            reduce using rule 61 (logical_op -> NEQ .)
-    CTEC            reduce using rule 61 (logical_op -> NEQ .)
-    TRUE            reduce using rule 61 (logical_op -> NEQ .)
-    FALSE           reduce using rule 61 (logical_op -> NEQ .)
-    OPENPAR         reduce using rule 61 (logical_op -> NEQ .)
-    ID              reduce using rule 61 (logical_op -> NEQ .)
-
-
-state 117
-
-    (62) logical_op -> EQ .
-
-    CTEI            reduce using rule 62 (logical_op -> EQ .)
-    CTEF            reduce using rule 62 (logical_op -> EQ .)
-    CTEC            reduce using rule 62 (logical_op -> EQ .)
-    TRUE            reduce using rule 62 (logical_op -> EQ .)
-    FALSE           reduce using rule 62 (logical_op -> EQ .)
-    OPENPAR         reduce using rule 62 (logical_op -> EQ .)
-    ID              reduce using rule 62 (logical_op -> EQ .)
-
-
-state 118
-
-    (72) exp -> exp sums . termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    termino                        shift and go to state 144
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 119
-
-    (63) sums -> MINUS .
-
-    CTEI            reduce using rule 63 (sums -> MINUS .)
-    CTEF            reduce using rule 63 (sums -> MINUS .)
-    CTEC            reduce using rule 63 (sums -> MINUS .)
-    TRUE            reduce using rule 63 (sums -> MINUS .)
-    FALSE           reduce using rule 63 (sums -> MINUS .)
-    OPENPAR         reduce using rule 63 (sums -> MINUS .)
-    ID              reduce using rule 63 (sums -> MINUS .)
-
-
-state 120
-
-    (64) sums -> PLUS .
-
-    CTEI            reduce using rule 64 (sums -> PLUS .)
-    CTEF            reduce using rule 64 (sums -> PLUS .)
-    CTEC            reduce using rule 64 (sums -> PLUS .)
-    TRUE            reduce using rule 64 (sums -> PLUS .)
-    FALSE           reduce using rule 64 (sums -> PLUS .)
-    OPENPAR         reduce using rule 64 (sums -> PLUS .)
-    ID              reduce using rule 64 (sums -> PLUS .)
-
-
-state 121
-
-    (74) termino -> termino multdiv . factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    factor                         shift and go to state 145
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 122
-
-    (65) multdiv -> TIMES .
-
-    CTEI            reduce using rule 65 (multdiv -> TIMES .)
-    CTEF            reduce using rule 65 (multdiv -> TIMES .)
-    CTEC            reduce using rule 65 (multdiv -> TIMES .)
-    TRUE            reduce using rule 65 (multdiv -> TIMES .)
-    FALSE           reduce using rule 65 (multdiv -> TIMES .)
-    OPENPAR         reduce using rule 65 (multdiv -> TIMES .)
-    ID              reduce using rule 65 (multdiv -> TIMES .)
-
-
-state 123
-
-    (66) multdiv -> DIVIDE .
-
-    CTEI            reduce using rule 66 (multdiv -> DIVIDE .)
-    CTEF            reduce using rule 66 (multdiv -> DIVIDE .)
-    CTEC            reduce using rule 66 (multdiv -> DIVIDE .)
-    TRUE            reduce using rule 66 (multdiv -> DIVIDE .)
-    FALSE           reduce using rule 66 (multdiv -> DIVIDE .)
-    OPENPAR         reduce using rule 66 (multdiv -> DIVIDE .)
-    ID              reduce using rule 66 (multdiv -> DIVIDE .)
-
-
-state 124
-
-    (76) factor -> openpar megaexp . closepar
-    (68) megaexp -> megaexp . boolean_op superexp
-    (78) closepar -> . CLOSEPAR
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    CLOSEPAR        shift and go to state 147
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    closepar                       shift and go to state 146
-    boolean_op                     shift and go to state 108
-
-state 125
-
-    (32) condicion -> SI OPENPAR megaexp CLOSEPAR . ENTONCES bloque bloque_sino
-
-    ENTONCES        shift and go to state 148
-
-
-state 126
-
-    (39) func_void -> ID OPENPAR CLOSEPAR func_call_params . SEMICOLON
-
-    SEMICOLON       shift and go to state 149
-
-
-state 127
-
-    (35) func_call_params -> megaexp . more_call_params
-    (68) megaexp -> megaexp . boolean_op superexp
-    (37) more_call_params -> . COMMA megaexp
-    (38) more_call_params -> . empty
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-    (85) empty -> .
-
-    COMMA           shift and go to state 151
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-    SEMICOLON       reduce using rule 85 (empty -> .)
-
-    more_call_params               shift and go to state 150
-    boolean_op                     shift and go to state 108
-    empty                          shift and go to state 152
-
-state 128
-
-    (36) func_call_params -> empty .
-
-    SEMICOLON       reduce using rule 36 (func_call_params -> empty .)
-
-
-state 129
-
-    (53) id -> ID OPENBRAC exp CLOSEBRAC .
-    (54) id -> ID OPENBRAC exp CLOSEBRAC . OPENBRAC exp CLOSEBRAC
-
-    ASSIGN          reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    TIMES           reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    DIVIDE          reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    MINUS           reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    PLUS            reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    GT              reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    GTE             reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    LT              reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    LTE             reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    NEQ             reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    EQ              reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    SEMICOLON       reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    OR              reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    AND             reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    CLOSEPAR        reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    CLOSEBRAC       reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    COMMA           reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    HASTA           reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    HACER           reduce using rule 53 (id -> ID OPENBRAC exp CLOSEBRAC .)
-    OPENBRAC        shift and go to state 153
-
-
-state 130
-
-    (49) retorno -> RETORNO OPENPAR ID CLOSEPAR .
-
-    RCURLYB         reduce using rule 49 (retorno -> RETORNO OPENPAR ID CLOSEPAR .)
-
-
-state 131
-
-    (40) escribe -> ESCRIBE OPENPAR print_options CLOSEPAR . SEMICOLON
-
-    SEMICOLON       shift and go to state 154
-
-
-state 132
-
-    (41) print_options -> CTES more_print .
-
-    CLOSEPAR        reduce using rule 41 (print_options -> CTES more_print .)
-
-
-state 133
-
-    (43) more_print -> COMMA . CTES
-    (44) more_print -> COMMA . megaexp
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTES            shift and go to state 155
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    megaexp                        shift and go to state 156
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 134
-
-    (45) more_print -> empty .
-
-    CLOSEPAR        reduce using rule 45 (more_print -> empty .)
-
-
-state 135
-
-    (42) print_options -> megaexp more_print .
-
-    CLOSEPAR        reduce using rule 42 (print_options -> megaexp more_print .)
-
-
-state 136
-
-    (46) lee -> LEE OPENPAR ID read_more . CLOSEPAR SEMICOLON
-
-    CLOSEPAR        shift and go to state 157
-
-
-state 137
-
-    (47) read_more -> COMMA . ID read_more
-
-    ID              shift and go to state 158
-
-
-state 138
-
-    (48) read_more -> empty .
-
-    CLOSEPAR        reduce using rule 48 (read_more -> empty .)
-
-
-state 139
-
-    (50) desde -> DESDE ID ASSIGN exp . HASTA exp HACER bloque
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    HASTA           shift and go to state 159
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 140
-
-    (51) mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR . HAZ bloque
-
-    HAZ             shift and go to state 160
-
-
-state 141
-
-    (15) more_params -> COMMA tipo ID . more_params
-    (15) more_params -> . COMMA tipo ID more_params
-    (16) more_params -> . empty
-    (85) empty -> .
-
-    COMMA           shift and go to state 74
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    more_params                    shift and go to state 161
-    empty                          shift and go to state 75
-
-state 142
-
-    (68) megaexp -> megaexp boolean_op superexp .
-    (70) superexp -> superexp . logical_op exp
-    (57) logical_op -> . GT
-    (58) logical_op -> . GTE
-    (59) logical_op -> . LT
-    (60) logical_op -> . LTE
-    (61) logical_op -> . NEQ
-    (62) logical_op -> . EQ
-
-    SEMICOLON       reduce using rule 68 (megaexp -> megaexp boolean_op superexp .)
-    OR              reduce using rule 68 (megaexp -> megaexp boolean_op superexp .)
-    AND             reduce using rule 68 (megaexp -> megaexp boolean_op superexp .)
-    CLOSEPAR        reduce using rule 68 (megaexp -> megaexp boolean_op superexp .)
-    COMMA           reduce using rule 68 (megaexp -> megaexp boolean_op superexp .)
-    GT              shift and go to state 112
-    GTE             shift and go to state 113
-    LT              shift and go to state 114
-    LTE             shift and go to state 115
-    NEQ             shift and go to state 116
-    EQ              shift and go to state 117
-
-    logical_op                     shift and go to state 111
-
-state 143
-
-    (70) superexp -> superexp logical_op exp .
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    GT              reduce using rule 70 (superexp -> superexp logical_op exp .)
-    GTE             reduce using rule 70 (superexp -> superexp logical_op exp .)
-    LT              reduce using rule 70 (superexp -> superexp logical_op exp .)
-    LTE             reduce using rule 70 (superexp -> superexp logical_op exp .)
-    NEQ             reduce using rule 70 (superexp -> superexp logical_op exp .)
-    EQ              reduce using rule 70 (superexp -> superexp logical_op exp .)
-    SEMICOLON       reduce using rule 70 (superexp -> superexp logical_op exp .)
-    OR              reduce using rule 70 (superexp -> superexp logical_op exp .)
-    AND             reduce using rule 70 (superexp -> superexp logical_op exp .)
-    CLOSEPAR        reduce using rule 70 (superexp -> superexp logical_op exp .)
-    COMMA           reduce using rule 70 (superexp -> superexp logical_op exp .)
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 144
-
-    (72) exp -> exp sums termino .
-    (74) termino -> termino . multdiv factor
-    (65) multdiv -> . TIMES
-    (66) multdiv -> . DIVIDE
-
-    MINUS           reduce using rule 72 (exp -> exp sums termino .)
-    PLUS            reduce using rule 72 (exp -> exp sums termino .)
-    GT              reduce using rule 72 (exp -> exp sums termino .)
-    GTE             reduce using rule 72 (exp -> exp sums termino .)
-    LT              reduce using rule 72 (exp -> exp sums termino .)
-    LTE             reduce using rule 72 (exp -> exp sums termino .)
-    NEQ             reduce using rule 72 (exp -> exp sums termino .)
-    EQ              reduce using rule 72 (exp -> exp sums termino .)
-    SEMICOLON       reduce using rule 72 (exp -> exp sums termino .)
-    OR              reduce using rule 72 (exp -> exp sums termino .)
-    AND             reduce using rule 72 (exp -> exp sums termino .)
-    CLOSEPAR        reduce using rule 72 (exp -> exp sums termino .)
-    CLOSEBRAC       reduce using rule 72 (exp -> exp sums termino .)
-    COMMA           reduce using rule 72 (exp -> exp sums termino .)
-    HASTA           reduce using rule 72 (exp -> exp sums termino .)
-    HACER           reduce using rule 72 (exp -> exp sums termino .)
-    TIMES           shift and go to state 122
-    DIVIDE          shift and go to state 123
-
-    multdiv                        shift and go to state 121
-
-state 145
-
-    (74) termino -> termino multdiv factor .
-
-    TIMES           reduce using rule 74 (termino -> termino multdiv factor .)
-    DIVIDE          reduce using rule 74 (termino -> termino multdiv factor .)
-    MINUS           reduce using rule 74 (termino -> termino multdiv factor .)
-    PLUS            reduce using rule 74 (termino -> termino multdiv factor .)
-    GT              reduce using rule 74 (termino -> termino multdiv factor .)
-    GTE             reduce using rule 74 (termino -> termino multdiv factor .)
-    LT              reduce using rule 74 (termino -> termino multdiv factor .)
-    LTE             reduce using rule 74 (termino -> termino multdiv factor .)
-    NEQ             reduce using rule 74 (termino -> termino multdiv factor .)
-    EQ              reduce using rule 74 (termino -> termino multdiv factor .)
-    SEMICOLON       reduce using rule 74 (termino -> termino multdiv factor .)
-    OR              reduce using rule 74 (termino -> termino multdiv factor .)
-    AND             reduce using rule 74 (termino -> termino multdiv factor .)
-    CLOSEPAR        reduce using rule 74 (termino -> termino multdiv factor .)
-    CLOSEBRAC       reduce using rule 74 (termino -> termino multdiv factor .)
-    COMMA           reduce using rule 74 (termino -> termino multdiv factor .)
-    HASTA           reduce using rule 74 (termino -> termino multdiv factor .)
-    HACER           reduce using rule 74 (termino -> termino multdiv factor .)
-
-
-state 146
-
-    (76) factor -> openpar megaexp closepar .
-
-    TIMES           reduce using rule 76 (factor -> openpar megaexp closepar .)
-    DIVIDE          reduce using rule 76 (factor -> openpar megaexp closepar .)
-    MINUS           reduce using rule 76 (factor -> openpar megaexp closepar .)
-    PLUS            reduce using rule 76 (factor -> openpar megaexp closepar .)
-    GT              reduce using rule 76 (factor -> openpar megaexp closepar .)
-    GTE             reduce using rule 76 (factor -> openpar megaexp closepar .)
-    LT              reduce using rule 76 (factor -> openpar megaexp closepar .)
-    LTE             reduce using rule 76 (factor -> openpar megaexp closepar .)
-    NEQ             reduce using rule 76 (factor -> openpar megaexp closepar .)
-    EQ              reduce using rule 76 (factor -> openpar megaexp closepar .)
-    SEMICOLON       reduce using rule 76 (factor -> openpar megaexp closepar .)
-    OR              reduce using rule 76 (factor -> openpar megaexp closepar .)
-    AND             reduce using rule 76 (factor -> openpar megaexp closepar .)
-    CLOSEPAR        reduce using rule 76 (factor -> openpar megaexp closepar .)
-    CLOSEBRAC       reduce using rule 76 (factor -> openpar megaexp closepar .)
-    COMMA           reduce using rule 76 (factor -> openpar megaexp closepar .)
-    HASTA           reduce using rule 76 (factor -> openpar megaexp closepar .)
-    HACER           reduce using rule 76 (factor -> openpar megaexp closepar .)
-
-
-state 147
-
-    (78) closepar -> CLOSEPAR .
-
-    TIMES           reduce using rule 78 (closepar -> CLOSEPAR .)
-    DIVIDE          reduce using rule 78 (closepar -> CLOSEPAR .)
-    MINUS           reduce using rule 78 (closepar -> CLOSEPAR .)
-    PLUS            reduce using rule 78 (closepar -> CLOSEPAR .)
-    GT              reduce using rule 78 (closepar -> CLOSEPAR .)
-    GTE             reduce using rule 78 (closepar -> CLOSEPAR .)
-    LT              reduce using rule 78 (closepar -> CLOSEPAR .)
-    LTE             reduce using rule 78 (closepar -> CLOSEPAR .)
-    NEQ             reduce using rule 78 (closepar -> CLOSEPAR .)
-    EQ              reduce using rule 78 (closepar -> CLOSEPAR .)
-    SEMICOLON       reduce using rule 78 (closepar -> CLOSEPAR .)
-    OR              reduce using rule 78 (closepar -> CLOSEPAR .)
-    AND             reduce using rule 78 (closepar -> CLOSEPAR .)
-    CLOSEPAR        reduce using rule 78 (closepar -> CLOSEPAR .)
-    CLOSEBRAC       reduce using rule 78 (closepar -> CLOSEPAR .)
-    COMMA           reduce using rule 78 (closepar -> CLOSEPAR .)
-    HASTA           reduce using rule 78 (closepar -> CLOSEPAR .)
-    HACER           reduce using rule 78 (closepar -> CLOSEPAR .)
-
-
-state 148
-
-    (32) condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES . bloque bloque_sino
-    (21) bloque -> . LCURLYB estatuto RCURLYB
-
-    LCURLYB         shift and go to state 33
-
-    bloque                         shift and go to state 162
-
-state 149
-
-    (39) func_void -> ID OPENPAR CLOSEPAR func_call_params SEMICOLON .
-
-    RCURLYB         reduce using rule 39 (func_void -> ID OPENPAR CLOSEPAR func_call_params SEMICOLON .)
-
-
-state 150
-
-    (35) func_call_params -> megaexp more_call_params .
-
-    SEMICOLON       reduce using rule 35 (func_call_params -> megaexp more_call_params .)
-
-
-state 151
-
-    (37) more_call_params -> COMMA . megaexp
-    (67) megaexp -> . superexp
-    (68) megaexp -> . megaexp boolean_op superexp
-    (69) superexp -> . exp
-    (70) superexp -> . superexp logical_op exp
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    megaexp                        shift and go to state 163
-    superexp                       shift and go to state 81
-    exp                            shift and go to state 82
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 152
-
-    (38) more_call_params -> empty .
-
-    SEMICOLON       reduce using rule 38 (more_call_params -> empty .)
-
-
-state 153
-
-    (54) id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC . exp CLOSEBRAC
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    exp                            shift and go to state 164
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 154
-
-    (40) escribe -> ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON .
-
-    RCURLYB         reduce using rule 40 (escribe -> ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON .)
-
-
-state 155
-
-    (43) more_print -> COMMA CTES .
-
-    CLOSEPAR        reduce using rule 43 (more_print -> COMMA CTES .)
-
-
-state 156
-
-    (44) more_print -> COMMA megaexp .
-    (68) megaexp -> megaexp . boolean_op superexp
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    CLOSEPAR        reduce using rule 44 (more_print -> COMMA megaexp .)
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    boolean_op                     shift and go to state 108
-
-state 157
-
-    (46) lee -> LEE OPENPAR ID read_more CLOSEPAR . SEMICOLON
-
-    SEMICOLON       shift and go to state 165
-
-
-state 158
-
-    (47) read_more -> COMMA ID . read_more
-    (47) read_more -> . COMMA ID read_more
-    (48) read_more -> . empty
-    (85) empty -> .
-
-    COMMA           shift and go to state 137
-    CLOSEPAR        reduce using rule 85 (empty -> .)
-
-    read_more                      shift and go to state 166
-    empty                          shift and go to state 138
-
-state 159
-
-    (50) desde -> DESDE ID ASSIGN exp HASTA . exp HACER bloque
-    (71) exp -> . termino
-    (72) exp -> . exp sums termino
-    (73) termino -> . factor
-    (74) termino -> . termino multdiv factor
-    (75) factor -> . vcte
-    (76) factor -> . openpar megaexp closepar
-    (79) vcte -> . id
-    (80) vcte -> . CTEI
-    (81) vcte -> . CTEF
-    (82) vcte -> . CTEC
-    (83) vcte -> . TRUE
-    (84) vcte -> . FALSE
-    (77) openpar -> . OPENPAR
-    (52) id -> . ID
-    (53) id -> . ID OPENBRAC exp CLOSEBRAC
-    (54) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
-
-    CTEI            shift and go to state 87
-    CTEF            shift and go to state 88
-    CTEC            shift and go to state 89
-    TRUE            shift and go to state 90
-    FALSE           shift and go to state 91
-    OPENPAR         shift and go to state 92
-    ID              shift and go to state 93
-
-    exp                            shift and go to state 167
-    termino                        shift and go to state 83
-    factor                         shift and go to state 84
-    vcte                           shift and go to state 85
-    openpar                        shift and go to state 86
-    id                             shift and go to state 79
-
-state 160
-
-    (51) mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR HAZ . bloque
-    (21) bloque -> . LCURLYB estatuto RCURLYB
-
-    LCURLYB         shift and go to state 33
-
-    bloque                         shift and go to state 168
-
-state 161
-
-    (15) more_params -> COMMA tipo ID more_params .
-
-    CLOSEPAR        reduce using rule 15 (more_params -> COMMA tipo ID more_params .)
-
-
-state 162
-
-    (32) condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES bloque . bloque_sino
-    (33) bloque_sino -> . SINO bloque
-    (34) bloque_sino -> . empty
-    (85) empty -> .
-
-    SINO            shift and go to state 170
-    RCURLYB         reduce using rule 85 (empty -> .)
-
-    bloque_sino                    shift and go to state 169
-    empty                          shift and go to state 171
-
-state 163
-
-    (37) more_call_params -> COMMA megaexp .
-    (68) megaexp -> megaexp . boolean_op superexp
-    (55) boolean_op -> . OR
-    (56) boolean_op -> . AND
-
-    SEMICOLON       reduce using rule 37 (more_call_params -> COMMA megaexp .)
-    OR              shift and go to state 109
-    AND             shift and go to state 110
-
-    boolean_op                     shift and go to state 108
-
-state 164
-
-    (54) id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp . CLOSEBRAC
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    CLOSEBRAC       shift and go to state 172
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 165
-
-    (46) lee -> LEE OPENPAR ID read_more CLOSEPAR SEMICOLON .
-
-    RCURLYB         reduce using rule 46 (lee -> LEE OPENPAR ID read_more CLOSEPAR SEMICOLON .)
-
-
-state 166
-
-    (47) read_more -> COMMA ID read_more .
-
-    CLOSEPAR        reduce using rule 47 (read_more -> COMMA ID read_more .)
-
-
-state 167
-
-    (50) desde -> DESDE ID ASSIGN exp HASTA exp . HACER bloque
-    (72) exp -> exp . sums termino
-    (63) sums -> . MINUS
-    (64) sums -> . PLUS
-
-    HACER           shift and go to state 173
-    MINUS           shift and go to state 119
-    PLUS            shift and go to state 120
-
-    sums                           shift and go to state 118
-
-state 168
-
-    (51) mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque .
-
-    RCURLYB         reduce using rule 51 (mientras -> MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque .)
-
-
-state 169
-
-    (32) condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino .
-
-    RCURLYB         reduce using rule 32 (condicion -> SI OPENPAR megaexp CLOSEPAR ENTONCES bloque bloque_sino .)
-
-
-state 170
-
-    (33) bloque_sino -> SINO . bloque
-    (21) bloque -> . LCURLYB estatuto RCURLYB
-
-    LCURLYB         shift and go to state 33
-
-    bloque                         shift and go to state 174
-
-state 171
-
-    (34) bloque_sino -> empty .
-
-    RCURLYB         reduce using rule 34 (bloque_sino -> empty .)
-
-
-state 172
-
-    (54) id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .
-
-    ASSIGN          reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    TIMES           reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    DIVIDE          reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    MINUS           reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    PLUS            reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    GT              reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    GTE             reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    LT              reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    LTE             reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    NEQ             reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    EQ              reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    SEMICOLON       reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    OR              reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    AND             reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    CLOSEPAR        reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    CLOSEBRAC       reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    COMMA           reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    HASTA           reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-    HACER           reduce using rule 54 (id -> ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC .)
-
-
-state 173
-
-    (50) desde -> DESDE ID ASSIGN exp HASTA exp HACER . bloque
-    (21) bloque -> . LCURLYB estatuto RCURLYB
-
-    LCURLYB         shift and go to state 33
-
-    bloque                         shift and go to state 175
-
-state 174
-
-    (33) bloque_sino -> SINO bloque .
-
-    RCURLYB         reduce using rule 33 (bloque_sino -> SINO bloque .)
-
-
-state 175
-
-    (50) desde -> DESDE ID ASSIGN exp HASTA exp HACER bloque .
-
-    RCURLYB         reduce using rule 50 (desde -> DESDE ID ASSIGN exp HASTA exp HACER bloque .)
+    RCURLYB         reduce using rule 8 (estatutos_rec -> estatuto estatutos_rec .)
 

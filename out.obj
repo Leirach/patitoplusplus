@@ -1,9 +1,4 @@
-+ A b t1
-gotof t1 9
-> C 4 t2
-gotof t2 7
-+ 4 5 t3
-goto 8
-* 6 1 t4
-goto 10
-+ 1 1 t5
+> A B t1
+gotof t1 5
++ C D t2
+goto 1

@@ -7,26 +7,23 @@ import sys
 
 tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
-# si (A+b) entonces { si(C>4) entonces { 4+5 } sino { 6*1 } } sino { 1+1 }
-# -- Condicion --
-def p_condicion(p):
-    "condicion : SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces"
 
-def p_entonces(p):
-    'entonces : ENTONCES'
-    code.startIf()
+# mientras (A>B) haz { C+D }
+# -- Mientras --
+def p_mientras_estatuto(p):
+    '''mientras_estatuto : mientras OPENPAR megaexp CLOSEPAR haz bloque'''
+    # goto migajita y llenar gotof
+    code.whileEnd()
 
-def p_condicion_entonces(p):
-    "bloque_entonces : bloque bloque_sino"
+def p_mientras(p):
+    'mientras : MIENTRAS'
+    # migajita 
+    code.whileStart()
 
-def p_bloque_sino(p):
-    '''bloque_sino : sino bloque 
-                   | empty'''
-    code.endIf()
-
-def p_condicion_sino(p):
-    'sino : SINO'
-    code.elseIf()
+def p_mientras_haz(p):
+    'haz : HAZ'
+    #gotoFalso a no sé dónde
+    code.whileDo()
 
 def p_bloque(p):
     'bloque : LCURLYB estatutos_rec RCURLYB'
@@ -36,7 +33,7 @@ def p_estatutos_rec(p):
                      | empty''' 
 
 def p_estatuto(p):
-    '''estatuto : condicion
+    '''estatuto : mientras_estatuto
                 | megaexp'''
 
 

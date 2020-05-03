@@ -132,8 +132,20 @@ def p_desde(p):
     '''desde : DESDE ID ASSIGN exp HASTA exp HACER bloque'''
 
 # -- Mientras --
+def p_mientras_estatuto(p):
+    '''mientras_estatuto : mientras OPENPAR megaexp CLOSEPAR haz bloque'''
+    # goto migajita y llenar gotof
+    code.whileEnd()
+
 def p_mientras(p):
-    '''mientras : MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque'''
+    'mientras : MIENTRAS'
+    # migajita 
+    code.whileStart()
+
+def p_mientras_haz(p):
+    'haz : HAZ'
+    #gotoFalso a no sé dónde
+    code.whileDo()
 
 # -- ID o acceso a arreglo --
 def p_id(p):

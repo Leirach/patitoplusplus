@@ -23,7 +23,6 @@ class CodeGenerator:
         buf = "%s %s %s %s\n" % (tok1, tok2, tok3, tok4)
         self.idStack.append(tok4)
         self.temp += 1
-        print(buf)
         self.code.append(buf)
         print(self.code)
         self.line += 1
@@ -52,8 +51,29 @@ class CodeGenerator:
         target = self.line
         lineNo = self.gotoStack.pop()
         buf = "%s %d\n" % (self.pendingLines.pop(), target)
-        print(buf)
         self.code[lineNo-1] = buf
+        print(self.code)
+
+    def whileStart(self):
+        self.gotoStack.append(self.line)
+        print(self.code)
+
+    def whileDo(self):
+        cond = self.idStack.pop()
+        buf = "gotof %s" % (cond)
+        self.code.append("while gotof\n")
+        print(self.code)
+        self.pendingLines.append(buf)
+        self.gotoStack.append(self.line)
+        self.line += 1
+
+    def whileEnd(self):
+        lineNo = self.gotoStack.pop() - 1
+        buf = "%s %d\n" % (self.pendingLines.pop(), self.line+1)
+        self.code[lineNo] = buf
+        retLine = self.gotoStack.pop()
+        buf = "goto %d\n" % (retLine)
+        self.code.append(buf)
         print(self.code)
 
     def peek(self, stack):

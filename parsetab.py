@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ ESCRIBE FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LEE LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VARcondicion : SI OPENPAR megaexp CLOSEPAR entonces bloque_entoncesentonces : ENTONCESbloque_entonces : bloque bloque_sinobloque_sino : sino bloque \n                   | emptysino : SINObloque : LCURLYB estatutos_rec RCURLYBestatutos_rec : estatuto estatutos_rec\n                     | emptyestatuto : condicion\n                | megaexpboolean_op : OR \n                  | ANDlogical_op : GT\n                  | GTE\n                  | LT\n                  | LTE\n                  | NEQ\n                  | EQsums : MINUS \n            | PLUS multdiv : TIMES \n               | DIVIDE megaexp : superexp\n               | megaexp boolean_op superexpsuperexp : exp\n                | superexp logical_op expexp : termino\n           | exp sums terminotermino : factor\n               | termino multdiv factorfactor : vcte\n              | openpar megaexp closeparopenpar : OPENPARclosepar : CLOSEPARvcte : ID\n            | CTEI\n            | CTEF\n            | CTEC\n            | TRUE\n            | FALSEempty :'
+_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ ESCRIBE FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LEE LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VARmientras_estatuto : mientras OPENPAR megaexp CLOSEPAR haz bloquemientras : MIENTRAShaz : HAZbloque : LCURLYB estatutos_rec RCURLYBestatutos_rec : estatuto estatutos_rec\n                     | emptyestatuto : mientras_estatuto\n                | megaexpboolean_op : OR \n                  | ANDlogical_op : GT\n                  | GTE\n                  | LT\n                  | LTE\n                  | NEQ\n                  | EQsums : MINUS \n            | PLUS multdiv : TIMES \n               | DIVIDE megaexp : superexp\n               | megaexp boolean_op superexpsuperexp : exp\n                | superexp logical_op expexp : termino\n           | exp sums terminotermino : factor\n               | termino multdiv factorfactor : vcte\n              | openpar megaexp closeparopenpar : OPENPARclosepar : CLOSEPARvcte : ID\n            | CTEI\n            | CTEF\n            | CTEC\n            | TRUE\n            | FALSEempty :'
     
-_lr_action_items = {'SI':([0,6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[2,-24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,-25,-27,-29,-31,-33,-35,-1,-42,2,-3,-5,2,-10,-11,-4,-7,]),'$end':([1,44,45,47,49,56,57,],[0,-1,-42,-3,-5,-4,-7,]),'OPENPAR':([2,3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[3,4,-34,-24,-26,-28,-30,-32,4,-36,-37,-38,-39,-40,-41,4,-12,-13,4,-14,-15,-16,-17,-18,-19,4,-20,-21,4,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,4,-3,-5,4,-10,-11,-4,-7,]),'ID':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[12,-34,-24,-26,-28,-30,-32,12,-36,-37,-38,-39,-40,-41,12,-12,-13,12,-14,-15,-16,-17,-18,-19,12,-20,-21,12,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,12,-3,-5,12,-10,-11,-4,-7,]),'CTEI':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[13,-34,-24,-26,-28,-30,-32,13,-36,-37,-38,-39,-40,-41,13,-12,-13,13,-14,-15,-16,-17,-18,-19,13,-20,-21,13,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,13,-3,-5,13,-10,-11,-4,-7,]),'CTEF':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[14,-34,-24,-26,-28,-30,-32,14,-36,-37,-38,-39,-40,-41,14,-12,-13,14,-14,-15,-16,-17,-18,-19,14,-20,-21,14,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,14,-3,-5,14,-10,-11,-4,-7,]),'CTEC':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[15,-34,-24,-26,-28,-30,-32,15,-36,-37,-38,-39,-40,-41,15,-12,-13,15,-14,-15,-16,-17,-18,-19,15,-20,-21,15,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,15,-3,-5,15,-10,-11,-4,-7,]),'TRUE':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[16,-34,-24,-26,-28,-30,-32,16,-36,-37,-38,-39,-40,-41,16,-12,-13,16,-14,-15,-16,-17,-18,-19,16,-20,-21,16,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,16,-3,-5,16,-10,-11,-4,-7,]),'FALSE':([3,4,6,7,8,9,10,11,12,13,14,15,16,17,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,38,39,40,41,42,43,44,45,46,47,49,52,54,55,56,57,],[17,-34,-24,-26,-28,-30,-32,17,-36,-37,-38,-39,-40,-41,17,-12,-13,17,-14,-15,-16,-17,-18,-19,17,-20,-21,17,-22,-23,-25,-27,-29,-31,-33,-35,-1,-42,17,-3,-5,17,-10,-11,-4,-7,]),'CLOSEPAR':([5,6,7,8,9,10,12,13,14,15,16,17,35,38,39,40,41,42,43,],[18,-24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,43,-25,-27,-29,-31,-33,-35,]),'OR':([5,6,7,8,9,10,12,13,14,15,16,17,35,38,39,40,41,42,43,55,],[20,-24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,20,-25,-27,-29,-31,-33,-35,20,]),'AND':([5,6,7,8,9,10,12,13,14,15,16,17,35,38,39,40,41,42,43,55,],[21,-24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,21,-25,-27,-29,-31,-33,-35,21,]),'RCURLYB':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,44,45,46,47,49,51,52,53,54,55,56,57,58,],[-24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,-25,-27,-29,-31,-33,-35,-1,-42,-42,-3,-5,57,-42,-9,-10,-11,-4,-7,-8,]),'GT':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[23,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,23,-27,-29,-31,-33,-35,]),'GTE':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[24,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,24,-27,-29,-31,-33,-35,]),'LT':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[25,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,25,-27,-29,-31,-33,-35,]),'LTE':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[26,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,26,-27,-29,-31,-33,-35,]),'NEQ':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[27,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,27,-27,-29,-31,-33,-35,]),'EQ':([6,7,8,9,10,12,13,14,15,16,17,38,39,40,41,42,43,],[28,-26,-28,-30,-32,-36,-37,-38,-39,-40,-41,28,-27,-29,-31,-33,-35,]),'MINUS':([7,8,9,10,12,13,14,15,16,17,39,40,41,42,43,],[30,-28,-30,-32,-36,-37,-38,-39,-40,-41,30,-29,-31,-33,-35,]),'PLUS':([7,8,9,10,12,13,14,15,16,17,39,40,41,42,43,],[31,-28,-30,-32,-36,-37,-38,-39,-40,-41,31,-29,-31,-33,-35,]),'TIMES':([8,9,10,12,13,14,15,16,17,40,41,42,43,],[33,-30,-32,-36,-37,-38,-39,-40,-41,33,-31,-33,-35,]),'DIVIDE':([8,9,10,12,13,14,15,16,17,40,41,42,43,],[34,-30,-32,-36,-37,-38,-39,-40,-41,34,-31,-33,-35,]),'ENTONCES':([18,],[37,]),'LCURLYB':([36,37,48,50,],[46,-2,46,-6,]),'SINO':([45,57,],[50,-7,]),}
+_lr_action_items = {'MIENTRAS':([0,7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,45,46,48,50,51,52,],[3,-21,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,-22,-24,-26,-28,-30,-32,-1,3,3,-7,-8,-4,]),'$end':([1,45,52,],[0,-1,-4,]),'OPENPAR':([2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[4,-2,5,-31,-21,-23,-25,-27,-29,5,-33,-34,-35,-36,-37,-38,5,-9,-10,5,-11,-12,-13,-14,-15,-16,5,-17,-18,5,-19,-20,-22,-24,-26,-28,-30,-32,-1,5,5,-7,-8,-4,]),'ID':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[13,-31,-21,-23,-25,-27,-29,13,-33,-34,-35,-36,-37,-38,13,-9,-10,13,-11,-12,-13,-14,-15,-16,13,-17,-18,13,-19,-20,-22,-24,-26,-28,-30,-32,-1,13,13,-7,-8,-4,]),'CTEI':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[14,-31,-21,-23,-25,-27,-29,14,-33,-34,-35,-36,-37,-38,14,-9,-10,14,-11,-12,-13,-14,-15,-16,14,-17,-18,14,-19,-20,-22,-24,-26,-28,-30,-32,-1,14,14,-7,-8,-4,]),'CTEF':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[15,-31,-21,-23,-25,-27,-29,15,-33,-34,-35,-36,-37,-38,15,-9,-10,15,-11,-12,-13,-14,-15,-16,15,-17,-18,15,-19,-20,-22,-24,-26,-28,-30,-32,-1,15,15,-7,-8,-4,]),'CTEC':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[16,-31,-21,-23,-25,-27,-29,16,-33,-34,-35,-36,-37,-38,16,-9,-10,16,-11,-12,-13,-14,-15,-16,16,-17,-18,16,-19,-20,-22,-24,-26,-28,-30,-32,-1,16,16,-7,-8,-4,]),'TRUE':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[17,-31,-21,-23,-25,-27,-29,17,-33,-34,-35,-36,-37,-38,17,-9,-10,17,-11,-12,-13,-14,-15,-16,17,-17,-18,17,-19,-20,-22,-24,-26,-28,-30,-32,-1,17,17,-7,-8,-4,]),'FALSE':([4,5,7,8,9,10,11,12,13,14,15,16,17,18,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,39,40,41,42,43,44,45,46,48,50,51,52,],[18,-31,-21,-23,-25,-27,-29,18,-33,-34,-35,-36,-37,-38,18,-9,-10,18,-11,-12,-13,-14,-15,-16,18,-17,-18,18,-19,-20,-22,-24,-26,-28,-30,-32,-1,18,18,-7,-8,-4,]),'CLOSEPAR':([6,7,8,9,10,11,13,14,15,16,17,18,36,39,40,41,42,43,44,],[19,-21,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,44,-22,-24,-26,-28,-30,-32,]),'OR':([6,7,8,9,10,11,13,14,15,16,17,18,36,39,40,41,42,43,44,51,],[21,-21,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,21,-22,-24,-26,-28,-30,-32,21,]),'AND':([6,7,8,9,10,11,13,14,15,16,17,18,36,39,40,41,42,43,44,51,],[22,-21,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,22,-22,-24,-26,-28,-30,-32,22,]),'RCURLYB':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,],[-21,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,-22,-24,-26,-28,-30,-32,-1,-39,52,-39,-6,-7,-8,-4,-5,]),'GT':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[24,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,24,-24,-26,-28,-30,-32,]),'GTE':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[25,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,25,-24,-26,-28,-30,-32,]),'LT':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[26,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,26,-24,-26,-28,-30,-32,]),'LTE':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[27,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,27,-24,-26,-28,-30,-32,]),'NEQ':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[28,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,28,-24,-26,-28,-30,-32,]),'EQ':([7,8,9,10,11,13,14,15,16,17,18,39,40,41,42,43,44,],[29,-23,-25,-27,-29,-33,-34,-35,-36,-37,-38,29,-24,-26,-28,-30,-32,]),'MINUS':([8,9,10,11,13,14,15,16,17,18,40,41,42,43,44,],[31,-25,-27,-29,-33,-34,-35,-36,-37,-38,31,-26,-28,-30,-32,]),'PLUS':([8,9,10,11,13,14,15,16,17,18,40,41,42,43,44,],[32,-25,-27,-29,-33,-34,-35,-36,-37,-38,32,-26,-28,-30,-32,]),'TIMES':([9,10,11,13,14,15,16,17,18,41,42,43,44,],[34,-27,-29,-33,-34,-35,-36,-37,-38,34,-28,-30,-32,]),'DIVIDE':([9,10,11,13,14,15,16,17,18,41,42,43,44,],[35,-27,-29,-33,-34,-35,-36,-37,-38,35,-28,-30,-32,]),'HAZ':([19,],[38,]),'LCURLYB':([37,38,],[46,-3,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'condicion':([0,46,52,],[1,54,54,]),'megaexp':([3,11,46,52,],[5,35,55,55,]),'superexp':([3,11,19,46,52,],[6,6,38,6,6,]),'exp':([3,11,19,22,46,52,],[7,7,7,39,7,7,]),'termino':([3,11,19,22,29,46,52,],[8,8,8,8,40,8,8,]),'factor':([3,11,19,22,29,32,46,52,],[9,9,9,9,9,41,9,9,]),'vcte':([3,11,19,22,29,32,46,52,],[10,10,10,10,10,10,10,10,]),'openpar':([3,11,19,22,29,32,46,52,],[11,11,11,11,11,11,11,11,]),'boolean_op':([5,35,55,],[19,19,19,]),'logical_op':([6,38,],[22,22,]),'sums':([7,39,],[29,29,]),'multdiv':([8,40,],[32,32,]),'entonces':([18,],[36,]),'closepar':([35,],[42,]),'bloque_entonces':([36,],[44,]),'bloque':([36,48,],[45,56,]),'bloque_sino':([45,],[47,]),'sino':([45,],[48,]),'empty':([45,46,52,],[49,53,53,]),'estatutos_rec':([46,52,],[51,58,]),'estatuto':([46,52,],[52,52,]),}
+_lr_goto_items = {'mientras_estatuto':([0,46,48,],[1,50,50,]),'mientras':([0,46,48,],[2,2,2,]),'megaexp':([4,12,46,48,],[6,36,51,51,]),'superexp':([4,12,20,46,48,],[7,7,39,7,7,]),'exp':([4,12,20,23,46,48,],[8,8,8,40,8,8,]),'termino':([4,12,20,23,30,46,48,],[9,9,9,9,41,9,9,]),'factor':([4,12,20,23,30,33,46,48,],[10,10,10,10,10,42,10,10,]),'vcte':([4,12,20,23,30,33,46,48,],[11,11,11,11,11,11,11,11,]),'openpar':([4,12,20,23,30,33,46,48,],[12,12,12,12,12,12,12,12,]),'boolean_op':([6,36,51,],[20,20,20,]),'logical_op':([7,39,],[23,23,]),'sums':([8,40,],[30,30,]),'multdiv':([9,41,],[33,33,]),'haz':([19,],[37,]),'closepar':([36,],[43,]),'bloque':([37,],[45,]),'estatutos_rec':([46,48,],[47,53,]),'estatuto':([46,48,],[48,48,]),'empty':([46,48,],[49,49,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,47 +26,44 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> condicion","S'",1,None,None,None),
-  ('condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces','condicion',6,'p_condicion','test.py',15),
-  ('entonces -> ENTONCES','entonces',1,'p_entonces','test.py',18),
-  ('bloque_entonces -> bloque bloque_sino','bloque_entonces',2,'p_condicion_entonces','test.py',22),
-  ('bloque_sino -> sino bloque','bloque_sino',2,'p_bloque_sino','test.py',25),
-  ('bloque_sino -> empty','bloque_sino',1,'p_bloque_sino','test.py',26),
-  ('sino -> SINO','sino',1,'p_condicion_sino','test.py',30),
-  ('bloque -> LCURLYB estatutos_rec RCURLYB','bloque',3,'p_bloque','test.py',34),
-  ('estatutos_rec -> estatuto estatutos_rec','estatutos_rec',2,'p_estatutos_rec','test.py',37),
-  ('estatutos_rec -> empty','estatutos_rec',1,'p_estatutos_rec','test.py',38),
-  ('estatuto -> condicion','estatuto',1,'p_estatuto','test.py',41),
-  ('estatuto -> megaexp','estatuto',1,'p_estatuto','test.py',42),
-  ('boolean_op -> OR','boolean_op',1,'p_boolean_op','test.py',47),
-  ('boolean_op -> AND','boolean_op',1,'p_boolean_op','test.py',48),
-  ('logical_op -> GT','logical_op',1,'p_logical_op','test.py',53),
-  ('logical_op -> GTE','logical_op',1,'p_logical_op','test.py',54),
-  ('logical_op -> LT','logical_op',1,'p_logical_op','test.py',55),
-  ('logical_op -> LTE','logical_op',1,'p_logical_op','test.py',56),
-  ('logical_op -> NEQ','logical_op',1,'p_logical_op','test.py',57),
-  ('logical_op -> EQ','logical_op',1,'p_logical_op','test.py',58),
-  ('sums -> MINUS','sums',1,'p_sums','test.py',63),
-  ('sums -> PLUS','sums',1,'p_sums','test.py',64),
-  ('multdiv -> TIMES','multdiv',1,'p_multdiv','test.py',69),
-  ('multdiv -> DIVIDE','multdiv',1,'p_multdiv','test.py',70),
-  ('megaexp -> superexp','megaexp',1,'p_megaexp','test.py',76),
-  ('megaexp -> megaexp boolean_op superexp','megaexp',3,'p_megaexp','test.py',77),
-  ('superexp -> exp','superexp',1,'p_superexp','test.py',83),
-  ('superexp -> superexp logical_op exp','superexp',3,'p_superexp','test.py',84),
-  ('exp -> termino','exp',1,'p_exp','test.py',90),
-  ('exp -> exp sums termino','exp',3,'p_exp','test.py',91),
-  ('termino -> factor','termino',1,'p_termino','test.py',97),
-  ('termino -> termino multdiv factor','termino',3,'p_termino','test.py',98),
-  ('factor -> vcte','factor',1,'p_factor','test.py',104),
-  ('factor -> openpar megaexp closepar','factor',3,'p_factor','test.py',105),
-  ('openpar -> OPENPAR','openpar',1,'p_openpar','test.py',109),
-  ('closepar -> CLOSEPAR','closepar',1,'p_closepar','test.py',114),
-  ('vcte -> ID','vcte',1,'p_vcte','test.py',118),
-  ('vcte -> CTEI','vcte',1,'p_vcte','test.py',119),
-  ('vcte -> CTEF','vcte',1,'p_vcte','test.py',120),
-  ('vcte -> CTEC','vcte',1,'p_vcte','test.py',121),
-  ('vcte -> TRUE','vcte',1,'p_vcte','test.py',122),
-  ('vcte -> FALSE','vcte',1,'p_vcte','test.py',123),
-  ('empty -> <empty>','empty',0,'p_empty','test.py',128),
+  ("S' -> mientras_estatuto","S'",1,None,None,None),
+  ('mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque','mientras_estatuto',6,'p_mientras_estatuto','test.py',14),
+  ('mientras -> MIENTRAS','mientras',1,'p_mientras','test.py',19),
+  ('haz -> HAZ','haz',1,'p_mientras_haz','test.py',24),
+  ('bloque -> LCURLYB estatutos_rec RCURLYB','bloque',3,'p_bloque','test.py',29),
+  ('estatutos_rec -> estatuto estatutos_rec','estatutos_rec',2,'p_estatutos_rec','test.py',32),
+  ('estatutos_rec -> empty','estatutos_rec',1,'p_estatutos_rec','test.py',33),
+  ('estatuto -> mientras_estatuto','estatuto',1,'p_estatuto','test.py',36),
+  ('estatuto -> megaexp','estatuto',1,'p_estatuto','test.py',37),
+  ('boolean_op -> OR','boolean_op',1,'p_boolean_op','test.py',42),
+  ('boolean_op -> AND','boolean_op',1,'p_boolean_op','test.py',43),
+  ('logical_op -> GT','logical_op',1,'p_logical_op','test.py',48),
+  ('logical_op -> GTE','logical_op',1,'p_logical_op','test.py',49),
+  ('logical_op -> LT','logical_op',1,'p_logical_op','test.py',50),
+  ('logical_op -> LTE','logical_op',1,'p_logical_op','test.py',51),
+  ('logical_op -> NEQ','logical_op',1,'p_logical_op','test.py',52),
+  ('logical_op -> EQ','logical_op',1,'p_logical_op','test.py',53),
+  ('sums -> MINUS','sums',1,'p_sums','test.py',58),
+  ('sums -> PLUS','sums',1,'p_sums','test.py',59),
+  ('multdiv -> TIMES','multdiv',1,'p_multdiv','test.py',64),
+  ('multdiv -> DIVIDE','multdiv',1,'p_multdiv','test.py',65),
+  ('megaexp -> superexp','megaexp',1,'p_megaexp','test.py',71),
+  ('megaexp -> megaexp boolean_op superexp','megaexp',3,'p_megaexp','test.py',72),
+  ('superexp -> exp','superexp',1,'p_superexp','test.py',78),
+  ('superexp -> superexp logical_op exp','superexp',3,'p_superexp','test.py',79),
+  ('exp -> termino','exp',1,'p_exp','test.py',85),
+  ('exp -> exp sums termino','exp',3,'p_exp','test.py',86),
+  ('termino -> factor','termino',1,'p_termino','test.py',92),
+  ('termino -> termino multdiv factor','termino',3,'p_termino','test.py',93),
+  ('factor -> vcte','factor',1,'p_factor','test.py',99),
+  ('factor -> openpar megaexp closepar','factor',3,'p_factor','test.py',100),
+  ('openpar -> OPENPAR','openpar',1,'p_openpar','test.py',104),
+  ('closepar -> CLOSEPAR','closepar',1,'p_closepar','test.py',109),
+  ('vcte -> ID','vcte',1,'p_vcte','test.py',113),
+  ('vcte -> CTEI','vcte',1,'p_vcte','test.py',114),
+  ('vcte -> CTEF','vcte',1,'p_vcte','test.py',115),
+  ('vcte -> CTEC','vcte',1,'p_vcte','test.py',116),
+  ('vcte -> TRUE','vcte',1,'p_vcte','test.py',117),
+  ('vcte -> FALSE','vcte',1,'p_vcte','test.py',118),
+  ('empty -> <empty>','empty',0,'p_empty','test.py',123),
 ]

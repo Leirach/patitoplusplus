@@ -8,7 +8,7 @@ class CodeGenerator:
     def __del__(self):
         self.f.close()
 
-    def generate(self):
+    def buildExp(self):
         tok1 = self.opStack.pop()
         tok3 = self.idStack.pop()
         tok2 = self.idStack.pop()

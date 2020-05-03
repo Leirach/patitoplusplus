@@ -3,4 +3,5 @@ programa patito; var int i; float valor; principal() { }
 programa patito; funcion int fact(int j) var int i; { } principal() { }
 programa patito; principal() { }
 
-programa patito; principal() { i = 2; }
+programa patito; principal() { retorno(2*5-3); }
+programa patito; principal() { i = 1*(2+3); }

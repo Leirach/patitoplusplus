@@ -2,7 +2,7 @@ import ply.lex as lex
 
 # === LEXER ===
 tokens = [
-    'SEMICOLON', 'COLON', 'COMMA',
+    'SEMICOLON', 'COMMA',
     'PLUS', 'MINUS','TIMES','DIVIDE', 'ASSIGN',
     'GTE', 'LTE', 'NEQ', 'EQ', 'GT', 'LT', 'AND', 'OR',
     'LCURLYB', 'RCURLYB', 'OPENPAR', 'CLOSEPAR', 'OPENBRAC', 'CLOSEBRAC',
@@ -52,7 +52,6 @@ t_CLOSEPAR  = r'\)'
 t_OPENBRAC  = r'\['
 t_CLOSEBRAC = r'\]'
 t_SEMICOLON = r';'
-t_COLON     = r':'
 t_COMMA     = r','
 t_PLUS      = r'\+'
 t_MINUS     = r'-'

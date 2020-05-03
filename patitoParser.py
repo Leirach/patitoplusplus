@@ -1,9 +1,11 @@
 # === PARSER ===
 # Parsing rules
 import patitoLexer
+import codeGenerator as cg
 import ply.yacc as yacc
 
 tokens = patitoLexer.tokens
+code = cg.CodeGenerator()
 
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque'
@@ -94,8 +96,8 @@ def p_print_options(p):
 
 def p_more_print(p):
     '''more_print : COMMA CTES
-                   | COMMA megaexp
-                   | empty'''
+                  | COMMA megaexp
+                  | empty'''
 
 # -- Leer --
 def p_lee(p):
@@ -107,12 +109,28 @@ def p_read_more(p):
 
 # -- Retorno --
 def p_retorno(p):
-    'retorno : RETORNO OPENPAR megaexp CLOSEPAR'
+    'retorno : RETORNO OPENPAR ID CLOSEPAR SEMICOLON'
+
+# -- Desde --
+def p_desde(p):
+    '''desde : DESDE ID ASSIGN exp HASTA exp HACER bloque'''
+
+# -- Mientras --
+def p_mientras(p):
+    '''mientras : MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque'''
+
+# -- ID o acceso a arreglo --
+def p_id(p):
+    '''id : ID
+          | ID OPENBRAC exp CLOSEBRAC
+          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
 
 # -- Operadores --
 def p_boolean_op(p):
-    '''blooean_op : OR 
+    '''boolean_op : OR 
                   | AND'''
+    p[0] = p[1]
+    code.opStack.append(p[1])
 
 def p_logical_op(p):
     '''logical_op : GT
@@ -121,54 +139,64 @@ def p_logical_op(p):
                   | LTE
                   | NEQ
                   | EQ'''
+    p[0] = p[1]
+    code.opStack.append(p[1])
 
 def p_sums(p):
     '''sums : MINUS 
             | PLUS '''
     p[0] = p[1]
-
+    code.opStack.append(p[1])
+    
 def p_multdiv(p):
     '''multdiv : TIMES 
                | DIVIDE '''
     p[0] = p[1]
-# -- Expresiones
+    code.opStack.append(p[1])
 
+# -- Expresiones --
 def p_megaexp(p):
-    '''megaexp : superexp megaexp2'''
-
-def p_megaexp2(p):
-    '''megaexp2 : blooean_op megaexp
-                | empty'''
+    '''megaexp : superexp
+               | megaexp boolean_op superexp'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['&', '|']):
+        code.buildExp()
 
 def p_superexp(p):
-    '''superexp : exp superexp2'''
-
-def p_superexp2(p):
-    '''superexp2 : logical_op superexp
-                 | empty'''
+    '''superexp : exp
+                | superexp logical_op exp'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['<', '<=', '>', '>=', '!=', '==']):
+        code.buildExp()
 
 def p_exp(p):
-    '''exp : termino exp2'''
-
-def p_exp2(p):
-    '''exp2 : sums exp
-            | empty'''
-    if (p[1] is not None):
-        print("sums", p[1])
+    '''exp : termino
+           | exp sums termino'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['+', '-']):
+        code.buildExp()
 
 def p_termino(p):
-    '''termino : factor termino2'''
-
-def p_termino2(p):
-    '''termino2 : multdiv termino
-                | empty'''
-    #pushear operador
-    #eh pushear termino? o se hace push abajo? no se que hacer ayuda
+    '''termino : factor
+               | termino multdiv factor'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['*', '/']):
+        code.buildExp()
 
 def p_factor(p):
     '''factor : vcte
-              | OPENPAR megaexp CLOSEPAR'''
-            
+              | openpar megaexp closepar'''
+
+# agregar fondo falso a opstack
+def p_openpar(p): 
+    'openpar : OPENPAR'
+    code.opStack.append(p[1])
+
+# quitar fondo falso
+def p_closepar(p): 
+    'closepar : CLOSEPAR'
+    code.opStack.pop()
+
 def p_vcte(p):
     '''vcte : id
             | CTEI
@@ -177,19 +205,9 @@ def p_vcte(p):
             | TRUE
             | FALSE'''
     p[0] = p[1]
+    code.idStack.append(p[1])
 
-# -- ID o acceso a arreglo --
-def p_id(p):
-    '''id : ID
-          | ID OPENBRAC exp CLOSEBRAC
-          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
-
-def p_desde(p):
-    '''desde : DESDE ID ASSIGN exp HASTA exp HACER bloque'''
-
-def p_mientras(p):
-    '''mientras : MIENTRAS OPENPAR megaexp CLOSEPAR HAZ bloque'''
-
+# -- Error y empty --
 def p_empty(p):
     'empty :'
     pass
@@ -197,6 +215,7 @@ def p_empty(p):
 def p_error(p):
     print("error")
 
+# -- Crea el parser y loop para leer --
 parser = yacc.yacc()
 
 while True:

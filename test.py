@@ -7,56 +7,54 @@ import ply.yacc as yacc
 tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
 
-# -- Expresiones
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
+)
+
+# -- Expresiones --
 
 def p_megaexp(p):
-    '''megaexp : superexp megaexp2'''
-
-def p_megaexp2(p):
-    '''megaexp2 : blooean_op megaexp
-                | empty'''
-    if (p[1] is not None):
-        nextOp = code.peek(code.opStack) 
-        if (nextOp in ['&', '|']):
-            code.generate()
+    '''megaexp : superexp
+               | megaexp boolean_op superexp'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['&', '|']):
+        code.buildExp()
 
 def p_superexp(p):
-    '''superexp : exp superexp2'''
-
-def p_superexp2(p):
-    '''superexp2 : logical_op superexp
-                 | empty''' 
-    if (p[1] is not None):
-        nextOp = code.peek(code.opStack) 
-        if (nextOp in ['>', '>=', '<=', '!=', '==']):
-            code.generate()
+    '''superexp : exp
+                | superexp logical_op exp'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['<', '<=', '>', '>=', '!=', '==']):
+        code.buildExp()
 
 def p_exp(p):
-    '''exp : termino exp2'''
-
-def p_exp2(p):
-    '''exp2 : sums exp
-            | empty'''
-    if (p[1] is not None):
-        nextOp = code.peek(code.opStack) 
-        if (nextOp == '+' or nextOp == '-'):
-            code.generate()
-
+    '''exp : termino
+           | exp sums termino'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['+', '-']):
+        code.buildExp()
 
 def p_termino(p):
-    '''termino : factor termino2'''
-
-def p_termino2(p):
-    '''termino2 : multdiv termino
-                | empty'''
-    if (p[1] is not None):
-        nextOp = code.peek(code.opStack) 
-        if (nextOp == '*' or nextOp == '/'):
-            code.generate()
+    '''termino : factor
+               | termino multdiv factor'''
+    nextOp = code.peek(code.opStack) 
+    if (nextOp in ['*', '/']):
+        code.buildExp()
 
 def p_factor(p):
     '''factor : vcte
-              | OPENPAR megaexp CLOSEPAR'''
+              | openpar megaexp closepar'''
+              
+# agregar fondo falso a opstack
+def p_openpar(p): 
+    'openpar : OPENPAR'
+    code.opStack.append(p[1])
+
+# quitar fondo falso
+def p_closepar(p): 
+    'closepar : CLOSEPAR'
+    code.opStack.pop()
 
 def p_vcte(p):
     '''vcte : ID
@@ -69,8 +67,9 @@ def p_vcte(p):
     code.idStack.append(p[1])
 
 # -- Operadores --
+
 def p_boolean_op(p):
-    '''blooean_op : OR 
+    '''boolean_op : OR 
                   | AND'''
     p[0] = p[1]
     code.opStack.append(p[1])

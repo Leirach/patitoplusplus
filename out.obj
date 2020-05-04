@@ -1,4 +1,0 @@
-> A B t1
-gotof t1 5
-+ C D t2
-goto 1

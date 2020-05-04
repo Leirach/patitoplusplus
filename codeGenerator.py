@@ -6,6 +6,7 @@ class CodeGenerator:
         self.idStack = []
         self.gotoStack = []
         self.pendingLines = []
+        self.forIds = []
         self.temp = 1
         self.line = 1
 
@@ -26,7 +27,6 @@ class CodeGenerator:
         self.code.append(buf)
         print(self.code)
         self.line += 1
-        #self.f.write(buf)
 
     def startIf(self):
         cond = self.idStack.pop()
@@ -45,7 +45,6 @@ class CodeGenerator:
         self.endIf()
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line-1)
-
 
     def endIf(self):
         target = self.line
@@ -75,6 +74,41 @@ class CodeGenerator:
         buf = "goto %d\n" % (retLine)
         self.code.append(buf)
         print(self.code)
+
+    def forStart(self):
+        val = self.idStack.pop()
+        id = self.peek(self.idStack)
+        self.forIds.append(id)
+        buf = "%s %s %s %s\n" % ("=", val, " ", id)
+        self.code.append(buf)
+        self.line += 1
+        self.gotoStack.append(self.line)
+        print(self.code)
+
+    def forDo(self):
+        self.opStack.append("<=")
+        self.buildExp()
+        cond = self.idStack.pop()
+        buf = "gotof %s" % (cond)
+        self.code.append("loop gotof\n")
+        print(self.code)
+        self.pendingLines.append(buf)
+        self.gotoStack.append(self.line)
+        self.line += 1
+
+    def forEnd(self):
+        id = self.forIds.pop()
+        buf = "%s %s %d %s\n" % ('+', id, 1, id)
+        self.code.append(buf)
+        self.line += 1
+        lineNo = self.gotoStack.pop() - 1
+        buf = "%s %d\n" % (self.pendingLines.pop(), self.line+1)
+        self.code[lineNo] = buf
+        retLine = self.gotoStack.pop()
+        buf = "goto %d\n" % (retLine)
+        self.code.append(buf)
+        print(self.code)
+
 
     def peek(self, stack):
         if len(stack) > 0:

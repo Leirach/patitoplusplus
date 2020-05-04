@@ -63,8 +63,7 @@ def p_estatuto(p):
                 | escribe
                 | lee 
                 | desde
-                | mientras
-                | empty'''
+                | mientras_estatuto'''
 
 # -- Asignacion --
 def p_asignacion(p):
@@ -129,7 +128,20 @@ def p_retorno(p):
 
 # -- Desde --
 def p_desde(p):
-    '''desde : DESDE ID ASSIGN exp HASTA exp HACER bloque'''
+    '''desde : DESDE forId ASSIGN exp hasta exp hacer bloque'''
+    code.forEnd()
+
+def p_forId(p):
+    'forId : ID'
+    code.idStack.append(p[1])
+
+def p_desde_hasta(p):
+    'hasta : HASTA'
+    code.forStart()
+
+def p_desde_hacer(p):
+    'hacer : HACER'
+    code.forDo()
 
 # -- Mientras --
 def p_mientras_estatuto(p):

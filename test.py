@@ -9,21 +9,33 @@ tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
 
 # mientras (A>B) haz { C+D }
-# -- Mientras --
-def p_mientras_estatuto(p):
-    '''mientras_estatuto : mientras OPENPAR megaexp CLOSEPAR haz bloque'''
-    # goto migajita y llenar gotof
-    code.whileEnd()
+# desde pedrito = 3 hasta 5+5 hacer { A+B }
 
-def p_mientras(p):
-    'mientras : MIENTRAS'
-    # migajita 
-    code.whileStart()
+# -- Desde --
+def p_desde(p):
+    '''desde : DESDE forId ASSIGN exp hasta exp hacer bloque'''
+    code.forEnd()
 
-def p_mientras_haz(p):
-    'haz : HAZ'
-    #gotoFalso a no sé dónde
-    code.whileDo()
+def p_forId(p):
+    'forId : ID'
+    code.idStack.append(p[1])
+
+def p_desde_hasta(p):
+    'hasta : HASTA'
+    code.forStart()
+
+def p_desde_hacer(p):
+    'hacer : HACER'
+    code.forDo()
+
+# desde i = 1 hasta 10 hacer { }
+# = 1 _ i // HASTA
+#resolver exp t1// HACER poner migajita
+#<= i t1 t2 // comparacion
+#gotof t2 _ // meter inclomento en pendingLines
+#+ A B t3
+#+ i 1 i //al final del for
+#goto 2
 
 def p_bloque(p):
     'bloque : LCURLYB estatutos_rec RCURLYB'
@@ -33,7 +45,7 @@ def p_estatutos_rec(p):
                      | empty''' 
 
 def p_estatuto(p):
-    '''estatuto : mientras_estatuto
+    '''estatuto : desde
                 | megaexp'''
 
 

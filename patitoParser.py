@@ -262,15 +262,37 @@ def p_closepar(p):
     'closepar : CLOSEPAR'
     code.opStack.pop()
 
-def p_vcte(p):
-    '''vcte : id
-            | CTEI
-            | CTEF
-            | CTEC
-            | TRUE
+def p_vcte_ID(p):
+    'vcte : id'
+    p[0] = p[1]
+    code.idStack.append(p[1])
+    code.tpStack.append(code.getVarType('id'))
+
+def p_vcte_CTEI(p):
+    'vcte : CTEI'
+    p[0] = p[1]
+    code.idStack.append(p[1])
+    code.tpStack.append('int')
+
+def p_vcte_CTEF(p):
+    'vcte : CTEF'
+    p[0] = p[1]
+    code.idStack.append(p[1])
+    code.tpStack.append('float')
+
+def p_vcte_CTEB(p):
+    '''vcte : TRUE
             | FALSE'''
     p[0] = p[1]
     code.idStack.append(p[1])
+    code.tpStack.append('bool')
+
+def p_vcte_CTEC(p):
+    'vcte : CTEC'
+    p[0] = p[1]
+    code.idStack.append(p[1])
+    code.tpStack.append('char')
+
 
 # -- Error y empty --
 def p_empty(p):

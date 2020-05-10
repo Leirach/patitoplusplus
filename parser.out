@@ -96,9 +96,9 @@ Rule 90    closepar -> CLOSEPAR
 Rule 91    vcte -> id
 Rule 92    vcte -> CTEI
 Rule 93    vcte -> CTEF
-Rule 94    vcte -> CTEC
-Rule 95    vcte -> TRUE
-Rule 96    vcte -> FALSE
+Rule 94    vcte -> TRUE
+Rule 95    vcte -> FALSE
+Rule 96    vcte -> CTEC
 Rule 97    empty -> <empty>
 
 Terminals, with rules where they appear
@@ -110,7 +110,7 @@ CHAR                 : 22
 CLOSEBRAC            : 8 9 9 65 66 66
 CLOSEPAR             : 1 13 36 42 47 53 56 61 90
 COMMA                : 6 18 45 50 51 54
-CTEC                 : 94
+CTEC                 : 96
 CTEF                 : 93
 CTEI                 : 8 9 9 92
 CTES                 : 48 50
@@ -118,7 +118,7 @@ DESDE                : 57
 DIVIDE               : 78
 ENTONCES             : 37
 EQ                   : 74
-FALSE                : 96
+FALSE                : 95
 FLOAT                : 21
 FUNCION              : 13
 GT                   : 69
@@ -148,7 +148,7 @@ SEMICOLON            : 1 4 35 42 47 53 56
 SI                   : 36
 SINO                 : 41
 TIMES                : 77
-TRUE                 : 95
+TRUE                 : 94
 VAR                  : 2
 VOID                 : 15
 error                : 
@@ -1026,9 +1026,9 @@ state 72
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1036,9 +1036,9 @@ state 72
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1067,9 +1067,9 @@ state 73
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1077,9 +1077,9 @@ state 73
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1112,9 +1112,9 @@ state 74
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1124,9 +1124,9 @@ state 74
     COMMA           reduce using rule 97 (empty -> .)
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1157,9 +1157,9 @@ state 75
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1167,9 +1167,9 @@ state 75
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1200,9 +1200,9 @@ state 76
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1211,9 +1211,9 @@ state 76
     CTES            shift and go to state 109
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1247,9 +1247,9 @@ state 78
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1257,9 +1257,9 @@ state 78
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1300,9 +1300,9 @@ state 81
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1310,9 +1310,9 @@ state 81
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1554,9 +1554,9 @@ state 95
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1564,9 +1564,9 @@ state 95
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1629,74 +1629,74 @@ state 97
 
 state 98
 
-    (94) vcte -> CTEC .
+    (94) vcte -> TRUE .
 
-    TIMES           reduce using rule 94 (vcte -> CTEC .)
-    DIVIDE          reduce using rule 94 (vcte -> CTEC .)
-    MINUS           reduce using rule 94 (vcte -> CTEC .)
-    PLUS            reduce using rule 94 (vcte -> CTEC .)
-    GT              reduce using rule 94 (vcte -> CTEC .)
-    GTE             reduce using rule 94 (vcte -> CTEC .)
-    LT              reduce using rule 94 (vcte -> CTEC .)
-    LTE             reduce using rule 94 (vcte -> CTEC .)
-    NEQ             reduce using rule 94 (vcte -> CTEC .)
-    EQ              reduce using rule 94 (vcte -> CTEC .)
-    SEMICOLON       reduce using rule 94 (vcte -> CTEC .)
-    OR              reduce using rule 94 (vcte -> CTEC .)
-    AND             reduce using rule 94 (vcte -> CTEC .)
-    CLOSEPAR        reduce using rule 94 (vcte -> CTEC .)
-    COMMA           reduce using rule 94 (vcte -> CTEC .)
-    CLOSEBRAC       reduce using rule 94 (vcte -> CTEC .)
-    HASTA           reduce using rule 94 (vcte -> CTEC .)
-    HACER           reduce using rule 94 (vcte -> CTEC .)
+    TIMES           reduce using rule 94 (vcte -> TRUE .)
+    DIVIDE          reduce using rule 94 (vcte -> TRUE .)
+    MINUS           reduce using rule 94 (vcte -> TRUE .)
+    PLUS            reduce using rule 94 (vcte -> TRUE .)
+    GT              reduce using rule 94 (vcte -> TRUE .)
+    GTE             reduce using rule 94 (vcte -> TRUE .)
+    LT              reduce using rule 94 (vcte -> TRUE .)
+    LTE             reduce using rule 94 (vcte -> TRUE .)
+    NEQ             reduce using rule 94 (vcte -> TRUE .)
+    EQ              reduce using rule 94 (vcte -> TRUE .)
+    SEMICOLON       reduce using rule 94 (vcte -> TRUE .)
+    OR              reduce using rule 94 (vcte -> TRUE .)
+    AND             reduce using rule 94 (vcte -> TRUE .)
+    CLOSEPAR        reduce using rule 94 (vcte -> TRUE .)
+    COMMA           reduce using rule 94 (vcte -> TRUE .)
+    CLOSEBRAC       reduce using rule 94 (vcte -> TRUE .)
+    HASTA           reduce using rule 94 (vcte -> TRUE .)
+    HACER           reduce using rule 94 (vcte -> TRUE .)
 
 
 state 99
 
-    (95) vcte -> TRUE .
+    (95) vcte -> FALSE .
 
-    TIMES           reduce using rule 95 (vcte -> TRUE .)
-    DIVIDE          reduce using rule 95 (vcte -> TRUE .)
-    MINUS           reduce using rule 95 (vcte -> TRUE .)
-    PLUS            reduce using rule 95 (vcte -> TRUE .)
-    GT              reduce using rule 95 (vcte -> TRUE .)
-    GTE             reduce using rule 95 (vcte -> TRUE .)
-    LT              reduce using rule 95 (vcte -> TRUE .)
-    LTE             reduce using rule 95 (vcte -> TRUE .)
-    NEQ             reduce using rule 95 (vcte -> TRUE .)
-    EQ              reduce using rule 95 (vcte -> TRUE .)
-    SEMICOLON       reduce using rule 95 (vcte -> TRUE .)
-    OR              reduce using rule 95 (vcte -> TRUE .)
-    AND             reduce using rule 95 (vcte -> TRUE .)
-    CLOSEPAR        reduce using rule 95 (vcte -> TRUE .)
-    COMMA           reduce using rule 95 (vcte -> TRUE .)
-    CLOSEBRAC       reduce using rule 95 (vcte -> TRUE .)
-    HASTA           reduce using rule 95 (vcte -> TRUE .)
-    HACER           reduce using rule 95 (vcte -> TRUE .)
+    TIMES           reduce using rule 95 (vcte -> FALSE .)
+    DIVIDE          reduce using rule 95 (vcte -> FALSE .)
+    MINUS           reduce using rule 95 (vcte -> FALSE .)
+    PLUS            reduce using rule 95 (vcte -> FALSE .)
+    GT              reduce using rule 95 (vcte -> FALSE .)
+    GTE             reduce using rule 95 (vcte -> FALSE .)
+    LT              reduce using rule 95 (vcte -> FALSE .)
+    LTE             reduce using rule 95 (vcte -> FALSE .)
+    NEQ             reduce using rule 95 (vcte -> FALSE .)
+    EQ              reduce using rule 95 (vcte -> FALSE .)
+    SEMICOLON       reduce using rule 95 (vcte -> FALSE .)
+    OR              reduce using rule 95 (vcte -> FALSE .)
+    AND             reduce using rule 95 (vcte -> FALSE .)
+    CLOSEPAR        reduce using rule 95 (vcte -> FALSE .)
+    COMMA           reduce using rule 95 (vcte -> FALSE .)
+    CLOSEBRAC       reduce using rule 95 (vcte -> FALSE .)
+    HASTA           reduce using rule 95 (vcte -> FALSE .)
+    HACER           reduce using rule 95 (vcte -> FALSE .)
 
 
 state 100
 
-    (96) vcte -> FALSE .
+    (96) vcte -> CTEC .
 
-    TIMES           reduce using rule 96 (vcte -> FALSE .)
-    DIVIDE          reduce using rule 96 (vcte -> FALSE .)
-    MINUS           reduce using rule 96 (vcte -> FALSE .)
-    PLUS            reduce using rule 96 (vcte -> FALSE .)
-    GT              reduce using rule 96 (vcte -> FALSE .)
-    GTE             reduce using rule 96 (vcte -> FALSE .)
-    LT              reduce using rule 96 (vcte -> FALSE .)
-    LTE             reduce using rule 96 (vcte -> FALSE .)
-    NEQ             reduce using rule 96 (vcte -> FALSE .)
-    EQ              reduce using rule 96 (vcte -> FALSE .)
-    SEMICOLON       reduce using rule 96 (vcte -> FALSE .)
-    OR              reduce using rule 96 (vcte -> FALSE .)
-    AND             reduce using rule 96 (vcte -> FALSE .)
-    CLOSEPAR        reduce using rule 96 (vcte -> FALSE .)
-    COMMA           reduce using rule 96 (vcte -> FALSE .)
-    CLOSEBRAC       reduce using rule 96 (vcte -> FALSE .)
-    HASTA           reduce using rule 96 (vcte -> FALSE .)
-    HACER           reduce using rule 96 (vcte -> FALSE .)
+    TIMES           reduce using rule 96 (vcte -> CTEC .)
+    DIVIDE          reduce using rule 96 (vcte -> CTEC .)
+    MINUS           reduce using rule 96 (vcte -> CTEC .)
+    PLUS            reduce using rule 96 (vcte -> CTEC .)
+    GT              reduce using rule 96 (vcte -> CTEC .)
+    GTE             reduce using rule 96 (vcte -> CTEC .)
+    LT              reduce using rule 96 (vcte -> CTEC .)
+    LTE             reduce using rule 96 (vcte -> CTEC .)
+    NEQ             reduce using rule 96 (vcte -> CTEC .)
+    EQ              reduce using rule 96 (vcte -> CTEC .)
+    SEMICOLON       reduce using rule 96 (vcte -> CTEC .)
+    OR              reduce using rule 96 (vcte -> CTEC .)
+    AND             reduce using rule 96 (vcte -> CTEC .)
+    CLOSEPAR        reduce using rule 96 (vcte -> CTEC .)
+    COMMA           reduce using rule 96 (vcte -> CTEC .)
+    CLOSEBRAC       reduce using rule 96 (vcte -> CTEC .)
+    HASTA           reduce using rule 96 (vcte -> CTEC .)
+    HACER           reduce using rule 96 (vcte -> CTEC .)
 
 
 state 101
@@ -1705,9 +1705,9 @@ state 101
 
     CTEI            reduce using rule 89 (openpar -> OPENPAR .)
     CTEF            reduce using rule 89 (openpar -> OPENPAR .)
-    CTEC            reduce using rule 89 (openpar -> OPENPAR .)
     TRUE            reduce using rule 89 (openpar -> OPENPAR .)
     FALSE           reduce using rule 89 (openpar -> OPENPAR .)
+    CTEC            reduce using rule 89 (openpar -> OPENPAR .)
     OPENPAR         reduce using rule 89 (openpar -> OPENPAR .)
     ID              reduce using rule 89 (openpar -> OPENPAR .)
 
@@ -1876,9 +1876,9 @@ state 113
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1886,9 +1886,9 @@ state 113
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1963,9 +1963,9 @@ state 119
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -1973,9 +1973,9 @@ state 119
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -1993,9 +1993,9 @@ state 120
 
     CTEI            reduce using rule 67 (boolean_op -> OR .)
     CTEF            reduce using rule 67 (boolean_op -> OR .)
-    CTEC            reduce using rule 67 (boolean_op -> OR .)
     TRUE            reduce using rule 67 (boolean_op -> OR .)
     FALSE           reduce using rule 67 (boolean_op -> OR .)
+    CTEC            reduce using rule 67 (boolean_op -> OR .)
     OPENPAR         reduce using rule 67 (boolean_op -> OR .)
     ID              reduce using rule 67 (boolean_op -> OR .)
 
@@ -2006,9 +2006,9 @@ state 121
 
     CTEI            reduce using rule 68 (boolean_op -> AND .)
     CTEF            reduce using rule 68 (boolean_op -> AND .)
-    CTEC            reduce using rule 68 (boolean_op -> AND .)
     TRUE            reduce using rule 68 (boolean_op -> AND .)
     FALSE           reduce using rule 68 (boolean_op -> AND .)
+    CTEC            reduce using rule 68 (boolean_op -> AND .)
     OPENPAR         reduce using rule 68 (boolean_op -> AND .)
     ID              reduce using rule 68 (boolean_op -> AND .)
 
@@ -2025,9 +2025,9 @@ state 122
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2035,9 +2035,9 @@ state 122
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2054,9 +2054,9 @@ state 123
 
     CTEI            reduce using rule 69 (logical_op -> GT .)
     CTEF            reduce using rule 69 (logical_op -> GT .)
-    CTEC            reduce using rule 69 (logical_op -> GT .)
     TRUE            reduce using rule 69 (logical_op -> GT .)
     FALSE           reduce using rule 69 (logical_op -> GT .)
+    CTEC            reduce using rule 69 (logical_op -> GT .)
     OPENPAR         reduce using rule 69 (logical_op -> GT .)
     ID              reduce using rule 69 (logical_op -> GT .)
 
@@ -2067,9 +2067,9 @@ state 124
 
     CTEI            reduce using rule 70 (logical_op -> GTE .)
     CTEF            reduce using rule 70 (logical_op -> GTE .)
-    CTEC            reduce using rule 70 (logical_op -> GTE .)
     TRUE            reduce using rule 70 (logical_op -> GTE .)
     FALSE           reduce using rule 70 (logical_op -> GTE .)
+    CTEC            reduce using rule 70 (logical_op -> GTE .)
     OPENPAR         reduce using rule 70 (logical_op -> GTE .)
     ID              reduce using rule 70 (logical_op -> GTE .)
 
@@ -2080,9 +2080,9 @@ state 125
 
     CTEI            reduce using rule 71 (logical_op -> LT .)
     CTEF            reduce using rule 71 (logical_op -> LT .)
-    CTEC            reduce using rule 71 (logical_op -> LT .)
     TRUE            reduce using rule 71 (logical_op -> LT .)
     FALSE           reduce using rule 71 (logical_op -> LT .)
+    CTEC            reduce using rule 71 (logical_op -> LT .)
     OPENPAR         reduce using rule 71 (logical_op -> LT .)
     ID              reduce using rule 71 (logical_op -> LT .)
 
@@ -2093,9 +2093,9 @@ state 126
 
     CTEI            reduce using rule 72 (logical_op -> LTE .)
     CTEF            reduce using rule 72 (logical_op -> LTE .)
-    CTEC            reduce using rule 72 (logical_op -> LTE .)
     TRUE            reduce using rule 72 (logical_op -> LTE .)
     FALSE           reduce using rule 72 (logical_op -> LTE .)
+    CTEC            reduce using rule 72 (logical_op -> LTE .)
     OPENPAR         reduce using rule 72 (logical_op -> LTE .)
     ID              reduce using rule 72 (logical_op -> LTE .)
 
@@ -2106,9 +2106,9 @@ state 127
 
     CTEI            reduce using rule 73 (logical_op -> NEQ .)
     CTEF            reduce using rule 73 (logical_op -> NEQ .)
-    CTEC            reduce using rule 73 (logical_op -> NEQ .)
     TRUE            reduce using rule 73 (logical_op -> NEQ .)
     FALSE           reduce using rule 73 (logical_op -> NEQ .)
+    CTEC            reduce using rule 73 (logical_op -> NEQ .)
     OPENPAR         reduce using rule 73 (logical_op -> NEQ .)
     ID              reduce using rule 73 (logical_op -> NEQ .)
 
@@ -2119,9 +2119,9 @@ state 128
 
     CTEI            reduce using rule 74 (logical_op -> EQ .)
     CTEF            reduce using rule 74 (logical_op -> EQ .)
-    CTEC            reduce using rule 74 (logical_op -> EQ .)
     TRUE            reduce using rule 74 (logical_op -> EQ .)
     FALSE           reduce using rule 74 (logical_op -> EQ .)
+    CTEC            reduce using rule 74 (logical_op -> EQ .)
     OPENPAR         reduce using rule 74 (logical_op -> EQ .)
     ID              reduce using rule 74 (logical_op -> EQ .)
 
@@ -2136,9 +2136,9 @@ state 129
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2146,9 +2146,9 @@ state 129
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2164,9 +2164,9 @@ state 130
 
     CTEI            reduce using rule 75 (sums -> MINUS .)
     CTEF            reduce using rule 75 (sums -> MINUS .)
-    CTEC            reduce using rule 75 (sums -> MINUS .)
     TRUE            reduce using rule 75 (sums -> MINUS .)
     FALSE           reduce using rule 75 (sums -> MINUS .)
+    CTEC            reduce using rule 75 (sums -> MINUS .)
     OPENPAR         reduce using rule 75 (sums -> MINUS .)
     ID              reduce using rule 75 (sums -> MINUS .)
 
@@ -2177,9 +2177,9 @@ state 131
 
     CTEI            reduce using rule 76 (sums -> PLUS .)
     CTEF            reduce using rule 76 (sums -> PLUS .)
-    CTEC            reduce using rule 76 (sums -> PLUS .)
     TRUE            reduce using rule 76 (sums -> PLUS .)
     FALSE           reduce using rule 76 (sums -> PLUS .)
+    CTEC            reduce using rule 76 (sums -> PLUS .)
     OPENPAR         reduce using rule 76 (sums -> PLUS .)
     ID              reduce using rule 76 (sums -> PLUS .)
 
@@ -2192,9 +2192,9 @@ state 132
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2202,9 +2202,9 @@ state 132
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2219,9 +2219,9 @@ state 133
 
     CTEI            reduce using rule 77 (multdiv -> TIMES .)
     CTEF            reduce using rule 77 (multdiv -> TIMES .)
-    CTEC            reduce using rule 77 (multdiv -> TIMES .)
     TRUE            reduce using rule 77 (multdiv -> TIMES .)
     FALSE           reduce using rule 77 (multdiv -> TIMES .)
+    CTEC            reduce using rule 77 (multdiv -> TIMES .)
     OPENPAR         reduce using rule 77 (multdiv -> TIMES .)
     ID              reduce using rule 77 (multdiv -> TIMES .)
 
@@ -2232,9 +2232,9 @@ state 134
 
     CTEI            reduce using rule 78 (multdiv -> DIVIDE .)
     CTEF            reduce using rule 78 (multdiv -> DIVIDE .)
-    CTEC            reduce using rule 78 (multdiv -> DIVIDE .)
     TRUE            reduce using rule 78 (multdiv -> DIVIDE .)
     FALSE           reduce using rule 78 (multdiv -> DIVIDE .)
+    CTEC            reduce using rule 78 (multdiv -> DIVIDE .)
     OPENPAR         reduce using rule 78 (multdiv -> DIVIDE .)
     ID              reduce using rule 78 (multdiv -> DIVIDE .)
 
@@ -2290,9 +2290,9 @@ state 138
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2302,9 +2302,9 @@ state 138
     CLOSEPAR        reduce using rule 97 (empty -> .)
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2357,9 +2357,9 @@ state 142
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2368,9 +2368,9 @@ state 142
     CTES            shift and go to state 164
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2753,9 +2753,9 @@ state 168
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2763,9 +2763,9 @@ state 168
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2788,9 +2788,9 @@ state 169
     (91) vcte -> . id
     (92) vcte -> . CTEI
     (93) vcte -> . CTEF
-    (94) vcte -> . CTEC
-    (95) vcte -> . TRUE
-    (96) vcte -> . FALSE
+    (94) vcte -> . TRUE
+    (95) vcte -> . FALSE
+    (96) vcte -> . CTEC
     (89) openpar -> . OPENPAR
     (64) id -> . ID
     (65) id -> . ID OPENBRAC exp CLOSEBRAC
@@ -2798,9 +2798,9 @@ state 169
 
     CTEI            shift and go to state 96
     CTEF            shift and go to state 97
-    CTEC            shift and go to state 98
-    TRUE            shift and go to state 99
-    FALSE           shift and go to state 100
+    TRUE            shift and go to state 98
+    FALSE           shift and go to state 99
+    CTEC            shift and go to state 100
     OPENPAR         shift and go to state 101
     ID              shift and go to state 102
 
@@ -2817,9 +2817,9 @@ state 170
 
     CTEI            reduce using rule 59 (hasta -> HASTA .)
     CTEF            reduce using rule 59 (hasta -> HASTA .)
-    CTEC            reduce using rule 59 (hasta -> HASTA .)
     TRUE            reduce using rule 59 (hasta -> HASTA .)
     FALSE           reduce using rule 59 (hasta -> HASTA .)
+    CTEC            reduce using rule 59 (hasta -> HASTA .)
     OPENPAR         reduce using rule 59 (hasta -> HASTA .)
     ID              reduce using rule 59 (hasta -> HASTA .)
 

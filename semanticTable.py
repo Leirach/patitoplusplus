@@ -1,79 +1,82 @@
 semanticTable = { 
-    'INT': {
-        'INT': {
-            'PLUS': 'INT',
-            'MINUS': 'INT',
-            'TIMES': 'INT',
-            'DIVIDE': 'INT',
-            'GT': 'BOOL',
-            'GTE': 'BOOL',
-            'LT': 'BOOL',
-            'LTE': 'BOOL',
-            'NEQ': 'BOOL',
-            'EQ': 'BOOL',
-            'AND': None,
-            'OR': None
+    'int': {
+        'int': {
+            '+': 'int',
+            '-': 'int',
+            '*': 'int',
+            '/': 'int',
+            '>': 'bool',
+            '>=': 'bool',
+            '<': 'bool',
+            '<=': 'bool',
+            '!=': 'bool',
+            '==': 'bool',
+            '&': None,
+            '|': None
         },
-        'FLOAT': {
-            'PLUS': 'FLOAT',
-            'MINUS': 'FLOAT',
-            'TIMES': 'FLOAT',
-            'DIVIDE': 'FLOAT',
-            'GT': 'BOOL',
-            'GTE': 'BOOL',
-            'LT': 'BOOL',
-            'LTE': 'BOOL',
-            'NEQ': 'BOOL',
-            'EQ': 'BOOL',
+        'float': {
+            '+': 'float',
+            '-': 'float',
+            '*': 'float',
+            '/': 'float',
+            'GT': 'bool',
+            '>=': 'bool',
+            '<': 'bool',
+            '<=': 'bool',
+            '!=': 'bool',
+            '==': 'bool',
         },
         'CHAR': {},
-        'BOOL': {}
+        'bool': {}
     },
-    'FLOAT': {
-        'INT': {
-            'PLUS': 'FLOAT',
-            'MINUS': 'FLOAT',
-            'TIMES': 'FLOAT',
-            'DIVIDE': 'FLOAT',
-            'GT': 'BOOL',
-            'GTE': 'BOOL',
-            'LT': 'BOOL',
-            'LTE': 'BOOL',
-            'NEQ': 'BOOL',
-            'EQ': 'BOOL',
+    'float': {
+        'int': {
+            '+': 'float',
+            '-': 'float',
+            '*': 'float',
+            '/': 'float',
+            'GT': 'bool',
+            '>=': 'bool',
+            '<': 'bool',
+            '<=': 'bool',
+            '!=': 'bool',
+            '==': 'bool',
         },
-        'FLOAT': {
-            'PLUS': 'FLOAT',
-            'MINUS': 'FLOAT',
-            'TIMES': 'FLOAT',
-            'DIVIDE': 'FLOAT',
-            'GT': 'BOOL',
-            'GTE': 'BOOL',
-            'LT': 'BOOL',
-            'LTE': 'BOOL',
-            'NEQ': 'BOOL',
-            'EQ': 'BOOL',
+        'float': {
+            '+': 'float',
+            '-': 'float',
+            '*': 'float',
+            '/': 'float',
+            'GT': 'bool',
+            '>=': 'bool',
+            '<': 'bool',
+            '<=': 'bool',
+            '!=': 'bool',
+            '==': 'bool',
         },
         'CHAR': { },
-        'BOOL': { }
+        'bool': { }
     },
-    'CHAR': {
-        'INT': { },
-        'FLOAT': { },
+    'char': {
+        'int': { },
+        'float': { },
         'CHAR': { },
-        'BOOL': { }
+        'bool': { }
     },
-    'BOOL': {
-        'INT': { },
-        'FLOAT': { },
+    'bool': {
+        'int': { },
+        'float': { },
         'CHAR': { },
-        'BOOL': { 
-            'AND': 'BOOL',
-            'OR': 'BOOL'
+        'bool': { 
+            '&': 'bool',
+            '|': 'bool'
         }
     }
 }
 
+def match(op, izqType, derType):
+    return semanticTable[izqType][derType].get(op)
+
 # semanticTable[TIPO1][TIPO2].get(OPERADOR) retorna None si no esta definido,
 # None = no son compatibles
-# print(semanticTable['BOOL']['BOOL'].get('PLUS'))
+# print(semanticTable['bool']['bool'].get('+'))

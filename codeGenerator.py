@@ -1,11 +1,12 @@
 import sys
-
+import semanticTable as semantic
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open("out.obj", "w")
         self.code = []
         self.opStack = []
         self.idStack = []
+        self.tpStack = []
         self.gotoStack = []
         self.pendingLines = []
         self.dirFunc = {}
@@ -19,13 +20,27 @@ class CodeGenerator:
             self.f.write(line)
         self.f.close()
 
+    def getVarType(p):
+        #placeholder
+        return 'int'
+
     def buildExp(self):
-        tok1 = self.opStack.pop()
-        tok3 = self.idStack.pop()
-        tok2 = self.idStack.pop()
-        tok4 = "t"+str(self.temp)
-        buf = "%s %s %s %s\n" % (tok1, tok2, tok3, tok4)
-        self.idStack.append(tok4)
+        op = self.opStack.pop()
+        # pop ids from stack
+        der = self.idStack.pop()
+        derType = self.tpStack.pop()
+        izq = self.idStack.pop()
+        izqType = self.tpStack.pop()
+        # get next temp var
+        aux = "t"+str(self.temp)
+        auxType = semantic.match(op, izqType, derType)
+        if (auxType is None):
+            print("Invalid operand %s for types %s and %s" % (op, izqType, derType))
+            sys.exit()
+
+        buf = "%s %s %s %s\n" % (op, izq, der, aux)
+        self.idStack.append(aux)
+        self.tpStack.append(auxType)
         self.temp += 1
         self.code.append(buf)
         print(self.code)

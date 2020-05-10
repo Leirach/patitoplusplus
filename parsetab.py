@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA QUACKIN QUACKOUT RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VAR VOIDdeclare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloquefunc_id : tipo ID\n               | VOID IDdeclare_func_params : tipo ID more_params\n                           | emptymore_params : COMMA tipo ID more_params\n                  | emptytipo : INT \n            | FLOAT\n            | CHAR\n            | BOOLbloque : LCURLYB estatutos_rec RCURLYBestatutos_rec : estatuto estatutos_rec\n                     | emptyestatuto : escribe\n                | lee escribe : QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLONprint_options : CTES more_print\n                     | ID more_printmore_print : COMMA CTES\n                  | COMMA ID\n                  | emptylee : QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLONread_more : COMMA ID read_more\n                 | emptyempty :'
+_lr_signature = 'AND ASSIGN BOOL CHAR CLOSEBRAC CLOSEPAR COMMA CTEC CTEF CTEI CTES DESDE DIVIDE ENTONCES EQ FALSE FLOAT FUNCION GT GTE HACER HASTA HAZ ID INT LCURLYB LT LTE MIENTRAS MINUS NEQ OPENBRAC OPENPAR OR PLUS PRINCIPAL PROGRAMA QUACKIN QUACKOUT RCURLYB RETORNO SEMICOLON SI SINO TIMES TRUE VAR VOIDfunc_void : func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLONfunc_call_id : IDfunc_call_params : vcte more_call_params\n                       | emptymore_call_params : COMMA vcte more_call_params\n                        | emptyvcte : ID\n            | CTEI\n            | CTEF\n            | CTEC\n            | TRUE\n            | FALSEempty :'
     
-_lr_action_items = {'FUNCION':([0,],[2,]),'$end':([1,18,31,],[0,-1,-12,]),'VOID':([2,],[5,]),'INT':([2,10,21,],[6,6,6,]),'FLOAT':([2,10,21,],[7,7,7,]),'CHAR':([2,10,21,],[8,8,8,]),'BOOL':([2,10,21,],[9,9,9,]),'OPENPAR':([3,11,12,28,29,],[10,-2,-3,33,34,]),'ID':([4,5,6,7,8,9,14,30,33,34,43,47,],[11,12,-8,-9,-10,-11,17,35,38,39,51,53,]),'CLOSEPAR':([10,13,15,17,20,22,35,36,37,38,39,40,42,44,45,46,48,50,51,53,55,],[-26,16,-5,-26,-4,-7,-26,41,-26,-26,-26,-6,-18,-22,-19,52,-25,-20,-21,-26,-24,]),'LCURLYB':([16,],[19,]),'COMMA':([17,35,37,38,39,53,],[21,21,43,43,47,47,]),'RCURLYB':([19,23,24,25,26,27,32,49,54,],[-26,31,-26,-14,-15,-16,-13,-17,-23,]),'QUACKOUT':([19,24,26,27,49,54,],[28,28,-15,-16,-17,-23,]),'QUACKIN':([19,24,26,27,49,54,],[29,29,-15,-16,-17,-23,]),'CTES':([33,43,],[37,50,]),'SEMICOLON':([41,52,],[49,54,]),}
+_lr_action_items = {'ID':([0,4,16,],[3,8,8,]),'$end':([1,18,],[0,-1,]),'OPENPAR':([2,3,],[4,-2,]),'CTEI':([4,16,],[9,9,]),'CTEF':([4,16,],[10,10,]),'CTEC':([4,16,],[11,11,]),'TRUE':([4,16,],[12,12,]),'FALSE':([4,16,],[13,13,]),'CLOSEPAR':([4,5,6,7,8,9,10,11,12,13,15,17,19,20,],[-13,14,-13,-4,-7,-8,-9,-10,-11,-12,-3,-6,-13,-5,]),'COMMA':([6,8,9,10,11,12,13,19,],[16,-7,-8,-9,-10,-11,-12,16,]),'SEMICOLON':([14,],[18,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'declare_func':([0,],[1,]),'func_id':([2,],[3,]),'tipo':([2,10,21,],[4,14,30,]),'declare_func_params':([10,],[13,]),'empty':([10,17,19,24,35,37,38,39,53,],[15,22,25,25,22,44,44,48,48,]),'bloque':([16,],[18,]),'more_params':([17,35,],[20,40,]),'estatutos_rec':([19,24,],[23,32,]),'estatuto':([19,24,],[24,24,]),'escribe':([19,24,],[26,26,]),'lee':([19,24,],[27,27,]),'print_options':([33,],[36,]),'more_print':([37,38,],[42,45,]),'read_more':([39,53,],[46,55,]),}
+_lr_goto_items = {'func_void':([0,],[1,]),'func_call_id':([0,],[2,]),'func_call_params':([4,],[5,]),'vcte':([4,16,],[6,19,]),'empty':([4,6,19,],[7,17,17,]),'more_call_params':([6,19,],[15,20,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,31 +26,18 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> declare_func","S'",1,None,None,None),
-  ('declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque','declare_func',6,'p_declare_func','test.py',14),
-  ('func_id -> tipo ID','func_id',2,'p_func_id','test.py',18),
-  ('func_id -> VOID ID','func_id',2,'p_func_id','test.py',19),
-  ('declare_func_params -> tipo ID more_params','declare_func_params',3,'p_declare_func_params','test.py',23),
-  ('declare_func_params -> empty','declare_func_params',1,'p_declare_func_params','test.py',24),
-  ('more_params -> COMMA tipo ID more_params','more_params',4,'p_more_params','test.py',27),
-  ('more_params -> empty','more_params',1,'p_more_params','test.py',28),
-  ('tipo -> INT','tipo',1,'p_tipo','test.py',31),
-  ('tipo -> FLOAT','tipo',1,'p_tipo','test.py',32),
-  ('tipo -> CHAR','tipo',1,'p_tipo','test.py',33),
-  ('tipo -> BOOL','tipo',1,'p_tipo','test.py',34),
-  ('bloque -> LCURLYB estatutos_rec RCURLYB','bloque',3,'p_bloque','test.py',38),
-  ('estatutos_rec -> estatuto estatutos_rec','estatutos_rec',2,'p_estatutos_rec','test.py',41),
-  ('estatutos_rec -> empty','estatutos_rec',1,'p_estatutos_rec','test.py',42),
-  ('estatuto -> escribe','estatuto',1,'p_estatuto','test.py',45),
-  ('estatuto -> lee','estatuto',1,'p_estatuto','test.py',46),
-  ('escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON','escribe',5,'p_escribe','test.py',50),
-  ('print_options -> CTES more_print','print_options',2,'p_print_options','test.py',53),
-  ('print_options -> ID more_print','print_options',2,'p_print_options','test.py',54),
-  ('more_print -> COMMA CTES','more_print',2,'p_more_print','test.py',57),
-  ('more_print -> COMMA ID','more_print',2,'p_more_print','test.py',58),
-  ('more_print -> empty','more_print',1,'p_more_print','test.py',59),
-  ('lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON','lee',6,'p_lee','test.py',63),
-  ('read_more -> COMMA ID read_more','read_more',3,'p_read_more','test.py',66),
-  ('read_more -> empty','read_more',1,'p_read_more','test.py',67),
-  ('empty -> <empty>','empty',0,'p_empty','test.py',70),
+  ("S' -> func_void","S'",1,None,None,None),
+  ('func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON','func_void',5,'p_func_void','test.py',19),
+  ('func_call_id -> ID','func_call_id',1,'p_func_call_id','test.py',22),
+  ('func_call_params -> vcte more_call_params','func_call_params',2,'p_func_call_params','test.py',27),
+  ('func_call_params -> empty','func_call_params',1,'p_func_call_params','test.py',28),
+  ('more_call_params -> COMMA vcte more_call_params','more_call_params',3,'p_more_call_params','test.py',32),
+  ('more_call_params -> empty','more_call_params',1,'p_more_call_params','test.py',33),
+  ('vcte -> ID','vcte',1,'p_vcte','test.py',37),
+  ('vcte -> CTEI','vcte',1,'p_vcte','test.py',38),
+  ('vcte -> CTEF','vcte',1,'p_vcte','test.py',39),
+  ('vcte -> CTEC','vcte',1,'p_vcte','test.py',40),
+  ('vcte -> TRUE','vcte',1,'p_vcte','test.py',41),
+  ('vcte -> FALSE','vcte',1,'p_vcte','test.py',42),
+  ('empty -> <empty>','empty',0,'p_empty','test.py',47),
 ]

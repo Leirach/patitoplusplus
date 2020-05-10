@@ -4,20 +4,23 @@ Unused terminals:
 
     AND
     ASSIGN
+    BOOL
+    CHAR
     CLOSEBRAC
-    CTEC
-    CTEF
-    CTEI
+    CTES
     DESDE
     DIVIDE
     ENTONCES
     EQ
-    FALSE
+    FLOAT
+    FUNCION
     GT
     GTE
     HACER
     HASTA
     HAZ
+    INT
+    LCURLYB
     LT
     LTE
     MIENTRAS
@@ -28,619 +31,290 @@ Unused terminals:
     PLUS
     PRINCIPAL
     PROGRAMA
+    QUACKIN
+    QUACKOUT
+    RCURLYB
     RETORNO
     SI
     SINO
     TIMES
-    TRUE
     VAR
+    VOID
 
 Grammar
 
-Rule 0     S' -> declare_func
-Rule 1     declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque
-Rule 2     func_id -> tipo ID
-Rule 3     func_id -> VOID ID
-Rule 4     declare_func_params -> tipo ID more_params
-Rule 5     declare_func_params -> empty
-Rule 6     more_params -> COMMA tipo ID more_params
-Rule 7     more_params -> empty
-Rule 8     tipo -> INT
-Rule 9     tipo -> FLOAT
-Rule 10    tipo -> CHAR
-Rule 11    tipo -> BOOL
-Rule 12    bloque -> LCURLYB estatutos_rec RCURLYB
-Rule 13    estatutos_rec -> estatuto estatutos_rec
-Rule 14    estatutos_rec -> empty
-Rule 15    estatuto -> escribe
-Rule 16    estatuto -> lee
-Rule 17    escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
-Rule 18    print_options -> CTES more_print
-Rule 19    print_options -> ID more_print
-Rule 20    more_print -> COMMA CTES
-Rule 21    more_print -> COMMA ID
-Rule 22    more_print -> empty
-Rule 23    lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON
-Rule 24    read_more -> COMMA ID read_more
-Rule 25    read_more -> empty
-Rule 26    empty -> <empty>
+Rule 0     S' -> func_void
+Rule 1     func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON
+Rule 2     func_call_id -> ID
+Rule 3     func_call_params -> vcte more_call_params
+Rule 4     func_call_params -> empty
+Rule 5     more_call_params -> COMMA vcte more_call_params
+Rule 6     more_call_params -> empty
+Rule 7     vcte -> ID
+Rule 8     vcte -> CTEI
+Rule 9     vcte -> CTEF
+Rule 10    vcte -> CTEC
+Rule 11    vcte -> TRUE
+Rule 12    vcte -> FALSE
+Rule 13    empty -> <empty>
 
 Terminals, with rules where they appear
 
 AND                  : 
 ASSIGN               : 
-BOOL                 : 11
-CHAR                 : 10
+BOOL                 : 
+CHAR                 : 
 CLOSEBRAC            : 
-CLOSEPAR             : 1 17 23
-COMMA                : 6 20 21 24
-CTEC                 : 
-CTEF                 : 
-CTEI                 : 
-CTES                 : 18 20
+CLOSEPAR             : 1
+COMMA                : 5
+CTEC                 : 10
+CTEF                 : 9
+CTEI                 : 8
+CTES                 : 
 DESDE                : 
 DIVIDE               : 
 ENTONCES             : 
 EQ                   : 
-FALSE                : 
-FLOAT                : 9
-FUNCION              : 1
+FALSE                : 12
+FLOAT                : 
+FUNCION              : 
 GT                   : 
 GTE                  : 
 HACER                : 
 HASTA                : 
 HAZ                  : 
-ID                   : 2 3 4 6 19 21 23 24
-INT                  : 8
-LCURLYB              : 12
+ID                   : 2 7
+INT                  : 
+LCURLYB              : 
 LT                   : 
 LTE                  : 
 MIENTRAS             : 
 MINUS                : 
 NEQ                  : 
 OPENBRAC             : 
-OPENPAR              : 1 17 23
+OPENPAR              : 1
 OR                   : 
 PLUS                 : 
 PRINCIPAL            : 
 PROGRAMA             : 
-QUACKIN              : 23
-QUACKOUT             : 17
-RCURLYB              : 12
+QUACKIN              : 
+QUACKOUT             : 
+RCURLYB              : 
 RETORNO              : 
-SEMICOLON            : 17 23
+SEMICOLON            : 1
 SI                   : 
 SINO                 : 
 TIMES                : 
-TRUE                 : 
+TRUE                 : 11
 VAR                  : 
-VOID                 : 3
+VOID                 : 
 error                : 
 
 Nonterminals, with rules where they appear
 
-bloque               : 1
-declare_func         : 0
-declare_func_params  : 1
-empty                : 5 7 14 22 25
-escribe              : 15
-estatuto             : 13
-estatutos_rec        : 12 13
-func_id              : 1
-lee                  : 16
-more_params          : 4 6
-more_print           : 18 19
-print_options        : 17
-read_more            : 23 24
-tipo                 : 2 4 6
+empty                : 4 6
+func_call_id         : 1
+func_call_params     : 1
+func_void            : 0
+more_call_params     : 3 5
+vcte                 : 3 5
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . declare_func
-    (1) declare_func -> . FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque
+    (0) S' -> . func_void
+    (1) func_void -> . func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON
+    (2) func_call_id -> . ID
 
-    FUNCION         shift and go to state 2
+    ID              shift and go to state 3
 
-    declare_func                   shift and go to state 1
+    func_void                      shift and go to state 1
+    func_call_id                   shift and go to state 2
 
 state 1
 
-    (0) S' -> declare_func .
+    (0) S' -> func_void .
 
 
 
 state 2
 
-    (1) declare_func -> FUNCION . func_id OPENPAR declare_func_params CLOSEPAR bloque
-    (2) func_id -> . tipo ID
-    (3) func_id -> . VOID ID
-    (8) tipo -> . INT
-    (9) tipo -> . FLOAT
-    (10) tipo -> . CHAR
-    (11) tipo -> . BOOL
+    (1) func_void -> func_call_id . OPENPAR func_call_params CLOSEPAR SEMICOLON
 
-    VOID            shift and go to state 5
-    INT             shift and go to state 6
-    FLOAT           shift and go to state 7
-    CHAR            shift and go to state 8
-    BOOL            shift and go to state 9
+    OPENPAR         shift and go to state 4
 
-    func_id                        shift and go to state 3
-    tipo                           shift and go to state 4
 
 state 3
 
-    (1) declare_func -> FUNCION func_id . OPENPAR declare_func_params CLOSEPAR bloque
+    (2) func_call_id -> ID .
 
-    OPENPAR         shift and go to state 10
+    OPENPAR         reduce using rule 2 (func_call_id -> ID .)
 
 
 state 4
 
-    (2) func_id -> tipo . ID
+    (1) func_void -> func_call_id OPENPAR . func_call_params CLOSEPAR SEMICOLON
+    (3) func_call_params -> . vcte more_call_params
+    (4) func_call_params -> . empty
+    (7) vcte -> . ID
+    (8) vcte -> . CTEI
+    (9) vcte -> . CTEF
+    (10) vcte -> . CTEC
+    (11) vcte -> . TRUE
+    (12) vcte -> . FALSE
+    (13) empty -> .
 
-    ID              shift and go to state 11
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
+    CLOSEPAR        reduce using rule 13 (empty -> .)
 
+    func_call_params               shift and go to state 5
+    vcte                           shift and go to state 6
+    empty                          shift and go to state 7
 
 state 5
 
-    (3) func_id -> VOID . ID
+    (1) func_void -> func_call_id OPENPAR func_call_params . CLOSEPAR SEMICOLON
 
-    ID              shift and go to state 12
+    CLOSEPAR        shift and go to state 14
 
 
 state 6
 
-    (8) tipo -> INT .
+    (3) func_call_params -> vcte . more_call_params
+    (5) more_call_params -> . COMMA vcte more_call_params
+    (6) more_call_params -> . empty
+    (13) empty -> .
 
-    ID              reduce using rule 8 (tipo -> INT .)
+    COMMA           shift and go to state 16
+    CLOSEPAR        reduce using rule 13 (empty -> .)
 
+    more_call_params               shift and go to state 15
+    empty                          shift and go to state 17
 
 state 7
 
-    (9) tipo -> FLOAT .
+    (4) func_call_params -> empty .
 
-    ID              reduce using rule 9 (tipo -> FLOAT .)
+    CLOSEPAR        reduce using rule 4 (func_call_params -> empty .)
 
 
 state 8
 
-    (10) tipo -> CHAR .
+    (7) vcte -> ID .
 
-    ID              reduce using rule 10 (tipo -> CHAR .)
+    COMMA           reduce using rule 7 (vcte -> ID .)
+    CLOSEPAR        reduce using rule 7 (vcte -> ID .)
 
 
 state 9
 
-    (11) tipo -> BOOL .
+    (8) vcte -> CTEI .
 
-    ID              reduce using rule 11 (tipo -> BOOL .)
+    COMMA           reduce using rule 8 (vcte -> CTEI .)
+    CLOSEPAR        reduce using rule 8 (vcte -> CTEI .)
 
 
 state 10
 
-    (1) declare_func -> FUNCION func_id OPENPAR . declare_func_params CLOSEPAR bloque
-    (4) declare_func_params -> . tipo ID more_params
-    (5) declare_func_params -> . empty
-    (8) tipo -> . INT
-    (9) tipo -> . FLOAT
-    (10) tipo -> . CHAR
-    (11) tipo -> . BOOL
-    (26) empty -> .
+    (9) vcte -> CTEF .
 
-    INT             shift and go to state 6
-    FLOAT           shift and go to state 7
-    CHAR            shift and go to state 8
-    BOOL            shift and go to state 9
-    CLOSEPAR        reduce using rule 26 (empty -> .)
+    COMMA           reduce using rule 9 (vcte -> CTEF .)
+    CLOSEPAR        reduce using rule 9 (vcte -> CTEF .)
 
-    declare_func_params            shift and go to state 13
-    tipo                           shift and go to state 14
-    empty                          shift and go to state 15
 
 state 11
 
-    (2) func_id -> tipo ID .
+    (10) vcte -> CTEC .
 
-    OPENPAR         reduce using rule 2 (func_id -> tipo ID .)
+    COMMA           reduce using rule 10 (vcte -> CTEC .)
+    CLOSEPAR        reduce using rule 10 (vcte -> CTEC .)
 
 
 state 12
 
-    (3) func_id -> VOID ID .
+    (11) vcte -> TRUE .
 
-    OPENPAR         reduce using rule 3 (func_id -> VOID ID .)
+    COMMA           reduce using rule 11 (vcte -> TRUE .)
+    CLOSEPAR        reduce using rule 11 (vcte -> TRUE .)
 
 
 state 13
 
-    (1) declare_func -> FUNCION func_id OPENPAR declare_func_params . CLOSEPAR bloque
+    (12) vcte -> FALSE .
 
-    CLOSEPAR        shift and go to state 16
+    COMMA           reduce using rule 12 (vcte -> FALSE .)
+    CLOSEPAR        reduce using rule 12 (vcte -> FALSE .)
 
 
 state 14
 
-    (4) declare_func_params -> tipo . ID more_params
+    (1) func_void -> func_call_id OPENPAR func_call_params CLOSEPAR . SEMICOLON
 
-    ID              shift and go to state 17
+    SEMICOLON       shift and go to state 18
 
 
 state 15
 
-    (5) declare_func_params -> empty .
+    (3) func_call_params -> vcte more_call_params .
 
-    CLOSEPAR        reduce using rule 5 (declare_func_params -> empty .)
+    CLOSEPAR        reduce using rule 3 (func_call_params -> vcte more_call_params .)
 
 
 state 16
 
-    (1) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR . bloque
-    (12) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (5) more_call_params -> COMMA . vcte more_call_params
+    (7) vcte -> . ID
+    (8) vcte -> . CTEI
+    (9) vcte -> . CTEF
+    (10) vcte -> . CTEC
+    (11) vcte -> . TRUE
+    (12) vcte -> . FALSE
 
-    LCURLYB         shift and go to state 19
+    ID              shift and go to state 8
+    CTEI            shift and go to state 9
+    CTEF            shift and go to state 10
+    CTEC            shift and go to state 11
+    TRUE            shift and go to state 12
+    FALSE           shift and go to state 13
 
-    bloque                         shift and go to state 18
+    vcte                           shift and go to state 19
 
 state 17
 
-    (4) declare_func_params -> tipo ID . more_params
-    (6) more_params -> . COMMA tipo ID more_params
-    (7) more_params -> . empty
-    (26) empty -> .
+    (6) more_call_params -> empty .
 
-    COMMA           shift and go to state 21
-    CLOSEPAR        reduce using rule 26 (empty -> .)
+    CLOSEPAR        reduce using rule 6 (more_call_params -> empty .)
 
-    more_params                    shift and go to state 20
-    empty                          shift and go to state 22
 
 state 18
 
-    (1) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque .
+    (1) func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .
 
-    $end            reduce using rule 1 (declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque .)
+    $end            reduce using rule 1 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
 
 
 state 19
 
-    (12) bloque -> LCURLYB . estatutos_rec RCURLYB
-    (13) estatutos_rec -> . estatuto estatutos_rec
-    (14) estatutos_rec -> . empty
-    (15) estatuto -> . escribe
-    (16) estatuto -> . lee
-    (26) empty -> .
-    (17) escribe -> . QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
-    (23) lee -> . QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON
+    (5) more_call_params -> COMMA vcte . more_call_params
+    (5) more_call_params -> . COMMA vcte more_call_params
+    (6) more_call_params -> . empty
+    (13) empty -> .
 
-    RCURLYB         reduce using rule 26 (empty -> .)
-    QUACKOUT        shift and go to state 28
-    QUACKIN         shift and go to state 29
+    COMMA           shift and go to state 16
+    CLOSEPAR        reduce using rule 13 (empty -> .)
 
-    estatutos_rec                  shift and go to state 23
-    estatuto                       shift and go to state 24
-    empty                          shift and go to state 25
-    escribe                        shift and go to state 26
-    lee                            shift and go to state 27
+    more_call_params               shift and go to state 20
+    empty                          shift and go to state 17
 
 state 20
 
-    (4) declare_func_params -> tipo ID more_params .
+    (5) more_call_params -> COMMA vcte more_call_params .
 
-    CLOSEPAR        reduce using rule 4 (declare_func_params -> tipo ID more_params .)
-
-
-state 21
-
-    (6) more_params -> COMMA . tipo ID more_params
-    (8) tipo -> . INT
-    (9) tipo -> . FLOAT
-    (10) tipo -> . CHAR
-    (11) tipo -> . BOOL
-
-    INT             shift and go to state 6
-    FLOAT           shift and go to state 7
-    CHAR            shift and go to state 8
-    BOOL            shift and go to state 9
-
-    tipo                           shift and go to state 30
-
-state 22
-
-    (7) more_params -> empty .
-
-    CLOSEPAR        reduce using rule 7 (more_params -> empty .)
-
-
-state 23
-
-    (12) bloque -> LCURLYB estatutos_rec . RCURLYB
-
-    RCURLYB         shift and go to state 31
-
-
-state 24
-
-    (13) estatutos_rec -> estatuto . estatutos_rec
-    (13) estatutos_rec -> . estatuto estatutos_rec
-    (14) estatutos_rec -> . empty
-    (15) estatuto -> . escribe
-    (16) estatuto -> . lee
-    (26) empty -> .
-    (17) escribe -> . QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
-    (23) lee -> . QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON
-
-    RCURLYB         reduce using rule 26 (empty -> .)
-    QUACKOUT        shift and go to state 28
-    QUACKIN         shift and go to state 29
-
-    estatuto                       shift and go to state 24
-    estatutos_rec                  shift and go to state 32
-    empty                          shift and go to state 25
-    escribe                        shift and go to state 26
-    lee                            shift and go to state 27
-
-state 25
-
-    (14) estatutos_rec -> empty .
-
-    RCURLYB         reduce using rule 14 (estatutos_rec -> empty .)
-
-
-state 26
-
-    (15) estatuto -> escribe .
-
-    QUACKOUT        reduce using rule 15 (estatuto -> escribe .)
-    QUACKIN         reduce using rule 15 (estatuto -> escribe .)
-    RCURLYB         reduce using rule 15 (estatuto -> escribe .)
-
-
-state 27
-
-    (16) estatuto -> lee .
-
-    QUACKOUT        reduce using rule 16 (estatuto -> lee .)
-    QUACKIN         reduce using rule 16 (estatuto -> lee .)
-    RCURLYB         reduce using rule 16 (estatuto -> lee .)
-
-
-state 28
-
-    (17) escribe -> QUACKOUT . OPENPAR print_options CLOSEPAR SEMICOLON
-
-    OPENPAR         shift and go to state 33
-
-
-state 29
-
-    (23) lee -> QUACKIN . OPENPAR ID read_more CLOSEPAR SEMICOLON
-
-    OPENPAR         shift and go to state 34
-
-
-state 30
-
-    (6) more_params -> COMMA tipo . ID more_params
-
-    ID              shift and go to state 35
-
-
-state 31
-
-    (12) bloque -> LCURLYB estatutos_rec RCURLYB .
-
-    $end            reduce using rule 12 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-
-
-state 32
-
-    (13) estatutos_rec -> estatuto estatutos_rec .
-
-    RCURLYB         reduce using rule 13 (estatutos_rec -> estatuto estatutos_rec .)
-
-
-state 33
-
-    (17) escribe -> QUACKOUT OPENPAR . print_options CLOSEPAR SEMICOLON
-    (18) print_options -> . CTES more_print
-    (19) print_options -> . ID more_print
-
-    CTES            shift and go to state 37
-    ID              shift and go to state 38
-
-    print_options                  shift and go to state 36
-
-state 34
-
-    (23) lee -> QUACKIN OPENPAR . ID read_more CLOSEPAR SEMICOLON
-
-    ID              shift and go to state 39
-
-
-state 35
-
-    (6) more_params -> COMMA tipo ID . more_params
-    (6) more_params -> . COMMA tipo ID more_params
-    (7) more_params -> . empty
-    (26) empty -> .
-
-    COMMA           shift and go to state 21
-    CLOSEPAR        reduce using rule 26 (empty -> .)
-
-    more_params                    shift and go to state 40
-    empty                          shift and go to state 22
-
-state 36
-
-    (17) escribe -> QUACKOUT OPENPAR print_options . CLOSEPAR SEMICOLON
-
-    CLOSEPAR        shift and go to state 41
-
-
-state 37
-
-    (18) print_options -> CTES . more_print
-    (20) more_print -> . COMMA CTES
-    (21) more_print -> . COMMA ID
-    (22) more_print -> . empty
-    (26) empty -> .
-
-    COMMA           shift and go to state 43
-    CLOSEPAR        reduce using rule 26 (empty -> .)
-
-    more_print                     shift and go to state 42
-    empty                          shift and go to state 44
-
-state 38
-
-    (19) print_options -> ID . more_print
-    (20) more_print -> . COMMA CTES
-    (21) more_print -> . COMMA ID
-    (22) more_print -> . empty
-    (26) empty -> .
-
-    COMMA           shift and go to state 43
-    CLOSEPAR        reduce using rule 26 (empty -> .)
-
-    more_print                     shift and go to state 45
-    empty                          shift and go to state 44
-
-state 39
-
-    (23) lee -> QUACKIN OPENPAR ID . read_more CLOSEPAR SEMICOLON
-    (24) read_more -> . COMMA ID read_more
-    (25) read_more -> . empty
-    (26) empty -> .
-
-    COMMA           shift and go to state 47
-    CLOSEPAR        reduce using rule 26 (empty -> .)
-
-    read_more                      shift and go to state 46
-    empty                          shift and go to state 48
-
-state 40
-
-    (6) more_params -> COMMA tipo ID more_params .
-
-    CLOSEPAR        reduce using rule 6 (more_params -> COMMA tipo ID more_params .)
-
-
-state 41
-
-    (17) escribe -> QUACKOUT OPENPAR print_options CLOSEPAR . SEMICOLON
-
-    SEMICOLON       shift and go to state 49
-
-
-state 42
-
-    (18) print_options -> CTES more_print .
-
-    CLOSEPAR        reduce using rule 18 (print_options -> CTES more_print .)
-
-
-state 43
-
-    (20) more_print -> COMMA . CTES
-    (21) more_print -> COMMA . ID
-
-    CTES            shift and go to state 50
-    ID              shift and go to state 51
-
-
-state 44
-
-    (22) more_print -> empty .
-
-    CLOSEPAR        reduce using rule 22 (more_print -> empty .)
-
-
-state 45
-
-    (19) print_options -> ID more_print .
-
-    CLOSEPAR        reduce using rule 19 (print_options -> ID more_print .)
-
-
-state 46
-
-    (23) lee -> QUACKIN OPENPAR ID read_more . CLOSEPAR SEMICOLON
-
-    CLOSEPAR        shift and go to state 52
-
-
-state 47
-
-    (24) read_more -> COMMA . ID read_more
-
-    ID              shift and go to state 53
-
-
-state 48
-
-    (25) read_more -> empty .
-
-    CLOSEPAR        reduce using rule 25 (read_more -> empty .)
-
-
-state 49
-
-    (17) escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .
-
-    QUACKOUT        reduce using rule 17 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
-    QUACKIN         reduce using rule 17 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
-    RCURLYB         reduce using rule 17 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
-
-
-state 50
-
-    (20) more_print -> COMMA CTES .
-
-    CLOSEPAR        reduce using rule 20 (more_print -> COMMA CTES .)
-
-
-state 51
-
-    (21) more_print -> COMMA ID .
-
-    CLOSEPAR        reduce using rule 21 (more_print -> COMMA ID .)
-
-
-state 52
-
-    (23) lee -> QUACKIN OPENPAR ID read_more CLOSEPAR . SEMICOLON
-
-    SEMICOLON       shift and go to state 54
-
-
-state 53
-
-    (24) read_more -> COMMA ID . read_more
-    (24) read_more -> . COMMA ID read_more
-    (25) read_more -> . empty
-    (26) empty -> .
-
-    COMMA           shift and go to state 47
-    CLOSEPAR        reduce using rule 26 (empty -> .)
-
-    read_more                      shift and go to state 55
-    empty                          shift and go to state 48
-
-state 54
-
-    (23) lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON .
-
-    QUACKOUT        reduce using rule 23 (lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON .)
-    QUACKIN         reduce using rule 23 (lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON .)
-    RCURLYB         reduce using rule 23 (lee -> QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON .)
-
-
-state 55
-
-    (24) read_more -> COMMA ID read_more .
-
-    CLOSEPAR        reduce using rule 24 (read_more -> COMMA ID read_more .)
+    CLOSEPAR        reduce using rule 5 (more_call_params -> COMMA vcte more_call_params .)
 

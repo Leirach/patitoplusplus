@@ -30,9 +30,15 @@ def p_dimensions(p):
                   | empty'''
 
 def p_declare_func(p):
-    '''declare_func : FUNCION tipo ID OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque
                     | empty'''
-                    
+    code.endFunc()
+
+def p_func_id(p):
+    '''func_id : tipo ID
+               | VOID ID'''
+    code.registerFunc(id=p[2], tipo=p[1])
+
 def p_declare_func_params(p):
     '''declare_func_params : tipo ID more_params
                            | empty'''

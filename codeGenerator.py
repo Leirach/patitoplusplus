@@ -7,6 +7,7 @@ class CodeGenerator:
         self.gotoStack = []
         self.pendingLines = []
         self.dirFunc = {}
+        self.paramCounter = 0
         self.forIds = []
         self.temp = 1
         self.line = 1
@@ -119,6 +120,19 @@ class CodeGenerator:
         # insertar endfunc
         # calcular tamaño de todo self.temp tiene el count
         # liberar varTable, resetear temporales? idk
+    
+    def funcCall(self, func_id):
+        #check if functions exists in directory?
+        buf = "ERA %s\n" % (func_id)
+        self.code.append(buf)
+        self.line+=1
+
+    def funcCallParam(self):
+        param = self.idStack.pop()
+        self.paramCounter += 1 # starts @ 0
+        buf = "PARAM %s par%d\n" % (param, self.paramCounter)
+        self.code.append(buf)
+        self.line+=1
 
     def peek(self, stack):
         if len(stack) > 0:

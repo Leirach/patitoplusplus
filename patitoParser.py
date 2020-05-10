@@ -3,14 +3,25 @@
 import patitoLexer
 import codeGenerator as cg
 import ply.yacc as yacc
+import sys
 
 tokens = patitoLexer.tokens
 code = cg.CodeGenerator()
 
+EMPTY = '$'
+
+precedence = (
+    ('left', 'COMMA'),
+)
+
 def p_program_declaration(p):
-    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func PRINCIPAL OPENPAR CLOSEPAR bloque'
+    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec PRINCIPAL OPENPAR CLOSEPAR bloque'
     global programId
     programId = p[2]
+
+
+#def p_principal(p):
+    #code.startMain()
 
 def p_declare_vars(p):
     '''declare_vars : VAR vars
@@ -29,9 +40,12 @@ def p_dimensions(p):
                   | OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
                   | empty'''
 
+def p_declare_func_rec(p):
+    '''declare_func_rec : declare_func_rec declare_func
+                        | empty'''
+
 def p_declare_func(p):
-    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque
-                    | empty'''
+    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque'''
     code.endFunc()
 
 def p_func_id(p):
@@ -45,7 +59,7 @@ def p_declare_func_params(p):
 
 def p_more_params(p):
     '''more_params : COMMA tipo ID more_params
-                  | empty'''
+                   | empty'''
 
 def p_tipo(p):
     '''tipo : INT 
@@ -96,16 +110,20 @@ def p_condicion_sino(p):
     code.elseIf()
 
 # -- Funcion void --
-def p_func_call_params(p):
-    '''func_call_params : megaexp more_call_params
-                       | empty'''
-
-def p_more_call_params(p):
-    '''more_call_params : COMMA megaexp
-                        | empty'''
-
 def p_func_void(p):
-    '''func_void : ID OPENPAR CLOSEPAR func_call_params SEMICOLON'''
+    'func_void : func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON'
+    code.funcCallEnd()
+
+def p_func_call_id(p):
+    'func_call_id : ID'
+    code.funcCall(p[1])
+
+def p_func_call_params(p):
+    '''func_call_params : megaexp
+                        | func_call_params COMMA func_call_params
+                        | empty'''
+    if (p[1] != EMPTY):
+        code.funcCallParam()
 
 # -- Escribir --
 def p_escribe(p):
@@ -130,7 +148,7 @@ def p_read_more(p):
 
 # -- Retorno --
 def p_retorno(p):
-    'retorno : RETORNO OPENPAR ID CLOSEPAR SEMICOLON'
+    'retorno : RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON'
 
 # -- Desde --
 def p_desde(p):
@@ -170,6 +188,7 @@ def p_id(p):
     '''id : ID
           | ID OPENBRAC exp CLOSEBRAC
           | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
+    p[0] = p[1]
 
 # -- Operadores --
 def p_boolean_op(p):
@@ -256,7 +275,7 @@ def p_vcte(p):
 # -- Error y empty --
 def p_empty(p):
     'empty :'
-    pass
+    p[0] = EMPTY
 
 def p_error(p):
     print("error")
@@ -267,6 +286,8 @@ parser = yacc.yacc()
 while True:
     try:
         s = input('test > ')
+        if s == '$':
+            sys.exit()
     except EOFError:
         break
-    parser.parse(s)
+    parser.parse(s, debug=0)

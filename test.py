@@ -8,6 +8,10 @@ import sys
 tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
 
+precedence = (
+    ('left', 'COMMA'),
+)
+
 # delcaracion, en patitoParser.py
 # funcion void mifuncion () { quackout(variable); }
 
@@ -25,17 +29,14 @@ def p_func_call_id(p):
 #vcte para testear, deberia ser megaexp
 #todo parsea de derecha a izquierda D:
 def p_func_call_params(p):
-    '''func_call_params : vcte more_call_params
-                        | empty'''
+    '''func_call_params : vcte
+                        | empty
+                        | func_call_params COMMA func_call_params'''
     if (p[1] is not None):
         code.funcCallParam()
 
-def p_more_call_params(p):
-    '''more_call_params : COMMA vcte more_call_params
-                        | empty'''
-    if (p[1] is not None):
-        code.funcCallParam()
 
+        
 def p_vcte(p):
     '''vcte : ID
             | CTEI

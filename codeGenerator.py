@@ -1,3 +1,5 @@
+import sys
+
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open("out.obj", "w")
@@ -112,17 +114,21 @@ class CodeGenerator:
 
     def registerFunc(self, id, tipo): 
         if (self.dirFunc.get(id) is not None):
-            return "Eh que pedo"
-        self.dirFunc[id] = {"type": tipo}
+            #raise Exception("Función '%s' fue definida anteriormente." % (id))
+            sys.exit()
+        else:
+            self.dirFunc[id] = {"type": tipo}
 
     def endFunc(self):
-        print("acaba func")
-        # insertar endfunc
         # calcular tamaño de todo self.temp tiene el count
         # liberar varTable, resetear temporales? idk
-    
+        self.temp = 1 # reset temp counter
+        self.code.append("ENDFUNC\n")
+        self.line+=1
+
     def funcCall(self, func_id):
         #check if functions exists in directory?
+        self.idStack.append(func_id)
         buf = "ERA %s\n" % (func_id)
         self.code.append(buf)
         self.line+=1
@@ -134,14 +140,16 @@ class CodeGenerator:
         self.code.append(buf)
         self.line+=1
 
+    def funcCallEnd(self):
+        func_id = self.idStack.pop()
+        buf = "GOSUB %s\n" % (func_id)
+        self.code.append(buf)
+        self.line += 1
+        self.paramCounter = 0 # reset param counter
+
     def peek(self, stack):
         if len(stack) > 0:
             return stack[-1]    # this will get the last element of stack
         else:
             return None
 
-# =========== EXAMPLE ===========
-# codeGen = CodeGenerator()
-# codeGen.generate('A', 'B', 'C', 'D')
-# codeGen.generate('A', 'B', '', 'C')
-# codeGen.generate('PLUS', 'A', 'B', 'T1')

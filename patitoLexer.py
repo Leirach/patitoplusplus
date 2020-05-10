@@ -19,6 +19,7 @@ reserved = {
     'float': 'FLOAT',
     'char': 'CHAR',
     'bool': 'BOOL',
+    'void': 'VOID',
     'si': 'SI',
     'entonces': 'ENTONCES',
     'sino': 'SINO',
@@ -27,8 +28,8 @@ reserved = {
     'desde': 'DESDE',
     'hasta': 'HASTA',
     'hacer': 'HACER',
-    'quackin': 'LEE',
-    'quackout': 'ESCRIBE',
+    'quackin': 'QUACKIN',
+    'quackout': 'QUACKOUT',
     'retorno': 'RETORNO',
     'true': 'TRUE',
     'false': 'FALSE'

@@ -103,7 +103,7 @@ def p_func_void(p):
 
 # -- Escribir --
 def p_escribe(p):
-    "escribe : ESCRIBE OPENPAR print_options CLOSEPAR SEMICOLON"
+    "escribe : QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON"
 
 def p_print_options(p):
     '''print_options : CTES more_print
@@ -116,7 +116,7 @@ def p_more_print(p):
 
 # -- Leer --
 def p_lee(p):
-    '''lee : LEE OPENPAR ID read_more CLOSEPAR SEMICOLON'''
+    '''lee : QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON'''
 
 def p_read_more(p):
     '''read_more : COMMA ID read_more

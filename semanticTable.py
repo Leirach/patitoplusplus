@@ -74,6 +74,6 @@ semanticTable = {
     }
 }
 
-# semanticTable[TIPO1][TIPO2].get(OPERADOR) retorna None si no esta definido
-# es decir no son compatibles
+# semanticTable[TIPO1][TIPO2].get(OPERADOR) retorna None si no esta definido,
+# None = no son compatibles
 # print(semanticTable['BOOL']['BOOL'].get('PLUS'))

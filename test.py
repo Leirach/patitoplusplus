@@ -8,34 +8,32 @@ import sys
 tokens = patitoLexer.tokens
 code = cd.CodeGenerator()
 
-# mientras (A>B) haz { C+D }
-# desde pedrito = 3 hasta 5+5 hacer { A+B }
+# funcion void mifuncion () { quackout(variable); }
 
-# -- Desde --
-def p_desde(p):
-    '''desde : DESDE forId ASSIGN exp hasta exp hacer bloque'''
-    code.forEnd()
+def p_declare_func(p):
+    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque'''
+                   #| empty'''
+    code.endFunc()
 
-def p_forId(p):
-    'forId : ID'
-    code.idStack.append(p[1])
+def p_func_id(p):
+    '''func_id : tipo ID
+               | VOID ID'''
+    code.registerFunc(id=p[2], tipo=p[1])
 
-def p_desde_hasta(p):
-    'hasta : HASTA'
-    code.forStart()
+def p_declare_func_params(p):
+    '''declare_func_params : tipo ID more_params
+                           | empty'''
 
-def p_desde_hacer(p):
-    'hacer : HACER'
-    code.forDo()
+def p_more_params(p):
+    '''more_params : COMMA tipo ID more_params
+                  | empty'''
 
-# desde i = 1 hasta 10 hacer { }
-# = 1 _ i // HASTA
-#resolver exp t1// HACER poner migajita
-#<= i t1 t2 // comparacion
-#gotof t2 _ // meter inclomento en pendingLines
-#+ A B t3
-#+ i 1 i //al final del for
-#goto 2
+def p_tipo(p):
+    '''tipo : INT 
+            | FLOAT
+            | CHAR
+            | BOOL'''
+    p[0] = p[1]
 
 def p_bloque(p):
     'bloque : LCURLYB estatutos_rec RCURLYB'
@@ -45,91 +43,29 @@ def p_estatutos_rec(p):
                      | empty''' 
 
 def p_estatuto(p):
-    '''estatuto : desde
-                | megaexp'''
+    '''estatuto : escribe
+                | lee '''
 
+# -- Escribir --
+def p_escribe(p):
+    "escribe : QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON"
 
-# -- Operadores --
-def p_boolean_op(p):
-    '''boolean_op : OR 
-                  | AND'''
-    p[0] = p[1]
-    code.opStack.append(p[1])
+def p_print_options(p):
+    '''print_options : CTES more_print
+                     | ID more_print'''
 
-def p_logical_op(p):
-    '''logical_op : GT
-                  | GTE
-                  | LT
-                  | LTE
-                  | NEQ
-                  | EQ'''
-    p[0] = p[1]
-    code.opStack.append(p[1])
+def p_more_print(p):
+    '''more_print : COMMA CTES
+                  | COMMA ID
+                  | empty'''
 
-def p_sums(p):
-    '''sums : MINUS 
-            | PLUS '''
-    p[0] = p[1]
-    code.opStack.append(p[1])
-    
-def p_multdiv(p):
-    '''multdiv : TIMES 
-               | DIVIDE '''
-    p[0] = p[1]
-    code.opStack.append(p[1])
+# -- Leer --
+def p_lee(p):
+    '''lee : QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON'''
 
-# -- Expresiones --
-def p_megaexp(p):
-    '''megaexp : superexp
-               | megaexp boolean_op superexp'''
-    nextOp = code.peek(code.opStack) 
-    if (nextOp in ['&', '|']):
-        code.buildExp()
-
-def p_superexp(p):
-    '''superexp : exp
-                | superexp logical_op exp'''
-    nextOp = code.peek(code.opStack) 
-    if (nextOp in ['<', '<=', '>', '>=', '!=', '==']):
-        code.buildExp()
-
-def p_exp(p):
-    '''exp : termino
-           | exp sums termino'''
-    nextOp = code.peek(code.opStack) 
-    if (nextOp in ['+', '-']):
-        code.buildExp()
-
-def p_termino(p):
-    '''termino : factor
-               | termino multdiv factor'''
-    nextOp = code.peek(code.opStack) 
-    if (nextOp in ['*', '/']):
-        code.buildExp()
-
-def p_factor(p):
-    '''factor : vcte
-              | openpar megaexp closepar'''
-
-# agregar fondo falso a opstack
-def p_openpar(p): 
-    'openpar : OPENPAR'
-    code.opStack.append(p[1])
-
-# quitar fondo falso
-def p_closepar(p): 
-    'closepar : CLOSEPAR'
-    code.opStack.pop()
-
-def p_vcte(p):
-    '''vcte : ID
-            | CTEI
-            | CTEF
-            | CTEC
-            | TRUE
-            | FALSE'''
-    p[0] = p[1]
-    code.idStack.append(p[1])
+def p_read_more(p):
+    '''read_more : COMMA ID read_more
+                 | empty'''
 
 def p_empty(p):
     'empty :'

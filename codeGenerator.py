@@ -6,10 +6,10 @@ class CodeGenerator:
         self.idStack = []
         self.gotoStack = []
         self.pendingLines = []
+        self.dirFunc = {}
         self.forIds = []
         self.temp = 1
         self.line = 1
-
 
     def __del__(self):
         for line in self.code:
@@ -109,6 +109,16 @@ class CodeGenerator:
         self.code.append(buf)
         print(self.code)
 
+    def registerFunc(self, id, tipo): 
+        if (self.dirFunc.get(id) is not None):
+            return "Eh que pedo"
+        self.dirFunc[id] = {"type": tipo}
+
+    def endFunc():
+        print("acaba func")
+        # insertar endfunc
+        # calcular tamaño de todo self.temp tiene el count
+        # liberar varTable, resetear temporales? idk
 
     def peek(self, stack):
         if len(stack) > 0:

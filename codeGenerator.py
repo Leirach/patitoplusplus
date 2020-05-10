@@ -114,7 +114,7 @@ class CodeGenerator:
             return "Eh que pedo"
         self.dirFunc[id] = {"type": tipo}
 
-    def endFunc():
+    def endFunc(self):
         print("acaba func")
         # insertar endfunc
         # calcular tamaño de todo self.temp tiene el count

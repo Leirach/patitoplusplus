@@ -17,9 +17,15 @@ programa patito; principal() { retorno(true*2); }
 programa patito; principal() { quackout(true*5); }
 
 Prueba con varios parámetros y varias funciones
-programa patito; var int i, j;  funcion int testing(int j, int x, bool g) { var int auxiliar; } funcion int fact(int j, int x, bool g) { var int auxiliar; } principal() { var bool canijilla;  }
-programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { } principal() { }
+// Variable repetida
 programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { var int pop; } principal() { var bool canijilla; float jeje, jiji, jiji; }
-programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { var int pop; } principal() { var bool jeje; fact(1, 2, 3); }
-programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var bool jeje; fact(1, true); }
-programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var bool jeje; fact(5, true); }
+//llamada 3 argumentos
+programa patito; var int i, j;  funcion int fact(int j, int x, int g) { var int pop; } principal() { var bool jeje; fact(1, 2, 3); }
+//llamada con menos argumentos
+programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var bool jeje; fact(true); }
+//Parámetro duplicado
+programa patito; var int i, j;  funcion int fact(int j, bool j) { var int pop; } principal() { var bool jeje; fact(5, 5); }
+//llamada argumentos de tipo dif al esperado 
+programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var bool jeje; fact(5, 'C'); }
+programa patito; var int i, j;  funcion int fact1(int j, bool e) { var int pop; fact2(5, true); } funcion int fact2(int j, bool e) { var int pop; fact1(5, true); }  principal() { var bool jeje; fact2(5, true); }
+programa patito; var int i, j;  funcion int fact1(int j, bool e) { var int pop; } funcion int fact2(int j, bool e) { var int pop; fact1(5, true); }  principal() { var bool jeje; fact1(5, true); }

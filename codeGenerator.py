@@ -194,7 +194,7 @@ class CodeGenerator:
         buf = "ERA %s\n" % (func_id)
         self.code.append(buf)
         self.line+=1
-        funcDir.addFunction(str(func_id)+"Call", "call")
+        funcDir.addFunction(str(func_id)+"patitoFuncCall", "call")
 
     def funcCallParam(self):
         param = self.idStack.pop()
@@ -205,7 +205,7 @@ class CodeGenerator:
             self.code.append(buf)
             self.line+=1
             paramType = self.getParamType(param)
-            funcDir.addParam(str(functionName)+"Call", param ,paramType)
+            funcDir.addParam(str(functionName)+"patitoFuncCall", param ,paramType)
             self.idStack.append(functionName)
         else:
             self.idStack.append(param)
@@ -217,10 +217,9 @@ class CodeGenerator:
         self.line += 1
         self.paramCounter = 0 # reset param counter
         print("END FUNCCALL", func_id)
+        scope = self.funcStack.pop()
         funcDir.validateFunctionSemantics(func_id)
-        
-
-
+    
     def peek(self, stack):
         if len(stack) > 0:
             return stack[-1]    # this will get the last element of stack

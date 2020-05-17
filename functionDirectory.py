@@ -10,6 +10,7 @@
 #TODO doble llamada de función
 import exceptions as exception
 
+global functionsDirectory
 functionsDirectory = { 'globals': {'type': 'void', 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
 }
 
@@ -33,7 +34,7 @@ def addParam(functionName, paramId, paramType):
     if functionName == None:
         functionName = list(functionsDirectory.keys())[-1]
     if functionName in functionsDirectory: #Si la función existe
-        if functionsDirectory[functionName]['paramsInfo'].get(paramId) == None: ## ??? no estoy segura de si se hace esta validación aquí o nel
+        if functionsDirectory[functionName]['paramsInfo'].get(paramId) == None or "patitoFuncCall" in functionName: ## ??? no estoy segura de si se hace esta validación aquí o nel
             if functionName == None:
                 functionName = list(functionsDirectory.keys())[-1]
             functionsDirectory[functionName]['numParams'] = functionsDirectory[functionName]['numParams'] + 1
@@ -43,6 +44,7 @@ def addParam(functionName, paramId, paramType):
             print(functionsDirectory)
             return True 
         else:
+
             exception.throwError("ID '%s' duplicado en parámetros de función '%s'" % (paramId, functionName))
             return False
     else:
@@ -86,16 +88,20 @@ def getVariableType(functionName, variable):
 def validateFunctionSemantics(functionName):
     if functionName in functionsDirectory: #Si la función existe
         print("Función existe")
-        if functionName+"Call" in functionsDirectory:
+        if functionName+"patitoFuncCall" in functionsDirectory:
             print("Llamada generada")
             funcParams = functionsDirectory[functionName]["numParams"]
-            funcCallParams = functionsDirectory[functionName+"Call"]["numParams"]
+            funcCallParams = functionsDirectory[functionName+"patitoFuncCall"]["numParams"]
             if funcParams == funcCallParams:
                 print("Número de parámetros correcto")
-                funcParamOrder = functionsDirectory[functionName+"Call"]["paramsOrder"]
-                funcCallOrder = functionsDirectory[functionName]["paramsOrder"]
+                funcCallOrder = functionsDirectory[functionName+"patitoFuncCall"]["paramsOrder"]
+                funcParamOrder = functionsDirectory[functionName]["paramsOrder"]
                 if funcParamOrder == funcCallOrder:
                     print("Orden correcto de tipos")
+                    print(functionsDirectory)
+                    del functionsDirectory[functionName+"patitoFuncCall"]
+                    print("REMOVED")
+                    print(functionsDirectory)
                 else:
                     exception.throwError("Se esperaba parámetros %s. Se recibió %s." % (str(funcParamOrder), str(funcCallOrder)))
             else:
@@ -104,6 +110,7 @@ def validateFunctionSemantics(functionName):
             exception.throwError("Ocurrió un problema llamando la función '%s'" % (functionName))
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
+
 
 '''functionName = 'main'
 functionType = 'void'

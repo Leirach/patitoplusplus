@@ -14,5 +14,6 @@ programa patito; principal() { i = 1*(2+3); }
 programa patito; principal() { quackout(true*5); }
 
 Prueba con varios parámetros y varias funciones
-programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { var int auxiliar; } principal() { var bool canijilla;  }
+programa patito; var int i, j;  funcion int testing(int j, int x, bool g) { var int auxiliar; } funcion int fact(int j, int x, bool g) { var int auxiliar; } principal() { var bool canijilla;  }
 programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { } principal() { }
+programa patito; var int i, j;  funcion int fact(int j, int x, bool g) { var int pop; } principal() { var bool canijilla; float jeje, jiji, jiji; }

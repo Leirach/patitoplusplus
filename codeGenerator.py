@@ -144,6 +144,7 @@ class CodeGenerator:
     def registerFunc(self, id, tipo): 
         if (self.dirFunc.get(id) is not None):
             #raise Exception("Función '%s' fue definida anteriormente." % (id))
+            print("Función '%s' fue definida anteriormente." % (id))
             sys.exit()
         else:
             self.dirFunc[id] = {"type": tipo}

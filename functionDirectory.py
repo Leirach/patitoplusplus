@@ -7,14 +7,17 @@
 #       paramsOrder: ['type']
 #       vars: {'varId': 'type'},
 # }
+import exceptions as exception
 
 functionsDirectory = { 'globals': {'type': 'void', 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
 }
 
+
 #add function to Directory
 def addFunction(functionName, functionType):
     if functionName in functionsDirectory: 
-        print("Función duplicada") #No stoi segura de que aquí se haga esta validación??
+        #No stoi segura de que aquí se haga esta validación??
+        exception.throwError("Función '%s' fue definida anteriormente." % (functionName))
         return False #función ya existe
     else:
         function = {
@@ -40,10 +43,10 @@ def addParam(functionName, paramId, paramType):
             print(functionsDirectory)
             return True 
         else:
-            print("Id de parámetro duplicado")
+            exception.throwError("ID '%s' duplicado" % (paramId))
             return False
     else:
-        print("Función no existe")
+        exception.throwError("Función '%s' no existe" % (functionName))
         return False
 
 #add function to Directory
@@ -59,10 +62,10 @@ def addVar(functionName, varId, varType):
             print(functionsDirectory)
             return True 
         else:
-            print("Id duplicado")
+            exception.throwError("ID '%s' duplicado" % (varId))
             return False #Variable ya existe
     else:
-        print("Función no existe")
+        exception.throwError("Función '%s' no existe" % (functionName))
         return False
 
 

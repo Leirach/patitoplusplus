@@ -23,9 +23,15 @@ class CodeGenerator:
             self.f.write(line)
         self.f.close()
 
-    def getVarType(p):
-        #placeholder
-        return 'int'
+
+    # TODO 
+    # se necesita tener nombre de función a la que pertenece :O
+    def getVarType(self, p):
+        functionName = self.funcStack.pop()
+        print("functionName:", functionName)
+        varType = funcDir.getVariableType(functionName, p)
+        self.funcStack.append(functionName)
+        return varType
 
     def getParamType(self, param):
         param = str(param)
@@ -42,7 +48,7 @@ class CodeGenerator:
         elif boolean.match(param):
             return 'bool'
         else: 
-            return getVarType(param) #falta validar tipo de ID??
+            return self.getVarType(param) #falta validar tipo de ID??
 
     def registerVariable(self, id, varType):
         funcName = self.funcStack.pop()
@@ -180,6 +186,7 @@ class CodeGenerator:
         self.code.append("ENDFUNC\n")
         self.line+=1
         self.endVariableDeclaration()
+        print("END FUNC")
 
     def funcCall(self, func_id):
         #check if functions exists in directory? 
@@ -209,7 +216,9 @@ class CodeGenerator:
         self.code.append(buf)
         self.line += 1
         self.paramCounter = 0 # reset param counter
+        print("END FUNCCALL", func_id)
         funcDir.validateFunctionSemantics(func_id)
+        
 
 
     def peek(self, stack):

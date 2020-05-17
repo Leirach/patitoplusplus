@@ -7,11 +7,11 @@
 #       paramsOrder: ['type']
 #       vars: {'varId': 'type'},
 # }
+#TODO doble llamada de función
 import exceptions as exception
 
 functionsDirectory = { 'globals': {'type': 'void', 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
 }
-
 
 #add function to Directory
 def addFunction(functionName, functionType):
@@ -63,6 +63,23 @@ def addVar(functionName, varId, varType):
             return True 
         else:
             exception.throwError("ID '%s' duplicado en función '%s'" % (varId, functionName))
+    else:
+        exception.throwError("Función '%s' no existe" % (functionName))
+
+def getVariableType(functionName, variable):
+    if functionName in functionsDirectory: #Si la función existe
+        print("Función existe")
+        print(variable)
+        if variable in functionsDirectory[functionName]["vars"]:
+            varType = functionsDirectory[functionName]["vars"][variable]
+            return varType
+        else:
+            if variable in functionsDirectory['globals']["vars"]:
+                print(functionsDirectory['globals']["vars"][variable])
+                varType = functionsDirectory['globals']["vars"][variable]
+                return varType
+            else:
+                exception.throwError("Variable '%s' no existe en este scope" % (variable))
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
 

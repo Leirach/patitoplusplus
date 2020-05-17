@@ -37,7 +37,6 @@ def p_vars(p):
     '''vars : var_id dimensions more_vars SEMICOLON vars
             | empty'''
     print("End of var declaration")
-    code.endVariableDeclaration()
 
 def p_var_id(p):
     '''var_id : tipo ID'''
@@ -293,7 +292,7 @@ def p_vcte_ID(p):
     'vcte : id'
     p[0] = p[1]
     code.idStack.append(p[1])
-    code.tpStack.append(code.getVarType('id'))
+    code.tpStack.append(code.getVarType(p[1]))
 
 def p_vcte_CTEI(p):
     'vcte : CTEI'

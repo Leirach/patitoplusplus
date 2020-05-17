@@ -35,7 +35,7 @@ def p_vars(p):
 def p_var_id(p):
     '''var_id : tipo ID'''
     #Falta identificar entre globales y las que pertecen a una función
-    funcDir.addVar('globals', p[2], p[1])
+    funcDir.addVar(None, p[2], p[1])
 
 def p_more_vars(p):
     '''more_vars : more_var_id dimensions more_vars
@@ -44,7 +44,7 @@ def p_more_vars(p):
 def p_more_var_id(p):
     '''more_var_id : COMMA ID'''
     if(p[2] != None and p[2] != '$'):
-        funcDir.addVar('globals', p[2], None)
+        funcDir.addVar(None, p[2], None)
 
 
 def p_dimensions(p):
@@ -57,7 +57,7 @@ def p_declare_func_rec(p):
                         | empty'''
 
 def p_declare_func(p):
-    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque'''
+    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque'''
     code.endFunc()
 
 def p_func_id(p):
@@ -89,7 +89,7 @@ def p_tipo(p):
     p[0] = p[1]
 
 def p_bloque(p):
-    'bloque : LCURLYB estatutos_rec RCURLYB'
+    'bloque : LCURLYB declare_vars estatutos_rec RCURLYB'
 
 def p_estatutos_rec(p):
     '''estatutos_rec : estatuto estatutos_rec

@@ -17,7 +17,7 @@ Rule 11    dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
 Rule 12    dimensions -> empty
 Rule 13    declare_func_rec -> declare_func_rec declare_func
 Rule 14    declare_func_rec -> empty
-Rule 15    declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+Rule 15    declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque
 Rule 16    func_id -> tipo ID
 Rule 17    func_id -> VOID ID
 Rule 18    declare_func_params -> get_func_params more_params
@@ -30,7 +30,7 @@ Rule 24    tipo -> INT
 Rule 25    tipo -> FLOAT
 Rule 26    tipo -> CHAR
 Rule 27    tipo -> BOOL
-Rule 28    bloque -> LCURLYB estatutos_rec RCURLYB
+Rule 28    bloque -> LCURLYB declare_vars estatutos_rec RCURLYB
 Rule 29    estatutos_rec -> estatuto estatutos_rec
 Rule 30    estatutos_rec -> empty
 Rule 31    estatuto -> asignacion
@@ -169,7 +169,7 @@ condicion            : 32
 declare_func         : 13
 declare_func_params  : 15
 declare_func_rec     : 1 13
-declare_vars         : 1 15
+declare_vars         : 1 28
 desde                : 37
 dimensions           : 4 7
 empty                : 3 5 8 12 14 19 22 30 44 50 56 59
@@ -285,7 +285,14 @@ state 6
 
     PRINCIPAL       reduce using rule 101 (empty -> .)
     FUNCION         reduce using rule 101 (empty -> .)
-    LCURLYB         reduce using rule 101 (empty -> .)
+    SI              reduce using rule 101 (empty -> .)
+    RETORNO         reduce using rule 101 (empty -> .)
+    QUACKOUT        reduce using rule 101 (empty -> .)
+    QUACKIN         reduce using rule 101 (empty -> .)
+    DESDE           reduce using rule 101 (empty -> .)
+    ID              reduce using rule 101 (empty -> .)
+    MIENTRAS        reduce using rule 101 (empty -> .)
+    RCURLYB         reduce using rule 101 (empty -> .)
     INT             shift and go to state 14
     FLOAT           shift and go to state 15
     CHAR            shift and go to state 16
@@ -302,14 +309,21 @@ state 7
 
     PRINCIPAL       reduce using rule 3 (declare_vars -> empty .)
     FUNCION         reduce using rule 3 (declare_vars -> empty .)
-    LCURLYB         reduce using rule 3 (declare_vars -> empty .)
+    SI              reduce using rule 3 (declare_vars -> empty .)
+    RETORNO         reduce using rule 3 (declare_vars -> empty .)
+    QUACKOUT        reduce using rule 3 (declare_vars -> empty .)
+    QUACKIN         reduce using rule 3 (declare_vars -> empty .)
+    DESDE           reduce using rule 3 (declare_vars -> empty .)
+    ID              reduce using rule 3 (declare_vars -> empty .)
+    MIENTRAS        reduce using rule 3 (declare_vars -> empty .)
+    RCURLYB         reduce using rule 3 (declare_vars -> empty .)
 
 
 state 8
 
     (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func_rec . PRINCIPAL OPENPAR CLOSEPAR bloque
     (13) declare_func_rec -> declare_func_rec . declare_func
-    (15) declare_func -> . FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    (15) declare_func -> . FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque
 
     PRINCIPAL       shift and go to state 18
     FUNCION         shift and go to state 20
@@ -330,7 +344,14 @@ state 10
 
     PRINCIPAL       reduce using rule 2 (declare_vars -> VAR vars .)
     FUNCION         reduce using rule 2 (declare_vars -> VAR vars .)
-    LCURLYB         reduce using rule 2 (declare_vars -> VAR vars .)
+    SI              reduce using rule 2 (declare_vars -> VAR vars .)
+    RETORNO         reduce using rule 2 (declare_vars -> VAR vars .)
+    QUACKOUT        reduce using rule 2 (declare_vars -> VAR vars .)
+    QUACKIN         reduce using rule 2 (declare_vars -> VAR vars .)
+    DESDE           reduce using rule 2 (declare_vars -> VAR vars .)
+    ID              reduce using rule 2 (declare_vars -> VAR vars .)
+    MIENTRAS        reduce using rule 2 (declare_vars -> VAR vars .)
+    RCURLYB         reduce using rule 2 (declare_vars -> VAR vars .)
 
 
 state 11
@@ -354,7 +375,14 @@ state 12
 
     PRINCIPAL       reduce using rule 5 (vars -> empty .)
     FUNCION         reduce using rule 5 (vars -> empty .)
-    LCURLYB         reduce using rule 5 (vars -> empty .)
+    SI              reduce using rule 5 (vars -> empty .)
+    RETORNO         reduce using rule 5 (vars -> empty .)
+    QUACKOUT        reduce using rule 5 (vars -> empty .)
+    QUACKIN         reduce using rule 5 (vars -> empty .)
+    DESDE           reduce using rule 5 (vars -> empty .)
+    ID              reduce using rule 5 (vars -> empty .)
+    MIENTRAS        reduce using rule 5 (vars -> empty .)
+    RCURLYB         reduce using rule 5 (vars -> empty .)
 
 
 state 13
@@ -409,7 +437,7 @@ state 19
 
 state 20
 
-    (15) declare_func -> FUNCION . func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    (15) declare_func -> FUNCION . func_id OPENPAR declare_func_params CLOSEPAR bloque
     (16) func_id -> . tipo ID
     (17) func_id -> . VOID ID
     (24) tipo -> . INT
@@ -476,7 +504,7 @@ state 25
 
 state 26
 
-    (15) declare_func -> FUNCION func_id . OPENPAR declare_func_params CLOSEPAR declare_vars bloque
+    (15) declare_func -> FUNCION func_id . OPENPAR declare_func_params CLOSEPAR bloque
 
     OPENPAR         shift and go to state 35
 
@@ -552,7 +580,7 @@ state 33
 state 34
 
     (1) program_declaration -> PROGRAMA ID SEMICOLON declare_vars declare_func_rec PRINCIPAL OPENPAR CLOSEPAR . bloque
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
     LCURLYB         shift and go to state 44
 
@@ -560,7 +588,7 @@ state 34
 
 state 35
 
-    (15) declare_func -> FUNCION func_id OPENPAR . declare_func_params CLOSEPAR declare_vars bloque
+    (15) declare_func -> FUNCION func_id OPENPAR . declare_func_params CLOSEPAR bloque
     (18) declare_func_params -> . get_func_params more_params
     (19) declare_func_params -> . empty
     (20) get_func_params -> . tipo ID
@@ -609,7 +637,14 @@ state 38
 
     PRINCIPAL       reduce using rule 101 (empty -> .)
     FUNCION         reduce using rule 101 (empty -> .)
-    LCURLYB         reduce using rule 101 (empty -> .)
+    SI              reduce using rule 101 (empty -> .)
+    RETORNO         reduce using rule 101 (empty -> .)
+    QUACKOUT        reduce using rule 101 (empty -> .)
+    QUACKIN         reduce using rule 101 (empty -> .)
+    DESDE           reduce using rule 101 (empty -> .)
+    ID              reduce using rule 101 (empty -> .)
+    MIENTRAS        reduce using rule 101 (empty -> .)
+    RCURLYB         reduce using rule 101 (empty -> .)
     INT             shift and go to state 14
     FLOAT           shift and go to state 15
     CHAR            shift and go to state 16
@@ -672,7 +707,104 @@ state 43
 
 state 44
 
-    (28) bloque -> LCURLYB . estatutos_rec RCURLYB
+    (28) bloque -> LCURLYB . declare_vars estatutos_rec RCURLYB
+    (2) declare_vars -> . VAR vars
+    (3) declare_vars -> . empty
+    (101) empty -> .
+
+    VAR             shift and go to state 6
+    SI              reduce using rule 101 (empty -> .)
+    RETORNO         reduce using rule 101 (empty -> .)
+    QUACKOUT        reduce using rule 101 (empty -> .)
+    QUACKIN         reduce using rule 101 (empty -> .)
+    DESDE           reduce using rule 101 (empty -> .)
+    ID              reduce using rule 101 (empty -> .)
+    MIENTRAS        reduce using rule 101 (empty -> .)
+    RCURLYB         reduce using rule 101 (empty -> .)
+
+    declare_vars                   shift and go to state 53
+    empty                          shift and go to state 7
+
+state 45
+
+    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params . CLOSEPAR bloque
+
+    CLOSEPAR        shift and go to state 54
+
+
+state 46
+
+    (18) declare_func_params -> get_func_params . more_params
+    (21) more_params -> . more_var_id more_params
+    (22) more_params -> . empty
+    (9) more_var_id -> . COMMA ID
+    (23) more_var_id -> . COMMA tipo ID
+    (101) empty -> .
+
+    COMMA           shift and go to state 32
+    CLOSEPAR        reduce using rule 101 (empty -> .)
+
+    more_params                    shift and go to state 55
+    more_var_id                    shift and go to state 56
+    empty                          shift and go to state 57
+
+state 47
+
+    (19) declare_func_params -> empty .
+
+    CLOSEPAR        reduce using rule 19 (declare_func_params -> empty .)
+
+
+state 48
+
+    (20) get_func_params -> tipo . ID
+
+    ID              shift and go to state 58
+
+
+state 49
+
+    (4) vars -> var_id dimensions more_vars SEMICOLON vars .
+
+    PRINCIPAL       reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    FUNCION         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    SI              reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    RETORNO         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    QUACKOUT        reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    QUACKIN         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    DESDE           reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    ID              reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    MIENTRAS        reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+    RCURLYB         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
+
+
+state 50
+
+    (7) more_vars -> more_var_id dimensions more_vars .
+
+    SEMICOLON       reduce using rule 7 (more_vars -> more_var_id dimensions more_vars .)
+
+
+state 51
+
+    (23) more_var_id -> COMMA tipo ID .
+
+    OPENBRAC        reduce using rule 23 (more_var_id -> COMMA tipo ID .)
+    COMMA           reduce using rule 23 (more_var_id -> COMMA tipo ID .)
+    SEMICOLON       reduce using rule 23 (more_var_id -> COMMA tipo ID .)
+    CLOSEPAR        reduce using rule 23 (more_var_id -> COMMA tipo ID .)
+
+
+state 52
+
+    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC . CTEI CLOSEBRAC
+
+    CTEI            shift and go to state 59
+
+
+state 53
+
+    (28) bloque -> LCURLYB declare_vars . estatutos_rec RCURLYB
     (29) estatutos_rec -> . estatuto estatutos_rec
     (30) estatutos_rec -> . empty
     (31) estatuto -> . asignacion
@@ -699,39 +831,48 @@ state 44
     (66) mientras -> . MIENTRAS
 
     RCURLYB         reduce using rule 101 (empty -> .)
-    SI              shift and go to state 65
-    RETORNO         shift and go to state 67
-    QUACKOUT        shift and go to state 68
-    QUACKIN         shift and go to state 69
-    DESDE           shift and go to state 71
-    ID              shift and go to state 70
-    MIENTRAS        shift and go to state 73
+    SI              shift and go to state 72
+    RETORNO         shift and go to state 74
+    QUACKOUT        shift and go to state 75
+    QUACKIN         shift and go to state 76
+    DESDE           shift and go to state 78
+    ID              shift and go to state 77
+    MIENTRAS        shift and go to state 80
 
-    estatutos_rec                  shift and go to state 53
-    estatuto                       shift and go to state 54
-    empty                          shift and go to state 55
-    asignacion                     shift and go to state 56
-    condicion                      shift and go to state 57
-    func_void                      shift and go to state 58
-    retorno                        shift and go to state 59
-    escribe                        shift and go to state 60
-    lee                            shift and go to state 61
-    desde                          shift and go to state 62
-    mientras_estatuto              shift and go to state 63
-    id                             shift and go to state 64
-    func_call_id                   shift and go to state 66
-    mientras                       shift and go to state 72
+    estatutos_rec                  shift and go to state 60
+    estatuto                       shift and go to state 61
+    empty                          shift and go to state 62
+    asignacion                     shift and go to state 63
+    condicion                      shift and go to state 64
+    func_void                      shift and go to state 65
+    retorno                        shift and go to state 66
+    escribe                        shift and go to state 67
+    lee                            shift and go to state 68
+    desde                          shift and go to state 69
+    mientras_estatuto              shift and go to state 70
+    id                             shift and go to state 71
+    func_call_id                   shift and go to state 73
+    mientras                       shift and go to state 79
 
-state 45
+state 54
 
-    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params . CLOSEPAR declare_vars bloque
+    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR . bloque
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
-    CLOSEPAR        shift and go to state 74
+    LCURLYB         shift and go to state 44
+
+    bloque                         shift and go to state 81
+
+state 55
+
+    (18) declare_func_params -> get_func_params more_params .
+
+    CLOSEPAR        reduce using rule 18 (declare_func_params -> get_func_params more_params .)
 
 
-state 46
+state 56
 
-    (18) declare_func_params -> get_func_params . more_params
+    (21) more_params -> more_var_id . more_params
     (21) more_params -> . more_var_id more_params
     (22) more_params -> . empty
     (9) more_var_id -> . COMMA ID
@@ -741,65 +882,40 @@ state 46
     COMMA           shift and go to state 32
     CLOSEPAR        reduce using rule 101 (empty -> .)
 
-    more_params                    shift and go to state 75
-    more_var_id                    shift and go to state 76
-    empty                          shift and go to state 77
+    more_var_id                    shift and go to state 56
+    more_params                    shift and go to state 82
+    empty                          shift and go to state 57
 
-state 47
+state 57
 
-    (19) declare_func_params -> empty .
+    (22) more_params -> empty .
 
-    CLOSEPAR        reduce using rule 19 (declare_func_params -> empty .)
-
-
-state 48
-
-    (20) get_func_params -> tipo . ID
-
-    ID              shift and go to state 78
+    CLOSEPAR        reduce using rule 22 (more_params -> empty .)
 
 
-state 49
+state 58
 
-    (4) vars -> var_id dimensions more_vars SEMICOLON vars .
+    (20) get_func_params -> tipo ID .
 
-    PRINCIPAL       reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
-    FUNCION         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
-    LCURLYB         reduce using rule 4 (vars -> var_id dimensions more_vars SEMICOLON vars .)
-
-
-state 50
-
-    (7) more_vars -> more_var_id dimensions more_vars .
-
-    SEMICOLON       reduce using rule 7 (more_vars -> more_var_id dimensions more_vars .)
+    COMMA           reduce using rule 20 (get_func_params -> tipo ID .)
+    CLOSEPAR        reduce using rule 20 (get_func_params -> tipo ID .)
 
 
-state 51
+state 59
 
-    (23) more_var_id -> COMMA tipo ID .
+    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI . CLOSEBRAC
 
-    OPENBRAC        reduce using rule 23 (more_var_id -> COMMA tipo ID .)
-    COMMA           reduce using rule 23 (more_var_id -> COMMA tipo ID .)
-    SEMICOLON       reduce using rule 23 (more_var_id -> COMMA tipo ID .)
-    CLOSEPAR        reduce using rule 23 (more_var_id -> COMMA tipo ID .)
+    CLOSEBRAC       shift and go to state 83
 
 
-state 52
+state 60
 
-    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC . CTEI CLOSEBRAC
+    (28) bloque -> LCURLYB declare_vars estatutos_rec . RCURLYB
 
-    CTEI            shift and go to state 79
-
-
-state 53
-
-    (28) bloque -> LCURLYB estatutos_rec . RCURLYB
-
-    RCURLYB         shift and go to state 80
+    RCURLYB         shift and go to state 84
 
 
-state 54
+state 61
 
     (29) estatutos_rec -> estatuto . estatutos_rec
     (29) estatutos_rec -> . estatuto estatutos_rec
@@ -828,37 +944,37 @@ state 54
     (66) mientras -> . MIENTRAS
 
     RCURLYB         reduce using rule 101 (empty -> .)
-    SI              shift and go to state 65
-    RETORNO         shift and go to state 67
-    QUACKOUT        shift and go to state 68
-    QUACKIN         shift and go to state 69
-    DESDE           shift and go to state 71
-    ID              shift and go to state 70
-    MIENTRAS        shift and go to state 73
+    SI              shift and go to state 72
+    RETORNO         shift and go to state 74
+    QUACKOUT        shift and go to state 75
+    QUACKIN         shift and go to state 76
+    DESDE           shift and go to state 78
+    ID              shift and go to state 77
+    MIENTRAS        shift and go to state 80
 
-    estatuto                       shift and go to state 54
-    estatutos_rec                  shift and go to state 81
-    empty                          shift and go to state 55
-    asignacion                     shift and go to state 56
-    condicion                      shift and go to state 57
-    func_void                      shift and go to state 58
-    retorno                        shift and go to state 59
-    escribe                        shift and go to state 60
-    lee                            shift and go to state 61
-    desde                          shift and go to state 62
-    mientras_estatuto              shift and go to state 63
-    id                             shift and go to state 64
-    func_call_id                   shift and go to state 66
-    mientras                       shift and go to state 72
+    estatuto                       shift and go to state 61
+    estatutos_rec                  shift and go to state 85
+    empty                          shift and go to state 62
+    asignacion                     shift and go to state 63
+    condicion                      shift and go to state 64
+    func_void                      shift and go to state 65
+    retorno                        shift and go to state 66
+    escribe                        shift and go to state 67
+    lee                            shift and go to state 68
+    desde                          shift and go to state 69
+    mientras_estatuto              shift and go to state 70
+    id                             shift and go to state 71
+    func_call_id                   shift and go to state 73
+    mientras                       shift and go to state 79
 
-state 55
+state 62
 
     (30) estatutos_rec -> empty .
 
     RCURLYB         reduce using rule 30 (estatutos_rec -> empty .)
 
 
-state 56
+state 63
 
     (31) estatuto -> asignacion .
 
@@ -872,7 +988,7 @@ state 56
     RCURLYB         reduce using rule 31 (estatuto -> asignacion .)
 
 
-state 57
+state 64
 
     (32) estatuto -> condicion .
 
@@ -886,7 +1002,7 @@ state 57
     RCURLYB         reduce using rule 32 (estatuto -> condicion .)
 
 
-state 58
+state 65
 
     (33) estatuto -> func_void .
 
@@ -900,7 +1016,7 @@ state 58
     RCURLYB         reduce using rule 33 (estatuto -> func_void .)
 
 
-state 59
+state 66
 
     (34) estatuto -> retorno .
 
@@ -914,7 +1030,7 @@ state 59
     RCURLYB         reduce using rule 34 (estatuto -> retorno .)
 
 
-state 60
+state 67
 
     (35) estatuto -> escribe .
 
@@ -928,7 +1044,7 @@ state 60
     RCURLYB         reduce using rule 35 (estatuto -> escribe .)
 
 
-state 61
+state 68
 
     (36) estatuto -> lee .
 
@@ -942,7 +1058,7 @@ state 61
     RCURLYB         reduce using rule 36 (estatuto -> lee .)
 
 
-state 62
+state 69
 
     (37) estatuto -> desde .
 
@@ -956,7 +1072,7 @@ state 62
     RCURLYB         reduce using rule 37 (estatuto -> desde .)
 
 
-state 63
+state 70
 
     (38) estatuto -> mientras_estatuto .
 
@@ -970,49 +1086,49 @@ state 63
     RCURLYB         reduce using rule 38 (estatuto -> mientras_estatuto .)
 
 
-state 64
+state 71
 
     (39) asignacion -> id . ASSIGN megaexp SEMICOLON
 
-    ASSIGN          shift and go to state 82
+    ASSIGN          shift and go to state 86
 
 
-state 65
+state 72
 
     (40) condicion -> SI . OPENPAR megaexp CLOSEPAR entonces bloque_entonces
-
-    OPENPAR         shift and go to state 83
-
-
-state 66
-
-    (46) func_void -> func_call_id . OPENPAR func_call_params CLOSEPAR SEMICOLON
-
-    OPENPAR         shift and go to state 84
-
-
-state 67
-
-    (60) retorno -> RETORNO . OPENPAR megaexp CLOSEPAR SEMICOLON
-
-    OPENPAR         shift and go to state 85
-
-
-state 68
-
-    (51) escribe -> QUACKOUT . OPENPAR print_options CLOSEPAR SEMICOLON
-
-    OPENPAR         shift and go to state 86
-
-
-state 69
-
-    (57) lee -> QUACKIN . OPENPAR ID read_more CLOSEPAR SEMICOLON
 
     OPENPAR         shift and go to state 87
 
 
-state 70
+state 73
+
+    (46) func_void -> func_call_id . OPENPAR func_call_params CLOSEPAR SEMICOLON
+
+    OPENPAR         shift and go to state 88
+
+
+state 74
+
+    (60) retorno -> RETORNO . OPENPAR megaexp CLOSEPAR SEMICOLON
+
+    OPENPAR         shift and go to state 89
+
+
+state 75
+
+    (51) escribe -> QUACKOUT . OPENPAR print_options CLOSEPAR SEMICOLON
+
+    OPENPAR         shift and go to state 90
+
+
+state 76
+
+    (57) lee -> QUACKIN . OPENPAR ID read_more CLOSEPAR SEMICOLON
+
+    OPENPAR         shift and go to state 91
+
+
+state 77
 
     (68) id -> ID .
     (69) id -> ID . OPENBRAC exp CLOSEBRAC
@@ -1020,117 +1136,82 @@ state 70
     (47) func_call_id -> ID .
 
     ASSIGN          reduce using rule 68 (id -> ID .)
-    OPENBRAC        shift and go to state 88
+    OPENBRAC        shift and go to state 92
     OPENPAR         reduce using rule 47 (func_call_id -> ID .)
 
 
-state 71
+state 78
 
     (61) desde -> DESDE . forId ASSIGN exp hasta exp hacer bloque
     (62) forId -> . ID
 
-    ID              shift and go to state 90
+    ID              shift and go to state 94
 
-    forId                          shift and go to state 89
+    forId                          shift and go to state 93
 
-state 72
+state 79
 
     (65) mientras_estatuto -> mientras . OPENPAR megaexp CLOSEPAR haz bloque
 
-    OPENPAR         shift and go to state 91
+    OPENPAR         shift and go to state 95
 
 
-state 73
+state 80
 
     (66) mientras -> MIENTRAS .
 
     OPENPAR         reduce using rule 66 (mientras -> MIENTRAS .)
 
 
-state 74
-
-    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR . declare_vars bloque
-    (2) declare_vars -> . VAR vars
-    (3) declare_vars -> . empty
-    (101) empty -> .
-
-    VAR             shift and go to state 6
-    LCURLYB         reduce using rule 101 (empty -> .)
-
-    declare_vars                   shift and go to state 92
-    empty                          shift and go to state 7
-
-state 75
-
-    (18) declare_func_params -> get_func_params more_params .
-
-    CLOSEPAR        reduce using rule 18 (declare_func_params -> get_func_params more_params .)
-
-
-state 76
-
-    (21) more_params -> more_var_id . more_params
-    (21) more_params -> . more_var_id more_params
-    (22) more_params -> . empty
-    (9) more_var_id -> . COMMA ID
-    (23) more_var_id -> . COMMA tipo ID
-    (101) empty -> .
-
-    COMMA           shift and go to state 32
-    CLOSEPAR        reduce using rule 101 (empty -> .)
-
-    more_var_id                    shift and go to state 76
-    more_params                    shift and go to state 93
-    empty                          shift and go to state 77
-
-state 77
-
-    (22) more_params -> empty .
-
-    CLOSEPAR        reduce using rule 22 (more_params -> empty .)
-
-
-state 78
-
-    (20) get_func_params -> tipo ID .
-
-    COMMA           reduce using rule 20 (get_func_params -> tipo ID .)
-    CLOSEPAR        reduce using rule 20 (get_func_params -> tipo ID .)
-
-
-state 79
-
-    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI . CLOSEBRAC
-
-    CLOSEBRAC       shift and go to state 94
-
-
-state 80
-
-    (28) bloque -> LCURLYB estatutos_rec RCURLYB .
-
-    $end            reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    PRINCIPAL       reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    FUNCION         reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    SINO            reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    SI              reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    RETORNO         reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    QUACKOUT        reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    QUACKIN         reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    DESDE           reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    ID              reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    MIENTRAS        reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    RCURLYB         reduce using rule 28 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-
-
 state 81
+
+    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque .
+
+    PRINCIPAL       reduce using rule 15 (declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque .)
+    FUNCION         reduce using rule 15 (declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque .)
+
+
+state 82
+
+    (21) more_params -> more_var_id more_params .
+
+    CLOSEPAR        reduce using rule 21 (more_params -> more_var_id more_params .)
+
+
+state 83
+
+    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .
+
+    COMMA           reduce using rule 11 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
+    SEMICOLON       reduce using rule 11 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
+
+
+state 84
+
+    (28) bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .
+
+    $end            reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    PRINCIPAL       reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    FUNCION         reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    SINO            reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    SI              reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    RETORNO         reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    QUACKOUT        reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    QUACKIN         reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    DESDE           reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    ID              reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    MIENTRAS        reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+    RCURLYB         reduce using rule 28 (bloque -> LCURLYB declare_vars estatutos_rec RCURLYB .)
+
+
+state 85
 
     (29) estatutos_rec -> estatuto estatutos_rec .
 
     RCURLYB         reduce using rule 29 (estatutos_rec -> estatuto estatutos_rec .)
 
 
-state 82
+state 86
 
     (39) asignacion -> id ASSIGN . megaexp SEMICOLON
     (83) megaexp -> . superexp
@@ -1154,24 +1235,24 @@ state 82
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    id                             shift and go to state 95
-    megaexp                        shift and go to state 96
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
+    id                             shift and go to state 96
+    megaexp                        shift and go to state 97
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
 
-state 83
+state 87
 
     (40) condicion -> SI OPENPAR . megaexp CLOSEPAR entonces bloque_entonces
     (83) megaexp -> . superexp
@@ -1195,24 +1276,24 @@ state 83
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    megaexp                        shift and go to state 110
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    megaexp                        shift and go to state 111
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 84
+state 88
 
     (46) func_void -> func_call_id OPENPAR . func_call_params CLOSEPAR SEMICOLON
     (48) func_call_params -> . megaexp
@@ -1242,26 +1323,26 @@ state 84
 
     CLOSEPAR        reduce using rule 101 (empty -> .)
     COMMA           reduce using rule 101 (empty -> .)
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    func_call_params               shift and go to state 111
-    megaexp                        shift and go to state 112
-    empty                          shift and go to state 113
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    func_call_params               shift and go to state 112
+    megaexp                        shift and go to state 113
+    empty                          shift and go to state 114
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 85
+state 89
 
     (60) retorno -> RETORNO OPENPAR . megaexp CLOSEPAR SEMICOLON
     (83) megaexp -> . superexp
@@ -1285,24 +1366,24 @@ state 85
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    megaexp                        shift and go to state 114
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    megaexp                        shift and go to state 115
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 86
+state 90
 
     (51) escribe -> QUACKOUT OPENPAR . print_options CLOSEPAR SEMICOLON
     (52) print_options -> . CTES more_print
@@ -1328,33 +1409,33 @@ state 86
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTES            shift and go to state 116
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTES            shift and go to state 117
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    print_options                  shift and go to state 115
-    megaexp                        shift and go to state 117
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    print_options                  shift and go to state 116
+    megaexp                        shift and go to state 118
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 87
+state 91
 
     (57) lee -> QUACKIN OPENPAR . ID read_more CLOSEPAR SEMICOLON
 
-    ID              shift and go to state 118
+    ID              shift and go to state 119
 
 
-state 88
+state 92
 
     (69) id -> ID OPENBRAC . exp CLOSEBRAC
     (70) id -> ID OPENBRAC . exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
@@ -1375,36 +1456,36 @@ state 88
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    exp                            shift and go to state 119
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    exp                            shift and go to state 120
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 89
+state 93
 
     (61) desde -> DESDE forId . ASSIGN exp hasta exp hacer bloque
 
-    ASSIGN          shift and go to state 120
+    ASSIGN          shift and go to state 121
 
 
-state 90
+state 94
 
     (62) forId -> ID .
 
     ASSIGN          reduce using rule 62 (forId -> ID .)
 
 
-state 91
+state 95
 
     (65) mientras_estatuto -> mientras OPENPAR . megaexp CLOSEPAR haz bloque
     (83) megaexp -> . superexp
@@ -1428,48 +1509,24 @@ state 91
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    megaexp                        shift and go to state 121
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    megaexp                        shift and go to state 122
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 92
-
-    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars . bloque
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
-
-    LCURLYB         shift and go to state 44
-
-    bloque                         shift and go to state 122
-
-state 93
-
-    (21) more_params -> more_var_id more_params .
-
-    CLOSEPAR        reduce using rule 21 (more_params -> more_var_id more_params .)
-
-
-state 94
-
-    (11) dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .
-
-    COMMA           reduce using rule 11 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
-    SEMICOLON       reduce using rule 11 (dimensions -> OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC .)
-
-
-state 95
+state 96
 
     (95) vcte -> id .
 
@@ -1493,7 +1550,7 @@ state 95
     HACER           reduce using rule 95 (vcte -> id .)
 
 
-state 96
+state 97
 
     (39) asignacion -> id ASSIGN megaexp . SEMICOLON
     (84) megaexp -> megaexp . boolean_op superexp
@@ -1506,7 +1563,7 @@ state 96
 
     boolean_op                     shift and go to state 124
 
-state 97
+state 98
 
     (83) megaexp -> superexp .
     (86) superexp -> superexp . logical_op exp
@@ -1531,7 +1588,7 @@ state 97
 
     logical_op                     shift and go to state 127
 
-state 98
+state 99
 
     (85) superexp -> exp .
     (88) exp -> exp . sums termino
@@ -1554,7 +1611,7 @@ state 98
 
     sums                           shift and go to state 134
 
-state 99
+state 100
 
     (87) exp -> termino .
     (90) termino -> termino . multdiv factor
@@ -1582,7 +1639,7 @@ state 99
 
     multdiv                        shift and go to state 137
 
-state 100
+state 101
 
     (89) termino -> factor .
 
@@ -1606,7 +1663,7 @@ state 100
     HACER           reduce using rule 89 (termino -> factor .)
 
 
-state 101
+state 102
 
     (91) factor -> vcte .
 
@@ -1630,7 +1687,7 @@ state 101
     HACER           reduce using rule 91 (factor -> vcte .)
 
 
-state 102
+state 103
 
     (92) factor -> openpar . megaexp closepar
     (83) megaexp -> . superexp
@@ -1654,24 +1711,24 @@ state 102
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
-    openpar                        shift and go to state 102
+    openpar                        shift and go to state 103
     megaexp                        shift and go to state 140
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    id                             shift and go to state 95
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    id                             shift and go to state 96
 
-state 103
+state 104
 
     (96) vcte -> CTEI .
 
@@ -1695,7 +1752,7 @@ state 103
     HACER           reduce using rule 96 (vcte -> CTEI .)
 
 
-state 104
+state 105
 
     (97) vcte -> CTEF .
 
@@ -1719,7 +1776,7 @@ state 104
     HACER           reduce using rule 97 (vcte -> CTEF .)
 
 
-state 105
+state 106
 
     (98) vcte -> TRUE .
 
@@ -1743,7 +1800,7 @@ state 105
     HACER           reduce using rule 98 (vcte -> TRUE .)
 
 
-state 106
+state 107
 
     (99) vcte -> FALSE .
 
@@ -1767,7 +1824,7 @@ state 106
     HACER           reduce using rule 99 (vcte -> FALSE .)
 
 
-state 107
+state 108
 
     (100) vcte -> CTEC .
 
@@ -1791,7 +1848,7 @@ state 107
     HACER           reduce using rule 100 (vcte -> CTEC .)
 
 
-state 108
+state 109
 
     (93) openpar -> OPENPAR .
 
@@ -1804,7 +1861,7 @@ state 108
     ID              reduce using rule 93 (openpar -> OPENPAR .)
 
 
-state 109
+state 110
 
     (68) id -> ID .
     (69) id -> ID . OPENBRAC exp CLOSEBRAC
@@ -1828,10 +1885,10 @@ state 109
     CLOSEBRAC       reduce using rule 68 (id -> ID .)
     HASTA           reduce using rule 68 (id -> ID .)
     HACER           reduce using rule 68 (id -> ID .)
-    OPENBRAC        shift and go to state 88
+    OPENBRAC        shift and go to state 92
 
 
-state 110
+state 111
 
     (40) condicion -> SI OPENPAR megaexp . CLOSEPAR entonces bloque_entonces
     (84) megaexp -> megaexp . boolean_op superexp
@@ -1844,7 +1901,7 @@ state 110
 
     boolean_op                     shift and go to state 124
 
-state 111
+state 112
 
     (46) func_void -> func_call_id OPENPAR func_call_params . CLOSEPAR SEMICOLON
     (49) func_call_params -> func_call_params . COMMA func_call_params
@@ -1853,7 +1910,7 @@ state 111
     COMMA           shift and go to state 143
 
 
-state 112
+state 113
 
     (48) func_call_params -> megaexp .
     (84) megaexp -> megaexp . boolean_op superexp
@@ -1867,7 +1924,7 @@ state 112
 
     boolean_op                     shift and go to state 124
 
-state 113
+state 114
 
     (50) func_call_params -> empty .
 
@@ -1875,7 +1932,7 @@ state 113
     COMMA           reduce using rule 50 (func_call_params -> empty .)
 
 
-state 114
+state 115
 
     (60) retorno -> RETORNO OPENPAR megaexp . CLOSEPAR SEMICOLON
     (84) megaexp -> megaexp . boolean_op superexp
@@ -1888,14 +1945,14 @@ state 114
 
     boolean_op                     shift and go to state 124
 
-state 115
+state 116
 
     (51) escribe -> QUACKOUT OPENPAR print_options . CLOSEPAR SEMICOLON
 
     CLOSEPAR        shift and go to state 145
 
 
-state 116
+state 117
 
     (52) print_options -> CTES . more_print
     (54) more_print -> . COMMA CTES
@@ -1909,7 +1966,7 @@ state 116
     more_print                     shift and go to state 146
     empty                          shift and go to state 148
 
-state 117
+state 118
 
     (53) print_options -> megaexp . more_print
     (84) megaexp -> megaexp . boolean_op superexp
@@ -1929,7 +1986,7 @@ state 117
     boolean_op                     shift and go to state 124
     empty                          shift and go to state 148
 
-state 118
+state 119
 
     (57) lee -> QUACKIN OPENPAR ID . read_more CLOSEPAR SEMICOLON
     (58) read_more -> . COMMA ID read_more
@@ -1942,7 +1999,7 @@ state 118
     read_more                      shift and go to state 150
     empty                          shift and go to state 152
 
-state 119
+state 120
 
     (69) id -> ID OPENBRAC exp . CLOSEBRAC
     (70) id -> ID OPENBRAC exp . CLOSEBRAC OPENBRAC exp CLOSEBRAC
@@ -1956,7 +2013,7 @@ state 119
 
     sums                           shift and go to state 134
 
-state 120
+state 121
 
     (61) desde -> DESDE forId ASSIGN . exp hasta exp hacer bloque
     (87) exp -> . termino
@@ -1976,22 +2033,22 @@ state 120
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     exp                            shift and go to state 154
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
-state 121
+state 122
 
     (65) mientras_estatuto -> mientras OPENPAR megaexp . CLOSEPAR haz bloque
     (84) megaexp -> megaexp . boolean_op superexp
@@ -2003,14 +2060,6 @@ state 121
     AND             shift and go to state 126
 
     boolean_op                     shift and go to state 124
-
-state 122
-
-    (15) declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque .
-
-    PRINCIPAL       reduce using rule 15 (declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque .)
-    FUNCION         reduce using rule 15 (declare_func -> FUNCION func_id OPENPAR declare_func_params CLOSEPAR declare_vars bloque .)
-
 
 state 123
 
@@ -2048,21 +2097,21 @@ state 124
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     superexp                       shift and go to state 156
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 125
 
@@ -2110,20 +2159,20 @@ state 127
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     exp                            shift and go to state 157
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 128
 
@@ -2221,19 +2270,19 @@ state 134
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     termino                        shift and go to state 158
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 135
 
@@ -2277,18 +2326,18 @@ state 137
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     factor                         shift and go to state 159
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 138
 
@@ -2377,24 +2426,24 @@ state 143
 
     COMMA           reduce using rule 101 (empty -> .)
     CLOSEPAR        reduce using rule 101 (empty -> .)
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     func_call_params               shift and go to state 165
-    megaexp                        shift and go to state 112
-    empty                          shift and go to state 113
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    megaexp                        shift and go to state 113
+    empty                          shift and go to state 114
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 144
 
@@ -2443,22 +2492,22 @@ state 147
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
     CTES            shift and go to state 168
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     megaexp                        shift and go to state 169
-    superexp                       shift and go to state 97
-    exp                            shift and go to state 98
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    superexp                       shift and go to state 98
+    exp                            shift and go to state 99
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 148
 
@@ -2698,7 +2747,7 @@ state 162
 
     (40) condicion -> SI OPENPAR megaexp CLOSEPAR entonces . bloque_entonces
     (42) bloque_entonces -> . bloque bloque_sino
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
     LCURLYB         shift and go to state 44
 
@@ -2825,20 +2874,20 @@ state 172
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     exp                            shift and go to state 181
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 173
 
@@ -2860,20 +2909,20 @@ state 173
     (69) id -> . ID OPENBRAC exp CLOSEBRAC
     (70) id -> . ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC
 
-    CTEI            shift and go to state 103
-    CTEF            shift and go to state 104
-    TRUE            shift and go to state 105
-    FALSE           shift and go to state 106
-    CTEC            shift and go to state 107
-    OPENPAR         shift and go to state 108
-    ID              shift and go to state 109
+    CTEI            shift and go to state 104
+    CTEF            shift and go to state 105
+    TRUE            shift and go to state 106
+    FALSE           shift and go to state 107
+    CTEC            shift and go to state 108
+    OPENPAR         shift and go to state 109
+    ID              shift and go to state 110
 
     exp                            shift and go to state 182
-    termino                        shift and go to state 99
-    factor                         shift and go to state 100
-    vcte                           shift and go to state 101
-    openpar                        shift and go to state 102
-    id                             shift and go to state 95
+    termino                        shift and go to state 100
+    factor                         shift and go to state 101
+    vcte                           shift and go to state 102
+    openpar                        shift and go to state 103
+    id                             shift and go to state 96
 
 state 174
 
@@ -2891,7 +2940,7 @@ state 174
 state 175
 
     (65) mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz . bloque
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
     LCURLYB         shift and go to state 44
 
@@ -3020,7 +3069,7 @@ state 184
 state 185
 
     (43) bloque_sino -> sino . bloque
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
     LCURLYB         shift and go to state 44
 
@@ -3075,7 +3124,7 @@ state 188
 state 189
 
     (61) desde -> DESDE forId ASSIGN exp hasta exp hacer . bloque
-    (28) bloque -> . LCURLYB estatutos_rec RCURLYB
+    (28) bloque -> . LCURLYB declare_vars estatutos_rec RCURLYB
 
     LCURLYB         shift and go to state 44
 

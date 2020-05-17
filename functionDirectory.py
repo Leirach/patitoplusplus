@@ -48,6 +48,8 @@ def addParam(functionName, paramId, paramType):
 
 #add function to Directory
 def addVar(functionName, varId, varType):
+    if functionName == None:
+        functionName = list(functionsDirectory.keys())[-1]
     if functionName in functionsDirectory: #Si la función existe
         if functionsDirectory[functionName]['vars'].get(varId) == None: ## ??? no estoy segura de si se hace esta validación aquí o nel
             if varType == None:

@@ -8,3 +8,5 @@ programa patito; principal() { }
 
 programa patito; principal() { retorno(2*5-3); }
 programa patito; principal() { i = 1*(2+3); }
+
+programa patito; principal() { quackout(true*5); }

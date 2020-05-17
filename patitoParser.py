@@ -16,13 +16,18 @@ precedence = (
 )
 
 def p_program_declaration(p):
-    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec PRINCIPAL OPENPAR CLOSEPAR bloque'
+    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec declare_main OPENPAR CLOSEPAR bloque'
     global programId
     programId = p[2]
+    code.endFunc()
 
 
 #def p_principal(p):
     #code.startMain()
+    
+def p_declare_main(p):
+    '''declare_main : PRINCIPAL'''
+    code.registerFunc('principal', 'void')
 
 def p_declare_vars(p):
     '''declare_vars : VAR vars
@@ -31,11 +36,13 @@ def p_declare_vars(p):
 def p_vars(p):
     '''vars : var_id dimensions more_vars SEMICOLON vars
             | empty'''
+    print("End of var declaration")
+    code.endVariableDeclaration()
 
 def p_var_id(p):
     '''var_id : tipo ID'''
     #Falta identificar entre globales y las que pertecen a una función
-    funcDir.addVar(None, p[2], p[1])
+    code.registerVariable(p[2], p[1])
 
 def p_more_vars(p):
     '''more_vars : more_var_id dimensions more_vars
@@ -44,7 +51,7 @@ def p_more_vars(p):
 def p_more_var_id(p):
     '''more_var_id : COMMA ID'''
     if(p[2] != None and p[2] != '$'):
-        funcDir.addVar(None, p[2], None)
+        code.registerVariable(p[2], None)
 
 
 def p_dimensions(p):

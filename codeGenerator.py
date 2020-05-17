@@ -8,6 +8,7 @@ class CodeGenerator:
         self.opStack = []
         self.idStack = []
         self.tpStack = []
+        self.funcStack = ['globals']
         self.gotoStack = []
         self.pendingLines = []
         self.dirFunc = {}
@@ -24,6 +25,18 @@ class CodeGenerator:
     def getVarType(p):
         #placeholder
         return 'int'
+
+    def registerVariable(self, id, varType):
+        funcName = self.funcStack.pop()
+        funcDir.addVar(funcName, id, varType)
+        self.funcStack.append(funcName)
+
+    def endVariableDeclaration(self):
+        funcName = self.funcStack.pop()
+        if(funcName == 'globals'):
+            self.funcStack.append(funcName)
+        print("------------FuncStack------------")
+        print(self.funcStack)
 
     def buildExp(self):
         op = self.opStack.pop()
@@ -134,12 +147,14 @@ class CodeGenerator:
             sys.exit()
         else:
             self.dirFunc[id] = {"type": tipo}
+            self.funcStack.append(id)
             funcDir.addFunction(id, tipo)
     
     def registerFuncParams(self, id, tipo): 
         #hay un stack de ids de funciones???
-        self.dirFunc[id] = {"type": tipo}
-        funcDir.addParam(None, id ,tipo) #si no hay, hago la búsqueda directo en la última función registrada en el dir de funciones
+        funcName =  self.funcStack.pop()
+        funcDir.addParam(funcName, id ,tipo) #si no hay, hago la búsqueda directo en la última función registrada en el dir de funciones
+        self.funcStack.append(funcName)
     
     def endFunc(self):
         # calcular tamaño de todo self.temp tiene el count
@@ -147,6 +162,7 @@ class CodeGenerator:
         self.temp = 1 # reset temp counter
         self.code.append("ENDFUNC\n")
         self.line+=1
+        self.endVariableDeclaration()
 
     def funcCall(self, func_id):
         #check if functions exists in directory?
@@ -168,6 +184,7 @@ class CodeGenerator:
         self.code.append(buf)
         self.line += 1
         self.paramCounter = 0 # reset param counter
+
 
     def peek(self, stack):
         if len(stack) > 0:

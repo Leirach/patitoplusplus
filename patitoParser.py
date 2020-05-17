@@ -3,6 +3,7 @@
 import patitoLexer
 import codeGenerator as cg
 import ply.yacc as yacc
+import functionDirectory as funcDir
 import sys
 
 tokens = patitoLexer.tokens
@@ -28,12 +29,23 @@ def p_declare_vars(p):
                     | empty'''
 
 def p_vars(p):
-    '''vars : tipo ID dimensions more_vars SEMICOLON vars
+    '''vars : var_id dimensions more_vars SEMICOLON vars
             | empty'''
 
+def p_var_id(p):
+    '''var_id : tipo ID'''
+    #Falta identificar entre globales y las que pertecen a una función
+    funcDir.addVar('globals', p[2], p[1])
+
 def p_more_vars(p):
-    '''more_vars : COMMA ID dimensions more_vars
+    '''more_vars : more_var_id dimensions more_vars
                  | empty'''
+
+def p_more_var_id(p):
+    '''more_var_id : COMMA ID'''
+    if(p[2] != None and p[2] != '$'):
+        funcDir.addVar('globals', p[2], None)
+
 
 def p_dimensions(p):
     '''dimensions : OPENBRAC CTEI CLOSEBRAC 
@@ -54,12 +66,20 @@ def p_func_id(p):
     code.registerFunc(id=p[2], tipo=p[1])
 
 def p_declare_func_params(p):
-    '''declare_func_params : tipo ID more_params
+    '''declare_func_params : get_func_params more_params
                            | empty'''
 
+def p_get_func_params(p):
+    '''get_func_params : tipo ID'''
+    code.registerFuncParams(id=p[2], tipo=p[1])
+
 def p_more_params(p):
-    '''more_params : COMMA tipo ID more_params
+    '''more_params : more_var_id more_params
                    | empty'''
+
+def p_more_params_id(p):
+    '''more_var_id : COMMA tipo ID'''
+    code.registerFuncParams(id=p[3], tipo=p[2])
 
 def p_tipo(p):
     '''tipo : INT 

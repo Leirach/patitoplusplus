@@ -1,5 +1,6 @@
 import sys
 import semanticTable as semantic
+import functionDirectory as funcDir
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open("out.obj", "w")
@@ -133,7 +134,13 @@ class CodeGenerator:
             sys.exit()
         else:
             self.dirFunc[id] = {"type": tipo}
-
+            funcDir.addFunction(id, tipo)
+    
+    def registerFuncParams(self, id, tipo): 
+        #hay un stack de ids de funciones???
+        self.dirFunc[id] = {"type": tipo}
+        funcDir.addParam(None, id ,tipo) #si no hay, hago la búsqueda directo en la última función registrada en el dir de funciones
+    
     def endFunc(self):
         # calcular tamaño de todo self.temp tiene el count
         # liberar varTable, resetear temporales? idk

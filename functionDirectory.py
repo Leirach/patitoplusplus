@@ -8,7 +8,7 @@
 #       vars: {'varId': 'type'},
 # }
 
-functionsDirectory = { 
+functionsDirectory = { 'globals': {'type': 'void', 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
 }
 
 #add function to Directory
@@ -21,15 +21,23 @@ def addFunction(functionName, functionType):
             functionName : {'type': functionType, 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
         }
         functionsDirectory.update(function)
+        print("Se agregó función")
+        print(functionsDirectory)
         return True
 
 #add function to Directory
 def addParam(functionName, paramId, paramType):
+    if functionName == None:
+        functionName = list(functionsDirectory.keys())[-1]
     if functionName in functionsDirectory: #Si la función existe
         if functionsDirectory[functionName]['paramsInfo'].get(paramId) == None: ## ??? no estoy segura de si se hace esta validación aquí o nel
+            if functionName == None:
+                functionName = list(functionsDirectory.keys())[-1]
             functionsDirectory[functionName]['numParams'] = functionsDirectory[functionName]['numParams'] + 1
             functionsDirectory[functionName]['paramsInfo'].update({paramId: paramType})
             functionsDirectory[functionName]['paramsOrder'].append(paramType)
+            print("Se agregó parámetro")
+            print(functionsDirectory)
             return True 
         else:
             print("Id de parámetro duplicado")
@@ -42,7 +50,11 @@ def addParam(functionName, paramId, paramType):
 def addVar(functionName, varId, varType):
     if functionName in functionsDirectory: #Si la función existe
         if functionsDirectory[functionName]['vars'].get(varId) == None: ## ??? no estoy segura de si se hace esta validación aquí o nel
+            if varType == None:
+                varType = functionsDirectory[functionName]['vars'][list(functionsDirectory[functionName]['vars'].keys())[-1]]
             functionsDirectory[functionName]['vars'].update({varId: varType})
+            print("Se agregó a tabla de variables")
+            print(functionsDirectory)
             return True 
         else:
             print("Id duplicado")
@@ -50,7 +62,8 @@ def addVar(functionName, varId, varType):
     else:
         print("Función no existe")
         return False
-    
+
+
 '''functionName = 'main'
 functionType = 'void'
 param = 'x'

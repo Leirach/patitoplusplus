@@ -43,7 +43,7 @@ def addParam(functionName, paramId, paramType):
             print(functionsDirectory)
             return True 
         else:
-            exception.throwError("ID '%s' duplicado" % (paramId))
+            exception.throwError("ID '%s' duplicado en parámetros de función '%s'" % (paramId, functionName))
             return False
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
@@ -62,12 +62,15 @@ def addVar(functionName, varId, varType):
             print(functionsDirectory)
             return True 
         else:
-            exception.throwError("ID '%s' duplicado" % (varId))
-            return False #Variable ya existe
+            exception.throwError("ID '%s' duplicado en función '%s'" % (varId, functionName))
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
-        return False
 
+def validateFunctionSemantics(functionName, params, paramsOrder):
+    if functionName in functionsDirectory: #Si la función existe
+        print("Función existe")
+    else:
+        exception.throwError("Función '%s' no existe" % (functionName))
 
 '''functionName = 'main'
 functionType = 'void'

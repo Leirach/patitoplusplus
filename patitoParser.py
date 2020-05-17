@@ -24,7 +24,7 @@ def p_program_declaration(p):
 
 #def p_principal(p):
     #code.startMain()
-    
+
 def p_declare_main(p):
     '''declare_main : PRINCIPAL'''
     code.registerFunc('principal', 'void')

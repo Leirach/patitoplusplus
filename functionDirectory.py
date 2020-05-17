@@ -66,9 +66,25 @@ def addVar(functionName, varId, varType):
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
 
-def validateFunctionSemantics(functionName, params, paramsOrder):
+def validateFunctionSemantics(functionName):
     if functionName in functionsDirectory: #Si la función existe
         print("Función existe")
+        if functionName+"Call" in functionsDirectory:
+            print("Llamada generada")
+            funcParams = functionsDirectory[functionName]["numParams"]
+            funcCallParams = functionsDirectory[functionName+"Call"]["numParams"]
+            if funcParams == funcCallParams:
+                print("Número de parámetros correcto")
+                funcParamOrder = functionsDirectory[functionName+"Call"]["paramsOrder"]
+                funcCallOrder = functionsDirectory[functionName]["paramsOrder"]
+                if funcParamOrder == funcCallOrder:
+                    print("Orden correcto de tipos")
+                else:
+                    exception.throwError("Se esperaba parámetros %s. Se recibió %s." % (str(funcParamOrder), str(funcCallOrder)))
+            else:
+                exception.throwError("Número de parámetros incorrecto (%s) para la función '%s'. Se esperaban %s." % (str(funcCallParams), str(functionName), str(funcParams)))
+        else:
+            exception.throwError("Ocurrió un problema llamando la función '%s'" % (functionName))
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
 

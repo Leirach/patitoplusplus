@@ -1,0 +1,6 @@
+ENDFUNC
+ERA fact
+PARAM 1 par1
+PARAM true par2
+GOSUB fact
+ENDFUNC

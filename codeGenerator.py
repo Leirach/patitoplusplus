@@ -1,4 +1,5 @@
 import sys
+import re 
 import semanticTable as semantic
 import functionDirectory as funcDir
 class CodeGenerator:
@@ -26,6 +27,23 @@ class CodeGenerator:
         #placeholder
         return 'int'
 
+    def getParamType(self, param):
+        param = str(param)
+        integers = re.compile('^[-+]?([1-9]\d*|0)$') #match int
+        floats = re.compile('[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?') #match float
+        chars = re.compile("^['][a-zA-Z][']+$") #match chars
+        boolean = re.compile("^[true|false]+$")
+        if integers.match(param):
+            return 'int'
+        elif floats.match(param):
+            return 'float'
+        elif chars.match(param):
+            return 'char'
+        elif boolean.match(param):
+            return 'bool'
+        else: 
+            return getVarType(param) #falta validar tipo de ID??
+
     def registerVariable(self, id, varType):
         funcName = self.funcStack.pop()
         funcDir.addVar(funcName, id, varType)
@@ -35,8 +53,6 @@ class CodeGenerator:
         funcName = self.funcStack.pop()
         if(funcName == 'globals'):
             self.funcStack.append(funcName)
-        print("------------FuncStack------------")
-        print(self.funcStack)
 
     def buildExp(self):
         op = self.opStack.pop()
@@ -166,18 +182,26 @@ class CodeGenerator:
         self.endVariableDeclaration()
 
     def funcCall(self, func_id):
-        #check if functions exists in directory?
+        #check if functions exists in directory? 
         self.idStack.append(func_id)
         buf = "ERA %s\n" % (func_id)
         self.code.append(buf)
         self.line+=1
+        funcDir.addFunction(str(func_id)+"Call", "call")
 
     def funcCallParam(self):
         param = self.idStack.pop()
-        self.paramCounter += 1 # starts @ 0
-        buf = "PARAM %s par%d\n" % (param, self.paramCounter)
-        self.code.append(buf)
-        self.line+=1
+        if self.idStack:
+            functionName = self.idStack.pop()
+            self.paramCounter += 1 # starts @ 0
+            buf = "PARAM %s par%d\n" % (param, self.paramCounter)
+            self.code.append(buf)
+            self.line+=1
+            paramType = self.getParamType(param)
+            funcDir.addParam(str(functionName)+"Call", param ,paramType)
+            self.idStack.append(functionName)
+        else:
+            self.idStack.append(param)
 
     def funcCallEnd(self):
         func_id = self.idStack.pop()
@@ -185,6 +209,7 @@ class CodeGenerator:
         self.code.append(buf)
         self.line += 1
         self.paramCounter = 0 # reset param counter
+        funcDir.validateFunctionSemantics(func_id)
 
 
     def peek(self, stack):

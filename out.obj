@@ -1,5 +1,3 @@
 ENDFUNC
 ERA fact
 PARAM 5 par1
-PARAM 'C' par2
-GOSUB fact

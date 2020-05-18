@@ -1,7 +1,8 @@
 import sys
 import re 
 import semanticTable as semantic
-import functionDirectory as funcDir
+import functionDirectory as fm
+
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open("out.obj", "w")
@@ -9,7 +10,9 @@ class CodeGenerator:
         self.opStack = []
         self.idStack = []
         self.tpStack = []
-        self.funcStack = ['globals']
+        # self.funcStack = ['globals']
+        # self.scope = 'global'
+        self.funcDir = fm.FunctionManager()
         self.gotoStack = []
         self.pendingLines = []
         self.dirFunc = {}
@@ -24,41 +27,31 @@ class CodeGenerator:
         self.f.close()
 
 
-    # TODO 
+    # TODO NO SE SI SE NECESITA ESTO POR ESO LO COMENTO LO QUITO A LA PROXIMA
     # se necesita tener nombre de función a la que pertenece :O
-    def getVarType(self, p):
-        functionName = self.funcStack.pop()
-        print("functionName:", functionName)
-        varType = funcDir.getVariableType(functionName, p)
-        self.funcStack.append(functionName)
-        return varType
+    # def getVarType(self, p):
+    #     functionName = self.funcStack.pop()
+    #     print("functionName:", functionName)
+    #     varType = funcDir.getVariableType(functionName, p)
+    #     self.funcStack.append(functionName)
+    #     return varType
 
-    def getParamType(self, param):
-        param = str(param)
-        integers = re.compile('^[-+]?([1-9]\d*|0)$') #match int
-        floats = re.compile('[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?') #match float
-        chars = re.compile("^['][a-zA-Z][']+$") #match chars
-        boolean = re.compile("^[true|false]+$")
-        if integers.match(param):
-            return 'int'
-        elif floats.match(param):
-            return 'float'
-        elif chars.match(param):
-            return 'char'
-        elif boolean.match(param):
-            return 'bool'
-        else: 
-            return self.getVarType(param) #falta validar tipo de ID??
-
-    def registerVariable(self, id, varType):
-        funcName = self.funcStack.pop()
-        funcDir.addVar(funcName, id, varType)
-        self.funcStack.append(funcName)
-
-    def endVariableDeclaration(self):
-        funcName = self.funcStack.pop()
-        if(funcName == 'globals'):
-            self.funcStack.append(funcName)
+    # def getParamType(self, param):
+    #     param = str(param)
+    #     integers = re.compile('^[-+]?([1-9]\d*|0)$') #match int
+    #     floats = re.compile('[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?') #match float
+    #     chars = re.compile("^['][a-zA-Z][']+$") #match chars
+    #     boolean = re.compile("^[true|false]+$")
+    #     if integers.match(param):
+    #         return 'int'
+    #     elif floats.match(param):
+    #         return 'float'
+    #     elif chars.match(param):
+    #         return 'char'
+    #     elif boolean.match(param):
+    #         return 'bool'
+    #     else: 
+    #         return self.getVarType(param) #falta validar tipo de ID??
 
     def buildExp(self):
         op = self.opStack.pop()
@@ -163,52 +156,41 @@ class CodeGenerator:
         self.code.append(buf)
         print(self.code)
 
+    def registerVariable(self, id, varType):
+        self.funcDir.registerVariable(id, varType)
+
     def registerFunc(self, id, tipo): 
-        if (self.dirFunc.get(id) is not None):
-            #raise Exception("Función '%s' fue definida anteriormente." % (id))
-            print("Función '%s' fue definida anteriormente." % (id))
-            sys.exit()
-        else:
-            self.dirFunc[id] = {"type": tipo}
-            self.funcStack.append(id)
-            funcDir.addFunction(id, tipo)
-    
+        self.funcDir.registerFunc(id, tipo)
+
     def registerFuncParams(self, id, tipo): 
-        #hay un stack de ids de funciones???
-        funcName =  self.funcStack.pop()
-        funcDir.addParam(funcName, id ,tipo) #si no hay, hago la búsqueda directo en la última función registrada en el dir de funciones
-        self.funcStack.append(funcName)
-    
+        #hay un stack de ids de funciones??? no es necesario :D
+        self.funcDir.registerFuncParams(id ,tipo) 
+
     def endFunc(self):
-        # calcular tamaño de todo self.temp tiene el count
-        # liberar varTable, resetear temporales? idk
+        # calcular tamaño de todo, self.temp tiene el count
         self.temp = 1 # reset temp counter
         self.code.append("ENDFUNC\n")
-        self.line+=1
-        self.endVariableDeclaration()
+        self.line += 1
+        # self.endVariableDeclaration() No se si esto es necesario
         print("END FUNC")
 
-    def funcCall(self, func_id):
-        #check if functions exists in directory? 
+    def funcCallStart(self, func_id):
+        #check if functions exists in directory?
+        self.funcDir.callFunction(func_id)
         self.idStack.append(func_id)
         buf = "ERA %s\n" % (func_id)
         self.code.append(buf)
         self.line+=1
-        funcDir.addFunction(str(func_id)+"patitoFuncCall", "call")
 
     def funcCallParam(self):
         param = self.idStack.pop()
-        if self.idStack:
-            functionName = self.idStack.pop()
-            self.paramCounter += 1 # starts @ 0
-            buf = "PARAM %s par%d\n" % (param, self.paramCounter)
-            self.code.append(buf)
-            self.line+=1
-            paramType = self.getParamType(param)
-            funcDir.addParam(str(functionName)+"patitoFuncCall", param ,paramType)
-            self.idStack.append(functionName)
-        else:
-            self.idStack.append(param)
+        paramType = self.tpStack.pop()
+        calledFunc = self.peek(self.idStack)
+        self.funcDir.validateParam(calledFunc, self.paramCounter, paramType)
+        self.paramCounter += 1 # starts @ 0
+        buf = "PARAM %s par%d\n" % (param, self.paramCounter)
+        self.code.append(buf)
+        self.line += 1
 
     def funcCallEnd(self):
         func_id = self.idStack.pop()
@@ -217,8 +199,7 @@ class CodeGenerator:
         self.line += 1
         self.paramCounter = 0 # reset param counter
         print("END FUNCCALL", func_id)
-        scope = self.funcStack.pop()
-        funcDir.validateFunctionSemantics(func_id)
+        # funcDir.validateFunctionSemantics(func_id)
     
     def peek(self, stack):
         if len(stack) > 0:

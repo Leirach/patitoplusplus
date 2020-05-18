@@ -3,7 +3,6 @@
 import patitoLexer
 import codeGenerator as cg
 import ply.yacc as yacc
-import functionDirectory as funcDir
 import sys
 
 tokens = patitoLexer.tokens
@@ -16,7 +15,7 @@ precedence = (
 )
 
 def p_program_declaration(p):
-    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec declare_main OPENPAR CLOSEPAR bloque'
+    'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec declare_main OPENPAR CLOSEPAR bloque_funcion'
     global programId
     programId = p[2]
     code.endFunc()
@@ -49,7 +48,7 @@ def p_more_vars(p):
 
 def p_more_var_id(p):
     '''more_var_id : COMMA ID'''
-    if(p[2] != None and p[2] != '$'):
+    if(p[2] != None and p[2] != EMPTY):
         code.registerVariable(p[2], None)
 
 
@@ -63,7 +62,7 @@ def p_declare_func_rec(p):
                         | empty'''
 
 def p_declare_func(p):
-    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque'''
+    '''declare_func : FUNCION func_id OPENPAR declare_func_params CLOSEPAR bloque_funcion'''
     code.endFunc()
 
 def p_func_id(p):
@@ -94,8 +93,13 @@ def p_tipo(p):
             | BOOL'''
     p[0] = p[1]
 
+# Ahora las variables de cada funcion se declaran al principio del bloque
+def p_bloque_funcion(p):
+    'bloque_funcion : LCURLYB declare_vars estatutos_rec RCURLYB'
+
+#bloque sin variables para if, for, while etc.
 def p_bloque(p):
-    'bloque : LCURLYB declare_vars estatutos_rec RCURLYB'
+    'bloque : LCURLYB estatutos_rec RCURLYB'
 
 def p_estatutos_rec(p):
     '''estatutos_rec : estatuto estatutos_rec
@@ -142,14 +146,15 @@ def p_func_void(p):
 
 def p_func_call_id(p):
     'func_call_id : ID'
-    code.funcCall(p[1])
+    code.funcCallStart(p[1])
 
 def p_func_call_params(p):
-    '''func_call_params : megaexp
-                        | func_call_params COMMA func_call_params
+    '''func_call_params : func_call_params COMMA func_call_params
                         | empty'''
-    if (p[1] != EMPTY):
-        code.funcCallParam()
+
+def p_func_call_add_params(p):
+    'func_call_params : megaexp'
+    code.funcCallParam()
 
 # -- Escribir --
 def p_escribe(p):
@@ -279,12 +284,12 @@ def p_factor(p):
               | openpar megaexp closepar'''
 
 # agregar fondo falso a opstack
-def p_openpar(p): 
+def p_openpar(p):
     'openpar : OPENPAR'
     code.opStack.append(p[1])
 
 # quitar fondo falso
-def p_closepar(p): 
+def p_closepar(p):
     'closepar : CLOSEPAR'
     code.opStack.pop()
 

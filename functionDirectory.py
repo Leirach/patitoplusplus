@@ -1,107 +1,94 @@
 
-# 
-# functionName: {
-#       type: 'void',
-#       paramsInfo: {'paramId': 'type'},
-#       numParams: 1,
-#       paramsOrder: ['type']
-#       vars: {'varId': 'type'},
-# }
 #TODO doble llamada de función
 import exceptions as exception
 
-global functionsDirectory
-functionsDirectory = { 'globals': {'type': 'void', 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
-}
-
-#add function to Directory
-def addFunction(functionName, functionType):
-    if functionName in functionsDirectory: 
-        #No stoi segura de que aquí se haga esta validación??
-        exception.throwError("Función '%s' fue definida anteriormente." % (functionName))
-        return False #función ya existe
-    else:
-        function = {
-            functionName : {'type': functionType, 'numParams': 0, 'paramsInfo': {}, 'paramsOrder': [], 'vars': {}},
+# type: tipo de retorno esperado de la funcion
+# params: lista de los id de parametros esperados para la llamada
+#         la idea es que se indexe vars con estos strings para checar a que variable
+#         pertenece cual parametro. sentiende claro diafano cristalino?
+# vars: guarda parametros y variables en un diccionario para indexar facilmente
+class FunctionManager:
+    def __init__(self):
+        self.scope = 'global'
+        self.functionsDir = { 
+            'global': {'type': 'void', 'params': [], 'vars': {} },
         }
-        functionsDirectory.update(function)
-        print("Se agregó función")
-        print(functionsDirectory)
+
+    #add function to Directory
+    def registerFunc(self, functionName, functionType):
+        if self.functionsDir.get(functionName) is not None:
+            exception.throwError("Función '%s' fue definida anteriormente." % (functionName))
+            # return False #función ya existe
+        function = {
+            functionName : {'type': functionType, 'params': [], 'vars': {} },
+        }
+        self.functionsDir.update(function)
+        self.scope = functionName
         return True
 
-#add function to Directory
-def addParam(functionName, paramId, paramType):
-    if functionName == None:
-        functionName = list(functionsDirectory.keys())[-1]
-    if functionName in functionsDirectory: #Si la función existe
-        if functionsDirectory[functionName]['paramsInfo'].get(paramId) == None or "patitoFuncCall" in functionName: ## ??? no estoy segura de si se hace esta validación aquí o nel
-            if functionName == None:
-                functionName = list(functionsDirectory.keys())[-1]
-            functionsDirectory[functionName]['numParams'] = functionsDirectory[functionName]['numParams'] + 1
-            functionsDirectory[functionName]['paramsInfo'].update({paramId: paramType})
-            functionsDirectory[functionName]['paramsOrder'].append(paramType)
-            print("Se agregó parámetro")
-            print(functionsDirectory)
+    #add function to Directory
+    def registerFuncParams(self, paramId, paramType):
+        self.registerVariable(paramId, paramType)
+        self.functionsDir[self.scope]['params'].append(paramId)
+
+    #add function to Directory
+    def registerVariable(self, varId, varType):
+        #TODO creo que esto no es necesario
+        if self.functionsDir.get(self.scope) is None: #Si la función no existe
+            exception.throwError("Función '%s' no existe" % (self.scope))
+
+        if self.functionsDir[self.scope]['vars'].get(varId) is None:
+            self.functionsDir[self.scope]['vars'].update({varId: varType})
             return True 
-        else:
+        exception.throwError("Variable '%s' duplicada en función '%s'" % (varId, functionName))
 
-            exception.throwError("ID '%s' duplicado en parámetros de función '%s'" % (paramId, functionName))
-            return False
-    else:
-        exception.throwError("Función '%s' no existe" % (functionName))
-        return False
 
-#add function to Directory
-def addVar(functionName, varId, varType):
-    if functionName == None:
-        functionName = list(functionsDirectory.keys())[-1]
-    if functionName in functionsDirectory: #Si la función existe
-        if functionsDirectory[functionName]['vars'].get(varId) == None: ## ??? no estoy segura de si se hace esta validación aquí o nel
-            if varType == None:
-                varType = functionsDirectory[functionName]['vars'][list(functionsDirectory[functionName]['vars'].keys())[-1]]
-            functionsDirectory[functionName]['vars'].update({varId: varType})
-            print("Se agregó a tabla de variables")
-            print(functionsDirectory)
-            return True 
-        else:
-            exception.throwError("ID '%s' duplicado en función '%s'" % (varId, functionName))
-    else:
-        exception.throwError("Función '%s' no existe" % (functionName))
-
-def getVariableType(functionName, variable):
-    if functionName in functionsDirectory: #Si la función existe
-        print("Función existe")
-        print(variable)
-        if variable in functionsDirectory[functionName]["vars"]:
-            varType = functionsDirectory[functionName]["vars"][variable]
+    def getVariableType(self, functionName, varId):
+        varType = self.functionsDir[functionName]['vars'].get(varId)
+        if varType is not None:
             return varType
-        else:
-            if variable in functionsDirectory['globals']["vars"]:
-                print(functionsDirectory['globals']["vars"][variable])
-                varType = functionsDirectory['globals']["vars"][variable]
-                return varType
-            else:
-                exception.throwError("Variable '%s' no existe en este scope" % (variable))
-    else:
-        exception.throwError("Función '%s' no existe" % (functionName))
+        # Si no estaba en el scope local intenta en global o ya de plano no existe
+        varType = self.functionsDir['globals']['vars'].get(varId)
+        if varType is not None:
+            return varType
+        exception.throwError("Variable '%s' no ha sido declarada" % (varId))
 
+    # func: functionName, paramNum: Number, type: Type sent
+    # se asume que ya se valido que la funcion existe
+    def validateParam(self, func, paramNum, paramType):
+        length = len(self.functionsDir[func]['params'])
+        if paramNum >= length:
+            exception.throwError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s." % ( func, length) )
+        var = self.functionsDir[func]['params'][paramNum]
+        expected = self.getVariableType(func, var) # deberia regresar tipo de la variable local
+        if expected != paramType:
+            exception.throwError("Se esperaba parámetro de tipo %s. Se recibió %s." % (expected, paramType))
+        return True
+
+    def callFunction(self, functionName):
+        if self.functionsDir.get(functionName) is None:
+            exception.throwError("Función '%s' no existe" % (functionName))
+        return True
+
+# deje esto pero creo que ya no es necesario
+# pero se veia muy complicado y me da cosa borrarlo
 def validateFunctionSemantics(functionName):
-    if functionName in functionsDirectory: #Si la función existe
+    if functionsDir.get(functionName): #Si la función existe
         print("Función existe")
-        if functionName+"patitoFuncCall" in functionsDirectory:
+        if functionName+"patitoFuncCall" in functionsDir:
             print("Llamada generada")
-            funcParams = functionsDirectory[functionName]["numParams"]
-            funcCallParams = functionsDirectory[functionName+"patitoFuncCall"]["numParams"]
+            funcParams = functionsDir[functionName]["numParams"]
+            funcCallParams = functionsDir[functionName+"patitoFuncCall"]["numParams"]
             if funcParams == funcCallParams:
                 print("Número de parámetros correcto")
-                funcCallOrder = functionsDirectory[functionName+"patitoFuncCall"]["paramsOrder"]
-                funcParamOrder = functionsDirectory[functionName]["paramsOrder"]
+                funcCallOrder = functionsDir[functionName+"patitoFuncCall"]["paramsOrder"]
+                funcParamOrder = functionsDir[functionName]["paramsOrder"]
                 if funcParamOrder == funcCallOrder:
                     print("Orden correcto de tipos")
-                    print(functionsDirectory)
-                    del functionsDirectory[functionName+"patitoFuncCall"]
+                    print(functionsDir)
+                    del functionsDir[functionName+"patitoFuncCall"]
                     print("REMOVED")
-                    print(functionsDirectory)
+                    print(functionsDir)
                 else:
                     exception.throwError("Se esperaba parámetros %s. Se recibió %s." % (str(funcParamOrder), str(funcCallOrder)))
             else:
@@ -111,41 +98,47 @@ def validateFunctionSemantics(functionName):
     else:
         exception.throwError("Función '%s' no existe" % (functionName))
 
-
-'''functionName = 'main'
+# para probar errores
+'''
+functionName = 'main'
 functionType = 'void'
 param = 'x'
 paramType = 'int'
 print("........Empty dictionary.......")    
-print(functionsDirectory)
+print(functionsDir)
 print("........Adding Function to dictionary.......")  
-addFunction(functionName, functionType)
+registerFunc(functionName, functionType)
 print("........Function added.......")  
-print(functionsDirectory)
+print(functionsDir)
 print("........Adding param to function .......")  
-addParam(functionName, param, paramType)
+registerFuncParams(functionName, param, paramType)
 print("........Added param to function .......")  
-print(functionsDirectory)
+print(functionsDir)
+callFunction(functionName) # checa que existe
+validateParam(functionName, 0, 'int') # llamando x siendo entero: main(x)
+validateParam(functionName, 1, 'int') # llamando x siendo entero: main(x, x)
+
 print("........Adding param to function .......")  
-addParam(functionName, 'Y', paramType)
+registerFuncParams(functionName, 'Y', paramType)
 print("........Added param to function .......")  
-print(functionsDirectory)
+print(functionsDir)
 print("........Adding param to function .......")  
-addParam(functionName, 'Y', paramType)
+registerFuncParams(functionName, 'Y', paramType)
 print("........Adding var to function .......")  
-addVar(functionName, 'aux', 'bool')
+registerVariable(functionName, 'aux', 'bool')
 print("........Added var to function .......")  
 print("........Adding var to function .......")  
-addVar(functionName, 'aux', 'bool')
-print(functionsDirectory)
+registerVariable(functionName, 'aux', 'bool')
+print(functionsDir)
 print("........Adding var to function .......")  
-addVar(functionName, 'pop', 'float')
+registerVariable(functionName, 'pop', 'float')
 print("........Added var to function .......")  
-print(functionsDirectory)
+print(functionsDir)
 print("........Adding function .......")  
-addFunction(functionName, functionType)
-print(functionsDirectory)
+registerFunc(functionName, functionType)
+print(functionsDir)
 print("........Adding function .......")  
-addFunction('popRockCallejero', functionType)
+registerFunc('popRockCallejero', functionType)
 print("........Added function .......")  
-print(functionsDirectory)'''
+print(functionsDir)
+'''

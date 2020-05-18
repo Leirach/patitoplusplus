@@ -1,17 +1,15 @@
 import sys
 import re 
-import semanticTable as semantic
+import semanticTable as semantics
 import functionDirectory as fm
 
 class CodeGenerator:
     def __init__(self, filename="patito"):
-        self.f = open("out.obj", "w")
+        self.f = open(filename+".obj", "w")
         self.code = []
         self.opStack = []
         self.idStack = []
         self.tpStack = []
-        # self.funcStack = ['globals']
-        # self.scope = 'global'
         self.funcDir = fm.FunctionManager()
         self.gotoStack = []
         self.pendingLines = []
@@ -27,31 +25,9 @@ class CodeGenerator:
         self.f.close()
 
 
-    # TODO NO SE SI SE NECESITA ESTO POR ESO LO COMENTO LO QUITO A LA PROXIMA
-    # se necesita tener nombre de función a la que pertenece :O
-    # def getVarType(self, p):
-    #     functionName = self.funcStack.pop()
-    #     print("functionName:", functionName)
-    #     varType = funcDir.getVariableType(functionName, p)
-    #     self.funcStack.append(functionName)
-    #     return varType
-
-    # def getParamType(self, param):
-    #     param = str(param)
-    #     integers = re.compile('^[-+]?([1-9]\d*|0)$') #match int
-    #     floats = re.compile('[+-]?(\d+(\.\d*)?|\.\d+)([eE][+-]?\d+)?') #match float
-    #     chars = re.compile("^['][a-zA-Z][']+$") #match chars
-    #     boolean = re.compile("^[true|false]+$")
-    #     if integers.match(param):
-    #         return 'int'
-    #     elif floats.match(param):
-    #         return 'float'
-    #     elif chars.match(param):
-    #         return 'char'
-    #     elif boolean.match(param):
-    #         return 'bool'
-    #     else: 
-    #         return self.getVarType(param) #falta validar tipo de ID??
+    # se necesita tener nombre de función a la que pertenece, yasya
+    def getVarType(self, p):
+        return self.funcDir.getVariableType(None, p) #default scope
 
     def buildExp(self):
         op = self.opStack.pop()
@@ -62,7 +38,7 @@ class CodeGenerator:
         izqType = self.tpStack.pop()
         # get next temp var
         aux = "t"+str(self.temp)
-        auxType = semantic.match(op, izqType, derType)
+        auxType = semantics.match(op, izqType, derType)
         if (auxType is None):
             print("Invalid operand %s for types %s and %s" % (op, izqType, derType))
             sys.exit()
@@ -75,7 +51,18 @@ class CodeGenerator:
         print(self.code)
         self.line += 1
 
-    def startIf(self):
+    def buildUnaryExp(self):
+        op = self.opStack.pop()
+        var = self.idStack.pop()
+        if op == '-':
+            self.idStack.append(op+var)
+        elif op == '+':
+            self.idStack.append(var)
+        else:
+            self.idStack.append(op+var)
+
+
+    def ifStart(self):
         cond = self.idStack.pop()
         buf = "gotof %s" % (cond)
         self.code.append("if gotof\n")
@@ -84,16 +71,16 @@ class CodeGenerator:
         self.gotoStack.append(self.line)
         self.line += 1
 
-    def elseIf(self):
+    def ifElse(self):
         buf = "goto"
         self.code.append("else goto\n")
         self.line += 1
         print(self.code)
-        self.endIf()
+        self.ifEnd()
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line-1)
 
-    def endIf(self):
+    def ifEnd(self):
         target = self.line
         lineNo = self.gotoStack.pop()
         buf = "%s %d\n" % (self.pendingLines.pop(), target)

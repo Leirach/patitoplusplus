@@ -6,7 +6,8 @@ tokens = [
     'PLUS', 'MINUS','TIMES','DIVIDE', 'ASSIGN',
     'GTE', 'LTE', 'NEQ', 'EQ', 'GT', 'LT', 'AND', 'OR',
     'LCURLYB', 'RCURLYB', 'OPENPAR', 'CLOSEPAR', 'OPENBRAC', 'CLOSEBRAC',
-    'ID', 'CTEI', 'CTEF', 'CTES', 'CTEC'
+    'ID', 'CTEI', 'CTEF', 'CTES', 'CTEC',
+    'DETERM', 'TRANSPOSE', 'INVERSE'
 ]
 
 # Reserved 
@@ -59,16 +60,17 @@ t_MINUS     = r'-'
 t_TIMES     = r'\*'
 t_DIVIDE    = r'/'
 t_ASSIGN    = r'='
+t_DETERM    = r'\$'
+t_TRANSPOSE = r'!'
+t_INVERSE   = r'\^'
 
 
 def t_CTEF(t):
     r'\d*\.\d+'
-    t.value = float(t.value)
     return t
 
 def t_CTEI(t):
     r'\d+'
-    t.value = int(t.value)
     return t
     
 def t_CTEC(t):
@@ -77,6 +79,7 @@ def t_CTEC(t):
     
 def t_CTES(t):
     r'"([^"\n]|(\\"))*"$'
+    print(t.value)
     return t
 
 def t_ID(t):

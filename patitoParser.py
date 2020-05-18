@@ -125,7 +125,7 @@ def p_condicion(p):
 
 def p_entonces(p):
     'entonces : ENTONCES'
-    code.startIf()
+    code.ifStart()
 
 def p_condicion_entonces(p):
     "bloque_entonces : bloque bloque_sino"
@@ -133,11 +133,11 @@ def p_condicion_entonces(p):
 def p_bloque_sino(p):
     '''bloque_sino : sino bloque 
                    | empty'''
-    code.endIf()
+    code.ifEnd()
 
 def p_condicion_sino(p):
     'sino : SINO'
-    code.elseIf()
+    code.ifElse()
 
 # -- Funcion void --
 def p_func_void(p):
@@ -214,41 +214,6 @@ def p_mientras_haz(p):
     #gotoFalso a no sé dónde
     code.whileDo()
 
-# -- ID o acceso a arreglo --
-def p_id(p):
-    '''id : ID
-          | ID OPENBRAC exp CLOSEBRAC
-          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
-    p[0] = p[1]
-
-# -- Operadores --
-def p_boolean_op(p):
-    '''boolean_op : OR 
-                  | AND'''
-    p[0] = p[1]
-    code.opStack.append(p[1])
-
-def p_logical_op(p):
-    '''logical_op : GT
-                  | GTE
-                  | LT
-                  | LTE
-                  | NEQ
-                  | EQ'''
-    p[0] = p[1]
-    code.opStack.append(p[1])
-
-def p_sums(p):
-    '''sums : MINUS 
-            | PLUS '''
-    p[0] = p[1]
-    code.opStack.append(p[1])
-    
-def p_multdiv(p):
-    '''multdiv : TIMES 
-               | DIVIDE '''
-    p[0] = p[1]
-    code.opStack.append(p[1])
 
 # -- Expresiones --
 def p_megaexp(p):
@@ -283,6 +248,11 @@ def p_factor(p):
     '''factor : vcte
               | openpar megaexp closepar'''
 
+def p_factor_unary_op(p):
+    '''factor : unary_ops vcte
+              | unary_ops openpar megaexp closepar'''
+    code.buildUnaryExp()
+
 # agregar fondo falso a opstack
 def p_openpar(p):
     'openpar : OPENPAR'
@@ -298,6 +268,13 @@ def p_vcte_ID(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
+
+# ID o acceso a arreglo
+def p_id(p):
+    '''id : ID
+          | ID OPENBRAC exp CLOSEBRAC
+          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
+    p[0] = p[1]
 
 def p_vcte_CTEI(p):
     'vcte : CTEI'
@@ -323,6 +300,44 @@ def p_vcte_CTEC(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append('char')
+
+
+# -- Operadores --
+def p_boolean_op(p):
+    '''boolean_op : OR 
+                  | AND'''
+    p[0] = p[1]
+    code.opStack.append(p[1])
+
+def p_logical_op(p):
+    '''logical_op : GT
+                  | GTE
+                  | LT
+                  | LTE
+                  | NEQ
+                  | EQ'''
+    p[0] = p[1]
+    code.opStack.append(p[1])
+
+def p_sums(p):
+    '''sums : MINUS 
+            | PLUS '''
+    p[0] = p[1]
+    code.opStack.append(p[1])
+    
+def p_multdiv(p):
+    '''multdiv : TIMES 
+               | DIVIDE '''
+    p[0] = p[1]
+    code.opStack.append(p[1])
+
+def p_unary_ops(p):
+    '''unary_ops : MINUS
+                 | PLUS
+                 | DETERM
+                 | TRANSPOSE
+                 | INVERSE'''
+    code.opStack.append(p[1])
 
 
 # -- Error y empty --

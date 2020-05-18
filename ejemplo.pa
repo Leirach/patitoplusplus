@@ -26,6 +26,6 @@ programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; }
 //Parámetro duplicado
 programa patito; var int i, j;  funcion int fact(int j, bool j) { var int pop; } principal() { var bool jeje; fact(5, 5); }
 //llamada argumentos de tipo dif al esperado 
-programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var bool jeje; fact(5, 'C'); }
+programa patito; var int i, j;  funcion int fact(int j, bool e) { var int pop; } principal() { var float jeje; fact(5, jeje); }
 programa patito; var int i, j;  funcion int fact1(int j, bool e) { var int pop; fact2(5, true); } funcion int fact2(int j, bool e) { var int pop; fact1(5, true); }  principal() { var bool jeje; fact2(5, true); }
 programa patito; var int i, j;  funcion int fact1(int j, bool e) { var int pop; } funcion int fact2(int j, bool e) { var int pop; fact1(5, true); }  principal() { var bool jeje; fact1(5, true); }

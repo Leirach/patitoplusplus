@@ -1,6 +1,11 @@
 semanticTable = { 
     'int': {
+        # deben estar todas las combinaciones en cada indice aunque este vacio
+        # sino truena semanticTable[type1][type2]
         'int': {
+            # lista de todos los operadores en patito++
+            # no se tienen que agregar para cada combinacion,
+            # si no estan match() regresa None
             '+': 'int',
             '-': 'int',
             '*': 'int',
@@ -12,7 +17,10 @@ semanticTable = {
             '!=': 'bool',
             '==': 'bool',
             '&': None,
-            '|': None
+            '|': None,
+            '$': None,
+            '!': None,
+            '^': None
         },
         'float': {
             '+': 'float',
@@ -26,8 +34,12 @@ semanticTable = {
             '!=': 'bool',
             '==': 'bool',
         },
-        'CHAR': {},
-        'bool': {}
+        'char': {},
+        'bool': {},
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
     },
     'float': {
         'int': {
@@ -54,24 +66,76 @@ semanticTable = {
             '!=': 'bool',
             '==': 'bool',
         },
-        'CHAR': { },
-        'bool': { }
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
     },
     'char': {
         'int': { },
         'float': { },
-        'CHAR': { },
-        'bool': { }
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
     },
     'bool': {
         'int': { },
         'float': { },
-        'CHAR': { },
+        'char': { },
         'bool': { 
             '&': 'bool',
             '|': 'bool'
-        }
-    }
+        },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
+    },
+    'int[]': {
+        'int': { },
+        'float': { },
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
+    },
+    'float[]': {
+        'int': { },
+        'float': { },
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
+    },
+    'char[]': {
+        'int': { },
+        'float': { },
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
+    },
+    'bool[]': {
+        'int': { },
+        'float': { },
+        'char': { },
+        'bool': { },
+        'int[]': {},
+        'float[]': {},
+        'bool[]': {},
+        'char[]': {}
+    },
 }
 
 def match(op, izqType, derType):

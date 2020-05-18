@@ -10,7 +10,7 @@ import exceptions as exception
 class FunctionManager:
     def __init__(self):
         self.scope = 'global'
-        self.functionsDir = { 
+        self.functionsDir = {   
             'global': {'type': 'void', 'params': [], 'vars': {} },
         }
 
@@ -18,7 +18,6 @@ class FunctionManager:
     def registerFunc(self, functionName, functionType):
         if self.functionsDir.get(functionName) is not None:
             exception.throwError("Función '%s' fue definida anteriormente." % (functionName))
-            # return False #función ya existe
         function = {
             functionName : {'type': functionType, 'params': [], 'vars': {} },
         }
@@ -44,11 +43,14 @@ class FunctionManager:
 
 
     def getVariableType(self, functionName, varId):
+        #si le mandas None en functionName se asume que es el scope
+        if functionName is None:
+            functionName = self.scope
         varType = self.functionsDir[functionName]['vars'].get(varId)
         if varType is not None:
             return varType
         # Si no estaba en el scope local intenta en global o ya de plano no existe
-        varType = self.functionsDir['globals']['vars'].get(varId)
+        varType = self.functionsDir['global']['vars'].get(varId)
         if varType is not None:
             return varType
         exception.throwError("Variable '%s' no ha sido declarada" % (varId))

@@ -6,24 +6,26 @@ import functionDirectory as fm
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open(filename+".obj", "w")
-        self.code = []
+        self.code = ["Goto main"]
+        self.line = 2
+        # expresions
         self.opStack = []
         self.idStack = []
         self.tpStack = []
+        # functions and variables
         self.funcDir = fm.FunctionManager()
         self.gotoStack = []
         self.pendingLines = []
-        self.dirFunc = {}
         self.paramCounter = 0
         self.forIds = []
         self.temp = 1
-        self.line = 1
+        # Memory
+        self.memStack = []
 
     def __del__(self):
         for line in self.code:
             self.f.write(line)
         self.f.close()
-
 
     # se necesita tener nombre de función a la que pertenece, yasya
     def getVarType(self, p):
@@ -34,23 +36,30 @@ class CodeGenerator:
         # pop ids from stack
         der = self.idStack.pop()
         derType = self.tpStack.pop()
+        derMemScope = self.memStack.pop()
         izq = self.idStack.pop()
         izqType = self.tpStack.pop()
+        izqMemScope = self.memStack.pop()
         # get next temp var
         aux = "t"+str(self.temp)
         auxType = semantics.match(op, izqType, derType)
-        if (auxType is None):
+        if auxType is None:
             print("Invalid operand %s for types %s and %s" % (op, izqType, derType))
             sys.exit()
 
-        buf = "%s %s %s %s\n" % (op, izq, der, aux)
+        izqAddr = self.funcDir.getAddress(izq, izqMemScope, izqType)
+        derAddr = self.funcDir.getAddress(der, derMemScope, derType)
+        auxAddr = self.funcDir.getAddress(aux, 'temp', auxType)
+        buf = "%s %s %s %s\n" % (op, izqAddr, derAddr, auxAddr)
+        self.code.append(buf)
         self.idStack.append(aux)
         self.tpStack.append(auxType)
+        self.memStack.append('temp')
         self.temp += 1
-        self.code.append(buf)
-        print(self.code)
         self.line += 1
+        print(self.code)
 
+    # TODO incompleto
     def buildUnaryExp(self):
         op = self.opStack.pop()
         var = self.idStack.pop()
@@ -60,7 +69,6 @@ class CodeGenerator:
             self.idStack.append(var)
         else:
             self.idStack.append(op+var)
-
 
     def ifStart(self):
         cond = self.idStack.pop()
@@ -146,19 +154,21 @@ class CodeGenerator:
     def registerVariable(self, id, varType):
         self.funcDir.registerVariable(id, varType)
 
-    def registerFunc(self, id, tipo): 
-        self.funcDir.registerFunc(id, tipo)
+    def registerFunc(self, functionName, functionType):
+        if functionName == 'principal':
+            self.code[0] = "goto %d\n" %(self.line)
+            self.line += 1
+        self.funcDir.registerFunc(functionName, functionType)
 
-    def registerFuncParams(self, id, tipo): 
-        #hay un stack de ids de funciones??? no es necesario :D
-        self.funcDir.registerFuncParams(id ,tipo) 
+    def registerFuncParams(self, paramId, paramType):
+        self.funcDir.registerFuncParams(paramId, paramType) 
 
     def endFunc(self):
         # calcular tamaño de todo, self.temp tiene el count
         self.temp = 1 # reset temp counter
         self.code.append("ENDFUNC\n")
         self.line += 1
-        # self.endVariableDeclaration() No se si esto es necesario
+        self.funcDir.endFunc()
         print("END FUNC")
 
     def funcCallStart(self, func_id):
@@ -172,10 +182,12 @@ class CodeGenerator:
     def funcCallParam(self):
         param = self.idStack.pop()
         paramType = self.tpStack.pop()
+        paramMemScope = self.memStack.pop()
         calledFunc = self.peek(self.idStack)
         self.funcDir.validateParam(calledFunc, self.paramCounter, paramType)
         self.paramCounter += 1 # starts @ 0
-        buf = "PARAM %s par%d\n" % (param, self.paramCounter)
+        paramAddr = self.funcDir.getAddress(param, paramMemScope, paramType)
+        buf = "PARAM %s par%d\n" % (paramAddr, self.paramCounter)
         self.code.append(buf)
         self.line += 1
 

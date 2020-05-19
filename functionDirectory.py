@@ -1,18 +1,20 @@
 
-#TODO doble llamada de función
-import exceptions as exception
-
-# type: tipo de retorno esperado de la funcion
+# TODO doble llamada de función
+# type tipo de retorno esperado de la funcion
 # params: lista de los id de parametros esperados para la llamada
 #         la idea es que se indexe vars con estos strings para checar a que variable
 #         pertenece cual parametro. sentiende claro diafano cristalino?
 # vars: guarda parametros y variables en un diccionario para indexar facilmente
+
+import exceptions as exception
+import memory as mem
 class FunctionManager:
     def __init__(self):
         self.scope = 'global'
-        self.functionsDir = {   
+        self.functionsDir = {
             'global': {'type': 'void', 'params': [], 'vars': {} },
         }
+        self.memory = mem.MemoryManager()
 
     #add function to Directory
     def registerFunc(self, functionName, functionType):
@@ -30,6 +32,10 @@ class FunctionManager:
         self.registerVariable(paramId, paramType)
         self.functionsDir[self.scope]['params'].append(paramId)
 
+    # TODO guardar tamaño de funcion
+    def endFunc(self):
+        self.memory.reset()
+
     #add function to Directory
     def registerVariable(self, varId, varType):
         #TODO creo que esto no es necesario
@@ -37,22 +43,34 @@ class FunctionManager:
             exception.throwError("Función '%s' no existe" % (self.scope))
 
         if self.functionsDir[self.scope]['vars'].get(varId) is None:
-            self.functionsDir[self.scope]['vars'].update({varId: varType})
+            memoryScope = "local" if self.scope != "global" else "global"
+            address = self.memory.assignAddress(memoryScope, varType)
+            self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address} })
             return True 
-        exception.throwError("Variable '%s' duplicada en función '%s'" % (varId, functionName))
+        exception.throwError("Variable '%s' duplicada en función '%s'" % (varId, self.scope))
 
 
     def getVariableType(self, functionName, varId):
         #si le mandas None en functionName se asume que es el scope
         if functionName is None:
             functionName = self.scope
-        varType = self.functionsDir[functionName]['vars'].get(varId)
-        if varType is not None:
-            return varType
+        var = self.functionsDir[functionName]['vars'].get(varId)
+        if var is not None:
+            return var['type']
         # Si no estaba en el scope local intenta en global o ya de plano no existe
-        varType = self.functionsDir['global']['vars'].get(varId)
-        if varType is not None:
-            return varType
+        var = self.functionsDir['global']['vars'].get(varId)
+        if var is not None: 
+            return var['type']
+        exception.throwError("Variable '%s' no ha sido declarada" % (varId))
+
+    # se supone que ya se valido que existe la variable
+    def getVariableAddress(self, varId):
+        var = self.functionsDir[self.scope]['vars'].get(varId)
+        if var is not None:
+            return var['address']
+        var = self.functionsDir['global']['vars'].get(varId)
+        if var is not None: 
+            return var['address']
         exception.throwError("Variable '%s' no ha sido declarada" % (varId))
 
     # func: functionName, paramNum: Number, type: Type sent
@@ -72,75 +90,12 @@ class FunctionManager:
             exception.throwError("Función '%s' no existe" % (functionName))
         return True
 
-# deje esto pero creo que ya no es necesario
-# pero se veia muy complicado y me da cosa borrarlo
-def validateFunctionSemantics(functionName):
-    if functionsDir.get(functionName): #Si la función existe
-        print("Función existe")
-        if functionName+"patitoFuncCall" in functionsDir:
-            print("Llamada generada")
-            funcParams = functionsDir[functionName]["numParams"]
-            funcCallParams = functionsDir[functionName+"patitoFuncCall"]["numParams"]
-            if funcParams == funcCallParams:
-                print("Número de parámetros correcto")
-                funcCallOrder = functionsDir[functionName+"patitoFuncCall"]["paramsOrder"]
-                funcParamOrder = functionsDir[functionName]["paramsOrder"]
-                if funcParamOrder == funcCallOrder:
-                    print("Orden correcto de tipos")
-                    print(functionsDir)
-                    del functionsDir[functionName+"patitoFuncCall"]
-                    print("REMOVED")
-                    print(functionsDir)
-                else:
-                    exception.throwError("Se esperaba parámetros %s. Se recibió %s." % (str(funcParamOrder), str(funcCallOrder)))
-            else:
-                exception.throwError("Número de parámetros incorrecto (%s) para la función '%s'. Se esperaban %s." % (str(funcCallParams), str(functionName), str(funcParams)))
-        else:
-            exception.throwError("Ocurrió un problema llamando la función '%s'" % (functionName))
-    else:
-        exception.throwError("Función '%s' no existe" % (functionName))
-
-# para probar errores
-'''
-functionName = 'main'
-functionType = 'void'
-param = 'x'
-paramType = 'int'
-print("........Empty dictionary.......")    
-print(functionsDir)
-print("........Adding Function to dictionary.......")  
-registerFunc(functionName, functionType)
-print("........Function added.......")  
-print(functionsDir)
-print("........Adding param to function .......")  
-registerFuncParams(functionName, param, paramType)
-print("........Added param to function .......")  
-print(functionsDir)
-callFunction(functionName) # checa que existe
-validateParam(functionName, 0, 'int') # llamando x siendo entero: main(x)
-validateParam(functionName, 1, 'int') # llamando x siendo entero: main(x, x)
-
-print("........Adding param to function .......")  
-registerFuncParams(functionName, 'Y', paramType)
-print("........Added param to function .......")  
-print(functionsDir)
-print("........Adding param to function .......")  
-registerFuncParams(functionName, 'Y', paramType)
-print("........Adding var to function .......")  
-registerVariable(functionName, 'aux', 'bool')
-print("........Added var to function .......")  
-print("........Adding var to function .......")  
-registerVariable(functionName, 'aux', 'bool')
-print(functionsDir)
-print("........Adding var to function .......")  
-registerVariable(functionName, 'pop', 'float')
-print("........Added var to function .......")  
-print(functionsDir)
-print("........Adding function .......")  
-registerFunc(functionName, functionType)
-print(functionsDir)
-print("........Adding function .......")  
-registerFunc('popRockCallejero', functionType)
-print("........Added function .......")  
-print(functionsDir)
-'''
+    # regresa direccion de variable
+    # si no es variable regresa direccion con el modulo de memoria
+    def getAddress(self, value, scope, tipo):
+        if scope == 'var':
+            return self.getVariableAddress(value)
+        if scope == 'temp':
+            return self.memory.getTemporal(value, tipo)
+        if scope == 'const':
+            return self.memory.getConstant(value, tipo)

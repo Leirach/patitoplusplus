@@ -51,7 +51,6 @@ def p_more_var_id(p):
     if(p[2] != None and p[2] != EMPTY):
         code.registerVariable(p[2], None)
 
-
 def p_dimensions(p):
     '''dimensions : OPENBRAC CTEI CLOSEBRAC 
                   | OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
@@ -68,7 +67,7 @@ def p_declare_func(p):
 def p_func_id(p):
     '''func_id : tipo ID
                | VOID ID'''
-    code.registerFunc(id=p[2], tipo=p[1])
+    code.registerFunc(functionName=p[2], functionType=p[1])
 
 def p_declare_func_params(p):
     '''declare_func_params : get_func_params more_params
@@ -76,7 +75,7 @@ def p_declare_func_params(p):
 
 def p_get_func_params(p):
     '''get_func_params : tipo ID'''
-    code.registerFuncParams(id=p[2], tipo=p[1])
+    code.registerFuncParams(paramId=p[2], paramType=p[1])
 
 def p_more_params(p):
     '''more_params : more_var_id more_params
@@ -84,7 +83,7 @@ def p_more_params(p):
 
 def p_more_params_id(p):
     '''more_var_id : COMMA tipo ID'''
-    code.registerFuncParams(id=p[3], tipo=p[2])
+    code.registerFuncParams(paramId=p[3], paramType=p[2])
 
 def p_tipo(p):
     '''tipo : INT 
@@ -268,6 +267,7 @@ def p_vcte_ID(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
+    code.memStack.append('var')
 
 # ID o acceso a arreglo
 def p_id(p):
@@ -281,12 +281,14 @@ def p_vcte_CTEI(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append('int')
+    code.memStack.append('const')
 
 def p_vcte_CTEF(p):
     'vcte : CTEF'
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append('float')
+    code.memStack.append('const')
 
 def p_vcte_CTEB(p):
     '''vcte : TRUE
@@ -294,12 +296,14 @@ def p_vcte_CTEB(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append('bool')
+    code.memStack.append('const')
 
 def p_vcte_CTEC(p):
     'vcte : CTEC'
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append('char')
+    code.memStack.append('const')
 
 
 # -- Operadores --

@@ -16,13 +16,7 @@ precedence = (
 
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec declare_main OPENPAR CLOSEPAR bloque_funcion'
-    global programId
-    programId = p[2]
     code.endFunc()
-
-
-#def p_principal(p):
-    #code.startMain()
 
 def p_declare_main(p):
     '''declare_main : PRINCIPAL'''
@@ -159,14 +153,22 @@ def p_func_call_add_params(p):
 def p_escribe(p):
     "escribe : QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON"
 
-def p_print_options(p):
-    '''print_options : CTES more_print
-                     | megaexp more_print'''
+def p_print_multi(p):
+    'print_options : printable COMMA printable'
+def p_print_single(p):
+    'print_options : printable'
 
-def p_more_print(p):
-    '''more_print : COMMA CTES
-                  | COMMA megaexp
-                  | empty'''
+def p_printable_exp(p):
+    'printable : megaexp'
+    code.quackout()
+def p_printable(p):
+    'printable : CTES'
+    p[0] = p[1]
+    print(p[1])
+    code.idStack.append(p[1])
+    code.tpStack.append('char')
+    code.memStack.append('const')
+    code.quackout()
 
 # -- Leer --
 def p_lee(p):

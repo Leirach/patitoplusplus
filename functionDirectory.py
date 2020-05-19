@@ -99,3 +99,6 @@ class FunctionManager:
             return self.memory.getTemporal(value, tipo)
         if scope == 'const':
             return self.memory.getConstant(value, tipo)
+
+    def createConstTable(self):
+        return self.memory.createConstTable()

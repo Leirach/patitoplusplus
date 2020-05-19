@@ -77,7 +77,8 @@ class MemoryManager:
             }})
 
     def createConstTable(self):
-        return []
-        # for each key
-        # send to array [""]
-        # address : value\n
+        mem = []
+        for key in self.constants:
+            buf = "%s:%s\n" %(self.constants[key], key)
+            mem.append(buf)
+        return mem

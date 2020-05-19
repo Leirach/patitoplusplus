@@ -23,7 +23,11 @@ class CodeGenerator:
         self.memStack = []
 
     def __del__(self):
+        mem = self.funcDir.createConstTable()
         for line in self.code:
+            self.f.write(line)
+        self.f.write("\n")
+        for line in mem:
             self.f.write(line)
         self.f.close()
 
@@ -101,6 +105,8 @@ class CodeGenerator:
 
     def whileDo(self):
         cond = self.idStack.pop()
+        condType = self.tpStack.pop()       # TODO Checar que sea bool (int tambien?)
+        condMemScope = self.memStack.pop()
         buf = "gotof %s" % (cond)
         self.code.append("while gotof\n")
         print(self.code)
@@ -199,7 +205,21 @@ class CodeGenerator:
         self.paramCounter = 0 # reset param counter
         print("END FUNCCALL", func_id)
         # funcDir.validateFunctionSemantics(func_id)
-    
+
+    def quackout(self):
+        var = self.idStack.pop()
+        varType = self.tpStack.pop()
+        varMemScope = self.memStack.pop()
+        varAddr = self.funcDir.getAddress(var, varMemScope, varType)
+        buf = "print %s\n" % (varAddr)
+        self.code.append(buf)
+        self.line += 1
+
+    def quackin(self):
+        var = self.idStack.pop()
+        varType = self.tpStack.pop()
+        varMemScope = self.memStack.pop()
+
     def peek(self, stack):
         if len(stack) > 0:
             return stack[-1]    # this will get the last element of stack

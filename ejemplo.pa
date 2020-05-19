@@ -6,7 +6,7 @@ programa patito; funcion int fact(int j) { } principal() { }
 programa patito; var int i;  principal() { }
 programa patito; funcion int fact(int j) { } funcion int fact(int i) { } principal() { }
 programa patito; funcion int fact(int j) { quackout(1+2);} funcion int fact2(int a) { quackout(4-5);} principal() { fact(12); fact2(20);}
-programa patito; principal() { 1+2+3; 3-4;}
+programa patito; principal() { quackout(1+2+3, 3-4);}
 programa patito; funcion int fact(int j) { quackout(1+2);} funcion int fact2(int a) { quackout(4-5);} principal() { fact(12+1+4+5); fact2(20*7/2);}
 
 programa patito; principal() { retorno(2*5-3); retorno(2*1); }

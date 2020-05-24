@@ -47,17 +47,20 @@ class MemoryManager:
         return addr
 
     def getConstant(self, value, tipo):
-        addr = self.constants.get(value)
-        if addr is None:
-            addr = self.assignAddress('const', tipo)
-            self.constants.update({value: addr})
+        cte = self.constants.get(value)
+        if cte is not None:
+            return cte['addr']
+        addr = self.assignAddress('const', tipo)
+        self.constants.update({value: {'addr': addr, 'type': tipo}})
         return addr
+        
 
     def getTemporal(self, value, tipo):
-        addr = self.temporals.get(value)
-        if addr is None:
-            addr = self.assignAddress('temp', tipo)
-            self.temporals.update({value: addr})
+        temp = self.temporals.get(value)
+        if temp is not None:
+            return temp['addr']
+        addr = self.assignAddress('temp', tipo)
+        self.temporals.update({value: {'addr': addr, 'type': tipo}})
         return addr
 
     def reset(self):
@@ -79,6 +82,6 @@ class MemoryManager:
     def createConstTable(self):
         mem = []
         for key in self.constants:
-            buf = "%s:%s\n" %(self.constants[key], key)
+            buf = "%s %s %s\n" %(self.constants[key]['addr'], key, self.constants[key]['type'])
             mem.append(buf)
         return mem

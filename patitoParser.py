@@ -29,7 +29,6 @@ def p_declare_vars(p):
 def p_vars(p):
     '''vars : var_id dimensions more_vars SEMICOLON vars
             | empty'''
-    print("End of var declaration")
 
 def p_var_id(p):
     '''var_id : tipo ID'''
@@ -111,6 +110,7 @@ def p_estatuto(p):
 # -- Asignacion --
 def p_asignacion(p):
     "asignacion : id ASSIGN megaexp SEMICOLON"
+    code.buildAssign()
 
 # -- Condicion --
 def p_condicion(p):
@@ -184,12 +184,8 @@ def p_retorno(p):
 
 # -- Desde --
 def p_desde(p):
-    '''desde : DESDE forId ASSIGN exp hasta exp hacer bloque'''
+    '''desde : DESDE id ASSIGN exp hasta exp hacer bloque'''
     code.forEnd()
-
-def p_forId(p):
-    'forId : ID'
-    code.idStack.append(p[1])
 
 def p_desde_hasta(p):
     'hasta : HASTA'
@@ -267,9 +263,6 @@ def p_closepar(p):
 def p_vcte_ID(p):
     'vcte : id'
     p[0] = p[1]
-    code.idStack.append(p[1])
-    code.tpStack.append(code.getVarType(p[1]))
-    code.memStack.append('var')
 
 # ID o acceso a arreglo
 def p_id(p):
@@ -277,6 +270,9 @@ def p_id(p):
           | ID OPENBRAC exp CLOSEBRAC
           | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
     p[0] = p[1]
+    code.idStack.append(p[1])
+    code.tpStack.append(code.getVarType(p[1]))
+    code.memStack.append('var')
 
 def p_vcte_CTEI(p):
     'vcte : CTEI'
@@ -352,7 +348,7 @@ def p_empty(p):
     p[0] = EMPTY
 
 def p_error(p):
-    print("error")
+    print("Syntax error en %s" %p.value)
 
 # -- Crea el parser y loop para leer --
 parser = yacc.yacc()

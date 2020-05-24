@@ -19,7 +19,7 @@ class FunctionManager:
     #add function to Directory
     def registerFunc(self, functionName, functionType):
         if self.functionsDir.get(functionName) is not None:
-            exception.throwError("Función '%s' fue definida anteriormente." % (functionName))
+            exception.fatalError("Función '%s' fue definida anteriormente." % (functionName))
         function = {
             functionName : {'type': functionType, 'params': [], 'vars': {} },
         }
@@ -40,14 +40,14 @@ class FunctionManager:
     def registerVariable(self, varId, varType):
         #TODO creo que esto no es necesario
         if self.functionsDir.get(self.scope) is None: #Si la función no existe
-            exception.throwError("Función '%s' no existe" % (self.scope))
+            exception.fatalError("Función '%s' no existe" % (self.scope))
 
         if self.functionsDir[self.scope]['vars'].get(varId) is None:
             memoryScope = "local" if self.scope != "global" else "global"
             address = self.memory.assignAddress(memoryScope, varType)
             self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address} })
             return True 
-        exception.throwError("Variable '%s' duplicada en función '%s'" % (varId, self.scope))
+        exception.fatalError("Variable '%s' duplicada en función '%s'" % (varId, self.scope))
 
 
     def getVariableType(self, functionName, varId):
@@ -61,7 +61,7 @@ class FunctionManager:
         var = self.functionsDir['global']['vars'].get(varId)
         if var is not None: 
             return var['type']
-        exception.throwError("Variable '%s' no ha sido declarada" % (varId))
+        exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
 
     # se supone que ya se valido que existe la variable
     def getVariableAddress(self, varId):
@@ -71,23 +71,23 @@ class FunctionManager:
         var = self.functionsDir['global']['vars'].get(varId)
         if var is not None: 
             return var['address']
-        exception.throwError("Variable '%s' no ha sido declarada" % (varId))
+        exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
 
     # func: functionName, paramNum: Number, type: Type sent
     # se asume que ya se valido que la funcion existe
     def validateParam(self, func, paramNum, paramType):
         length = len(self.functionsDir[func]['params'])
         if paramNum >= length:
-            exception.throwError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s." % ( func, length) )
+            exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s." % ( func, length) )
         var = self.functionsDir[func]['params'][paramNum]
         expected = self.getVariableType(func, var) # deberia regresar tipo de la variable local
         if expected != paramType:
-            exception.throwError("Se esperaba parámetro de tipo %s. Se recibió %s." % (expected, paramType))
+            exception.fatalError("Se esperaba parámetro de tipo %s. Se recibió %s." % (expected, paramType))
         return True
 
     def callFunction(self, functionName):
         if self.functionsDir.get(functionName) is None:
-            exception.throwError("Función '%s' no existe" % (functionName))
+            exception.fatalError("Función '%s' no existe" % (functionName))
         return True
 
     # regresa direccion de variable

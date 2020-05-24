@@ -1,6 +1,6 @@
 import sys
 
-def throwError(text):
+def fatalError(text):
     #agregar line?? D:
     print("ERROR: ", text)
     sys.exit()

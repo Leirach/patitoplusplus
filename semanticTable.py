@@ -1,15 +1,16 @@
 semanticTable = { 
     'int': {
-        # deben estar todas las combinaciones en cada indice aunque este vacio
+        # deben estar todas las combinaciones de tipos aunque esté vacio
         # sino truena semanticTable[type1][type2]
         'int': {
             # lista de todos los operadores en patito++
-            # no se tienen que agregar para cada combinacion,
-            # si no estan match() regresa None
+            # no se tienen que agregar para cada combinación,
+            # si no están match() regresa None
+            '=': 'int',
             '+': 'int',
             '-': 'int',
             '*': 'int',
-            '/': 'int',
+            '/': 'float',
             '>': 'bool',
             '>=': 'bool',
             '<': 'bool',
@@ -18,16 +19,17 @@ semanticTable = {
             '==': 'bool',
             '&': None,
             '|': None,
-            '$': None,
-            '!': None,
-            '^': None
+            '$': None, # determinant
+            '!': None, # transpose
+            '^': None  # inverse
         },
         'float': {
+            '=': 'int',
             '+': 'float',
             '-': 'float',
             '*': 'float',
             '/': 'float',
-            'GT': 'bool',
+            '>': 'bool',
             '>=': 'bool',
             '<': 'bool',
             '<=': 'bool',
@@ -43,11 +45,12 @@ semanticTable = {
     },
     'float': {
         'int': {
+            '=': 'float',
             '+': 'float',
             '-': 'float',
             '*': 'float',
             '/': 'float',
-            'GT': 'bool',
+            '>': 'bool',
             '>=': 'bool',
             '<': 'bool',
             '<=': 'bool',
@@ -55,11 +58,12 @@ semanticTable = {
             '==': 'bool',
         },
         'float': {
+            '=': 'float',
             '+': 'float',
             '-': 'float',
             '*': 'float',
             '/': 'float',
-            'GT': 'bool',
+            '>': 'bool',
             '>=': 'bool',
             '<': 'bool',
             '<=': 'bool',
@@ -76,7 +80,9 @@ semanticTable = {
     'char': {
         'int': { },
         'float': { },
-        'char': { },
+        'char': {
+            '=': 'char',
+         },
         'bool': { },
         'int[]': {},
         'float[]': {},
@@ -87,7 +93,8 @@ semanticTable = {
         'int': { },
         'float': { },
         'char': { },
-        'bool': { 
+        'bool': {
+            '=': 'bool',
             '&': 'bool',
             '|': 'bool'
         },

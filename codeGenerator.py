@@ -1,7 +1,6 @@
-import sys
-import re 
 import semanticTable as semantics
 import functionDirectory as fm
+import exceptions
 
 class CodeGenerator:
     def __init__(self, filename="patito"):
@@ -31,37 +30,43 @@ class CodeGenerator:
             self.f.write(line)
         self.f.close()
 
-    # se necesita tener nombre de función a la que pertenece, yasya
-    def getVarType(self, p):
-        return self.funcDir.getVariableType(None, p) #default scope
+    # -- Utilities --
+    def writeQuad(self, tok1, tok2, tok3, tok4):
+        buf = "%s %s %s %s\n" % (tok1, tok2, tok3, tok4)
+        self.code.append(buf)
+        self.line += 1
 
+    def popVar(self):
+        var = self.idStack.pop()
+        tipo = self.tpStack.pop()
+        mem = self.memStack.pop()
+        return var, tipo, mem
+
+    def peek(self, stack):
+        if len(stack) > 0:
+            return stack[-1]    # this will get the last element of stack
+        else:
+            return None
+
+    # -- BUILD EXPRESSIONS AND ASSIGMENT --
     def buildExp(self):
         op = self.opStack.pop()
         # pop ids from stack
-        der = self.idStack.pop()
-        derType = self.tpStack.pop()
-        derMemScope = self.memStack.pop()
-        izq = self.idStack.pop()
-        izqType = self.tpStack.pop()
-        izqMemScope = self.memStack.pop()
+        der, derType, derMemScope = self.popVar()
+        izq, izqType, izqMemScope = self.popVar()
         # get next temp var
         aux = "t"+str(self.temp)
         auxType = semantics.match(op, izqType, derType)
         if auxType is None:
-            print("Invalid operand %s for types %s and %s" % (op, izqType, derType))
-            sys.exit()
-
+            exceptions.fatalError("Invalid operand %s for types %s and %s" % (op, izqType, derType))
         izqAddr = self.funcDir.getAddress(izq, izqMemScope, izqType)
         derAddr = self.funcDir.getAddress(der, derMemScope, derType)
         auxAddr = self.funcDir.getAddress(aux, 'temp', auxType)
-        buf = "%s %s %s %s\n" % (op, izqAddr, derAddr, auxAddr)
-        self.code.append(buf)
+        self.writeQuad(op, izqAddr, derAddr, auxAddr)
         self.idStack.append(aux)
         self.tpStack.append(auxType)
         self.memStack.append('temp')
         self.temp += 1
-        self.line += 1
-        print(self.code)
 
     # TODO incompleto
     def buildUnaryExp(self):
@@ -73,65 +78,74 @@ class CodeGenerator:
             self.idStack.append(var)
         else:
             self.idStack.append(op+var)
+    
+    def buildAssign(self):
+        op = '='
+        val, valType, valMem = self.popVar()
+        var, varType, varMem = self.popVar()
+        matches = semantics.match(op, varType, valType)
+        if matches is None:
+            exceptions.fatalError("No se puede asignar tipo %s a variable de tipo %s" % (valType, varType))
+        valAddr = self.funcDir.getAddress(val, valMem, valType)
+        varAddr = self.funcDir.getAddress(var, varMem, varType)
+        self.writeQuad('=', valAddr, '0', varAddr)
 
+    # -- IF ELSE / SI ENTONCES SINO--
     def ifStart(self):
-        cond = self.idStack.pop()
-        buf = "gotof %s" % (cond)
-        self.code.append("if gotof\n")
-        print(self.code)
+        cond, condType, condMemScope = self.popVar()
+        if condType not in ['bool']:
+            exceptions.fatalError("Se esperaba bool en condicional se leyó %s" % (condType))
+        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
+        buf = "gotof %s" %(condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
-        self.line += 1
+        self.writeQuad('if', 'gotof', 'temp', '0') # temporal quadruple
 
     def ifElse(self):
-        buf = "goto"
-        self.code.append("else goto\n")
-        self.line += 1
-        print(self.code)
+        self.writeQuad('else', 'goto', 'temp', '0')
         self.ifEnd()
+        buf = "goto"
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line-1)
 
     def ifEnd(self):
         target = self.line
         lineNo = self.gotoStack.pop()
-        buf = "%s %d\n" % (self.pendingLines.pop(), target)
+        buf = "%s %d 0 0\n" % (self.pendingLines.pop(), target)
         self.code[lineNo-1] = buf
-        print(self.code)
 
+    # -- WHILE / MIENTRAS HAZ --
     def whileStart(self):
         self.gotoStack.append(self.line)
-        print(self.code)
 
     def whileDo(self):
-        cond = self.idStack.pop()
-        condType = self.tpStack.pop()       # TODO Checar que sea bool (int tambien?)
-        condMemScope = self.memStack.pop()
-        buf = "gotof %s" % (cond)
-        self.code.append("while gotof\n")
-        print(self.code)
+        cond, condType, condMemScope = self.popVar() # TODO Checar que sea bool (int tambien?)
+        if condType not in ['bool']:
+            exceptions.fatalError("Se esperaba bool en ciclo mientras, se recibió %s" % (condType))
+        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
+        buf = "gotof %s" % (condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
-        self.line += 1
+        self.writeQuad('while', 'goto', 'temp', '0')
 
     def whileEnd(self):
-        lineNo = self.gotoStack.pop() - 1
-        buf = "%s %d\n" % (self.pendingLines.pop(), self.line+1)
-        self.code[lineNo] = buf
+        lineNo = self.gotoStack.pop()
+        buf = "%s %d 0\n" % (self.pendingLines.pop(), self.line+1)
+        self.code[lineNo-1] = buf
         retLine = self.gotoStack.pop()
-        buf = "goto %d\n" % (retLine)
-        self.code.append(buf)
-        print(self.code)
+        self.writeQuad('goto', retLine, '0', '0')
 
+    # -- FOR / DESDE HASTA HACER --
     def forStart(self):
-        val = self.idStack.pop()
-        id = self.peek(self.idStack)
-        self.forIds.append(id)
-        buf = "%s %s %s %s\n" % ("=", val, " ", id)
-        self.code.append(buf)
-        self.line += 1
+        val, valType, valMem = self.popVar()
+        inc, incType, incMem = self.popVar()
+        if  valType not in ['int', 'float']:
+            exceptions.fatalError("Se esperaba int o float para inicalizacion de desde, se recibió %s" %(valType))
+        valAddr = self.funcDir.getAddress(val, valMem, valType)
+        incAddr = self.funcDir.getAddress(inc, incMem, incType)
+        self.forIds.append(incAddr)
+        self.writeQuad("=", valAddr, " ", incAddr)
         self.gotoStack.append(self.line)
-        print(self.code)
 
     def forDo(self):
         self.opStack.append("<=")
@@ -139,31 +153,32 @@ class CodeGenerator:
         cond = self.idStack.pop()
         buf = "gotof %s" % (cond)
         self.code.append("loop gotof\n")
-        print(self.code)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
         self.line += 1
 
     def forEnd(self):
-        id = self.forIds.pop()
-        buf = "%s %s %d %s\n" % ('+', id, 1, id)
-        self.code.append(buf)
-        self.line += 1
+        incAddr = self.forIds.pop()
+        # la maquina virtual puede hacer incrementos aunque en teoria se deberia 
+        # usar un temporal para esta suma
+        self.writeQuad('+', incAddr, 1, incAddr)
         lineNo = self.gotoStack.pop() - 1
-        buf = "%s %d\n" % (self.pendingLines.pop(), self.line+1)
+        buf = "%s %d 0 0\n" % (self.pendingLines.pop(), self.line+1)
         self.code[lineNo] = buf
         retLine = self.gotoStack.pop()
-        buf = "goto %d\n" % (retLine)
-        self.code.append(buf)
-        print(self.code)
+        self.writeQuad('goto', str(retLine), '0', '0')
 
-    def registerVariable(self, id, varType):
-        self.funcDir.registerVariable(id, varType)
+
+    # -- FUNCDIR Y VARIABLES --
+    def registerVariable(self, var, varType):
+        self.funcDir.registerVariable(var, varType)
+
+    def getVarType(self, p):
+        return self.funcDir.getVariableType(None, p) #default scope
 
     def registerFunc(self, functionName, functionType):
         if functionName == 'principal':
-            self.code[0] = "goto %d\n" %(self.line)
-            self.line += 1
+            self.code[0] = "goto %d 0 0\n" %(self.line)
         self.funcDir.registerFunc(functionName, functionType)
 
     def registerFuncParams(self, paramId, paramType):
@@ -175,54 +190,37 @@ class CodeGenerator:
         self.code.append("ENDFUNC\n")
         self.line += 1
         self.funcDir.endFunc()
-        print("END FUNC")
 
+    # -- LLAMADAS DE FUNCIONES --
     def funcCallStart(self, func_id):
         #check if functions exists in directory?
         self.funcDir.callFunction(func_id)
         self.idStack.append(func_id)
-        buf = "ERA %s\n" % (func_id)
-        self.code.append(buf)
-        self.line+=1
+        self.writeQuad('ERA', func_id, '0', '0')
 
     def funcCallParam(self):
-        param = self.idStack.pop()
-        paramType = self.tpStack.pop()
-        paramMemScope = self.memStack.pop()
+        param, paramType, paramMemScope = self.popVar()
         calledFunc = self.peek(self.idStack)
         self.funcDir.validateParam(calledFunc, self.paramCounter, paramType)
-        self.paramCounter += 1 # starts @ 0
+        self.paramCounter += 1 # param counting starts at 0
         paramAddr = self.funcDir.getAddress(param, paramMemScope, paramType)
-        buf = "PARAM %s par%d\n" % (paramAddr, self.paramCounter)
-        self.code.append(buf)
-        self.line += 1
+        aux = 'par'+str(self.paramCounter)
+        self.writeQuad('PARAM', paramAddr, aux, '0')
 
     def funcCallEnd(self):
         func_id = self.idStack.pop()
-        buf = "GOSUB %s\n" % (func_id)
-        self.code.append(buf)
-        self.line += 1
+        self.writeQuad('GOSUB', func_id, '0', '0')
         self.paramCounter = 0 # reset param counter
-        print("END FUNCCALL", func_id)
         # funcDir.validateFunctionSemantics(func_id)
 
+    # -- READ PRINT / QUACKIN QUACKOUT --
     def quackout(self):
-        var = self.idStack.pop()
-        varType = self.tpStack.pop()
-        varMemScope = self.memStack.pop()
+        var, varType, varMemScope = self.popVar()
         varAddr = self.funcDir.getAddress(var, varMemScope, varType)
-        buf = "print %s\n" % (varAddr)
-        self.code.append(buf)
-        self.line += 1
+        self.writeQuad('print', varAddr, '0','0')
 
     def quackin(self):
-        var = self.idStack.pop()
-        varType = self.tpStack.pop()
-        varMemScope = self.memStack.pop()
-
-    def peek(self, stack):
-        if len(stack) > 0:
-            return stack[-1]    # this will get the last element of stack
-        else:
-            return None
+        var, varType, varMemScope = self.popVar()
+        varAddr = self.funcDir.getAddress(var, varMemScope, varType)
+        self.writeQuad('read', varAddr, '0','0')
 

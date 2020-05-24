@@ -16,14 +16,35 @@ class VirtualMachine:
             'goto' :self.goto,
             '+': self.sum,
             '-': self.subs,
+            # '*': self.mult,
+            # '/': self.div,
+            # '>': self.gt,
+            # '>=': self.gte,
+            # '<': self.lt,
+            # '<=': self.ltw,
+            # '!=': self.neq,
+            # '==': self.eq,
+            # '&': self.and,
+            # '|': self.or,
+            # '$': self.determ,
+            # '!': self.transpose,
+            # '^': self.inverse
             'print': self.print,
         }
         self.run()
 
     def reconstructMemory(self, obj):
         for line in obj:                # guardar en diccionario de memoria
-            aux = line.split(':')
-            self.mem[aux[0]] = int(aux[1])
+            aux = line.split()
+            # falta par int[], float[], etc. aka arrays
+            if   line[2] == 'int':
+                self.mem[aux[0]] = int(aux[1])
+            elif line[2] == 'float':
+                self.mem[aux[0]] = int(aux[1])
+            elif line[2] == 'bool':
+                self.mem[aux[0]] = (aux[1] == 'true')
+            else: # char
+                self.mem[aux[0]] = aux[1]
 
     def run(self):
         while self.code[self.ip] != 'ENDFUNC 0 0':

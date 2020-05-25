@@ -154,13 +154,12 @@ def p_escribe(p):
     "escribe : QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON"
 
 def p_print_multi(p):
-    'print_options : printable COMMA printable'
-def p_print_single(p):
-    'print_options : printable'
+    '''print_options : print_options COMMA printable
+                     | printable'''
+    code.ioQuad('print')
 
 def p_printable_exp(p):
     'printable : megaexp'
-    code.quackout()
 def p_printable(p):
     'printable : CTES'
     p[0] = p[1]
@@ -168,15 +167,15 @@ def p_printable(p):
     code.idStack.append(p[1])
     code.tpStack.append('char')
     code.memStack.append('const')
-    code.quackout()
 
 # -- Leer --
 def p_lee(p):
-    '''lee : QUACKIN OPENPAR ID read_more CLOSEPAR SEMICOLON'''
+    '''lee : QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON'''
 
-def p_read_more(p):
-    '''read_more : COMMA ID read_more
-                 | empty'''
+def p_read_options(p):
+    '''read_options : read_options COMMA id
+                    | id'''
+    code.ioQuad('read')
 
 # -- Retorno --
 def p_retorno(p):

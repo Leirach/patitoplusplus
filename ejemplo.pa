@@ -8,6 +8,9 @@ programa patito; funcion int fact(int j) { } funcion int fact(int i) { } princip
 programa patito; funcion int fact(int j) { quackout(1+2);} funcion int fact2(int a) { quackout(4-5);} principal() { fact(12); fact2(20);}
 programa patito; principal() { quackout(1+2+3, 3-4);}
 programa patito; principal() { var int i; i=10; mientras (i > 1) haz { i = i - 1; quackout(1+2+3, 3-4);}}
+programa patito; principal() { var int i; desde i = 0 hasta 10 hacer {quackout(i, 10, 12);}}
+programa patito; principal() { var int i, j, k; desde i = 0 hasta 10 hacer {quackin(i, j, k);}}
+programa patito; principal() { var int i, j, k; desde i = 0 hasta 10 hacer {quackin(i);}}
 programa patito; principal() { var int i; i=10; mientras (i > 1) haz { i = i - 1; si (i < 5) entonces {quackout(5);} quackout(1+2+3, 3-4);}}
 programa patito; funcion int fact(int j) { quackout(1+2);} funcion int fact2(int a) { quackout(4-5);} principal() { fact(12+1+4+5); fact2(20*7/2);}
 

@@ -11,6 +11,7 @@ import memory as mem
 class FunctionManager:
     def __init__(self):
         self.scope = 'global'
+        self.lastType = ''
         self.functionsDir = {
             'global': {'type': 'void', 'params': [], 'vars': {} },
         }
@@ -38,10 +39,10 @@ class FunctionManager:
 
     #add function to Directory
     def registerVariable(self, varId, varType):
-        #TODO creo que esto no es necesario
-        if self.functionsDir.get(self.scope) is None: #Si la función no existe
-            exception.fatalError("Función '%s' no existe" % (self.scope))
-
+        if varType is None: # Si no se manda tipo usar el anterior
+            varType = self.lastType
+        else:               # Si se manda tipo guardarlo para siguientes vars
+            self.lastType = varType
         if self.functionsDir[self.scope]['vars'].get(varId) is None:
             memoryScope = "local" if self.scope != "global" else "global"
             address = self.memory.assignAddress(memoryScope, varType)

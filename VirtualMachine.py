@@ -14,6 +14,7 @@ class VirtualMachine:
         self.ip = 1                     # instruction pointer
         self.operations = {
             'goto' :self.goto,
+            '=': self.assign,
             '+': self.sum,
             '-': self.subs,
             # '*': self.mult,
@@ -58,6 +59,10 @@ class VirtualMachine:
 
     def goto(self, op1, op2, op3):
         self.ip = int(op1)
+
+    def assign(self, op1, op2, op3):
+        self.mem[op3] = self.mem[op1]
+        self.ip += 1
 
     def sum(self, op1, op2, op3):
         self.mem[op3] = self.mem[op1] + self.mem[op2]

@@ -71,14 +71,15 @@ class CodeGenerator:
     # TODO incompleto
     def buildUnaryExp(self):
         op = self.opStack.pop()
-        var = self.idStack.pop()
-        if op == '-':
-            self.idStack.append(op+var)
-        elif op == '+':
-            self.idStack.append(var)
-        else:
-            self.idStack.append(op+var)
-    
+        # 
+        if op == '-': # no estoy seguro si esto funciona
+            self.opStack.append('*')
+            self.idStack.append('-1')
+            self.tpStack.append('int')
+            self.memStack.append('const')
+            self.buildExp()
+        # falta para '$', '^', '!'
+
     def buildAssign(self):
         op = '='
         val, valType, valMem = self.popVar()
@@ -140,33 +141,36 @@ class CodeGenerator:
         val, valType, valMem = self.popVar()
         inc, incType, incMem = self.popVar()
         if  valType not in ['int', 'float']:
-            exceptions.fatalError("Se esperaba int o float para inicalizacion de desde, se recibió %s" %(valType))
+            exceptions.fatalError("Se esperaba variable int o float para iterar en 'desde', se recibió %s" %(valType))
         valAddr = self.funcDir.getAddress(val, valMem, valType)
         incAddr = self.funcDir.getAddress(inc, incMem, incType)
+        self.writeQuad("=", valAddr, "0", incAddr)
+        self.idStack.append(inc)
+        self.tpStack.append(incType)
+        self.memStack.append(incMem)
         self.forIds.append(incAddr)
-        self.writeQuad("=", valAddr, " ", incAddr)
         self.gotoStack.append(self.line)
 
     def forDo(self):
         self.opStack.append("<=")
         self.buildExp()
-        cond = self.idStack.pop()
-        buf = "gotof %s" % (cond)
-        self.code.append("loop gotof\n")
-        self.pendingLines.append(buf)
+        cond, condType, condMemScope = self.popVar()
+        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
         self.gotoStack.append(self.line)
-        self.line += 1
+        buf = "gotof %s" % (condAddr)
+        self.pendingLines.append(buf)
+        self.writeQuad('loop', 'gotof', 'temp', '0')
 
     def forEnd(self):
         incAddr = self.forIds.pop()
         # la maquina virtual puede hacer incrementos aunque en teoria se deberia 
         # usar un temporal para esta suma
         self.writeQuad('+', incAddr, 1, incAddr)
-        lineNo = self.gotoStack.pop() - 1
-        buf = "%s %d 0 0\n" % (self.pendingLines.pop(), self.line+1)
-        self.code[lineNo] = buf
+        pendingIdx = self.gotoStack.pop() - 1
         retLine = self.gotoStack.pop()
         self.writeQuad('goto', str(retLine), '0', '0')
+        buf = "%s %d 0 0\n" % (self.pendingLines.pop(), self.line)
+        self.code[pendingIdx] = buf
 
 
     # -- FUNCDIR Y VARIABLES --
@@ -214,13 +218,8 @@ class CodeGenerator:
         # funcDir.validateFunctionSemantics(func_id)
 
     # -- READ PRINT / QUACKIN QUACKOUT --
-    def quackout(self):
+    def ioQuad(self, io):
         var, varType, varMemScope = self.popVar()
         varAddr = self.funcDir.getAddress(var, varMemScope, varType)
-        self.writeQuad('print', varAddr, '0','0')
-
-    def quackin(self):
-        var, varType, varMemScope = self.popVar()
-        varAddr = self.funcDir.getAddress(var, varMemScope, varType)
-        self.writeQuad('read', varAddr, '0','0')
+        self.writeQuad(io, varAddr, '0','0')
 

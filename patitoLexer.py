@@ -31,7 +31,7 @@ reserved = {
     'hacer': 'HACER',
     'quackin': 'QUACKIN',
     'quackout': 'QUACKOUT',
-    'retorno': 'RETORNO',
+    'retorna': 'RETORNA',
     'true': 'TRUE',
     'false': 'FALSE'
 }

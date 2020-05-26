@@ -24,6 +24,13 @@ class FunctionManager:
         }
         self.functionsDir.update(function)
         self.scope = functionName
+        if functionType != 'void':
+            # agrega una var global para retorno, prefix & para evitar conflictos
+            returnVar = '&' + functionName
+            address = self.memory.assignAddress('global', functionType)
+            self.functionsDir['global']['vars'].update({
+                returnVar: {'type':functionType, 'address':address, 'dim1':None, 'dim2':None}
+            })
         return True
 
     #add function to Directory

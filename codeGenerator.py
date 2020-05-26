@@ -5,7 +5,7 @@ import exceptions
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open(filename+".obj", "w")
-        self.code = ["Goto main"]
+        self.code = ["Goto main\n"]
         self.line = 2
         # expresions
         self.opStack = []
@@ -197,7 +197,6 @@ class CodeGenerator:
 
     # -- LLAMADAS DE FUNCIONES --
     def funcCallStart(self, func_id):
-        #check if functions exists in directory?
         self.funcDir.callFunction(func_id)
         self.idStack.append(func_id)
         self.writeQuad('ERA', func_id, '0', '0')
@@ -220,9 +219,7 @@ class CodeGenerator:
     # -- ARRAYS --
     def accessArray(self, arrId, dimKey):
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
-        print(idx, idxType, idxMem)
         idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
-        print(idxAddr)
         if idxType != 'int':                  #TODO no estoy seguro si float tambien
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
         arrVar = self.funcDir.getVariable(arrId)
@@ -245,6 +242,15 @@ class CodeGenerator:
         self.memStack.append('temp')
 
 
+    # -- RETORNA --
+    def retorna(self):
+        ret, retType, retMem = self.popVar()
+        retAddr = self.funcDir.getAddress(ret, retType, retMem)
+        gRetId = '&' + self.funcDir.scope
+        globalRetVar = self.funcDir.getVariable(gRetId)
+        if globalRetVar['type'] != retType:
+            exceptions.fatalError("No se puede retornar '%s' en funcion '%s', se esparaba tipo '%s'" %(retType, self.funcDir.scope, globalRetVar['type']))
+        self.writeQuad("=", retAddr, "0", globalRetVar['address'])
 
     # -- READ PRINT / QUACKIN QUACKOUT --
     def ioQuad(self, io):

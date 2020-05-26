@@ -107,7 +107,7 @@ def p_estatuto(p):
     '''estatuto : asignacion 
                 | condicion 
                 | func_void
-                | retorno
+                | retorna
                 | escribe
                 | lee 
                 | desde
@@ -183,9 +183,10 @@ def p_read_options(p):
                     | id'''
     code.ioQuad('read')
 
-# -- Retorno --
-def p_retorno(p):
-    'retorno : RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON'
+# -- Retorna --
+def p_retorna(p):
+    'retorna : RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON'
+    code.retorna()
 
 # -- Desde --
 def p_desde(p):

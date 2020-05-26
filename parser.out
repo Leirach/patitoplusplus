@@ -38,7 +38,7 @@ Rule 32    estatutos_rec -> empty
 Rule 33    estatuto -> asignacion
 Rule 34    estatuto -> condicion
 Rule 35    estatuto -> func_void
-Rule 36    estatuto -> retorno
+Rule 36    estatuto -> retorna
 Rule 37    estatuto -> escribe
 Rule 38    estatuto -> lee
 Rule 39    estatuto -> desde
@@ -63,7 +63,7 @@ Rule 57    printable -> CTES
 Rule 58    lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON
 Rule 59    read_options -> read_options COMMA id
 Rule 60    read_options -> id
-Rule 61    retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON
+Rule 61    retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON
 Rule 62    desde -> DESDE id ASSIGN exp hasta exp hacer bloque
 Rule 63    hasta -> HASTA
 Rule 64    hacer -> HACER
@@ -156,7 +156,7 @@ PROGRAMA             : 1
 QUACKIN              : 58
 QUACKOUT             : 53
 RCURLYB              : 29 30
-RETORNO              : 61
+RETORNA              : 61
 SEMICOLON            : 1 5 41 48 53 58 61
 SI                   : 42
 SINO                 : 47
@@ -215,7 +215,7 @@ print_options        : 53 54
 printable            : 54 55
 program_declaration  : 0
 read_options         : 58 59
-retorno              : 36
+retorna              : 36
 sino                 : 45
 sums                 : 73
 superexp             : 68 69 71
@@ -298,7 +298,7 @@ state 6
     PRINCIPAL       reduce using rule 108 (empty -> .)
     FUNCION         reduce using rule 108 (empty -> .)
     SI              reduce using rule 108 (empty -> .)
-    RETORNO         reduce using rule 108 (empty -> .)
+    RETORNA         reduce using rule 108 (empty -> .)
     QUACKOUT        reduce using rule 108 (empty -> .)
     QUACKIN         reduce using rule 108 (empty -> .)
     DESDE           reduce using rule 108 (empty -> .)
@@ -322,7 +322,7 @@ state 7
     PRINCIPAL       reduce using rule 4 (declare_vars -> empty .)
     FUNCION         reduce using rule 4 (declare_vars -> empty .)
     SI              reduce using rule 4 (declare_vars -> empty .)
-    RETORNO         reduce using rule 4 (declare_vars -> empty .)
+    RETORNA         reduce using rule 4 (declare_vars -> empty .)
     QUACKOUT        reduce using rule 4 (declare_vars -> empty .)
     QUACKIN         reduce using rule 4 (declare_vars -> empty .)
     DESDE           reduce using rule 4 (declare_vars -> empty .)
@@ -359,7 +359,7 @@ state 10
     PRINCIPAL       reduce using rule 3 (declare_vars -> VAR vars .)
     FUNCION         reduce using rule 3 (declare_vars -> VAR vars .)
     SI              reduce using rule 3 (declare_vars -> VAR vars .)
-    RETORNO         reduce using rule 3 (declare_vars -> VAR vars .)
+    RETORNA         reduce using rule 3 (declare_vars -> VAR vars .)
     QUACKOUT        reduce using rule 3 (declare_vars -> VAR vars .)
     QUACKIN         reduce using rule 3 (declare_vars -> VAR vars .)
     DESDE           reduce using rule 3 (declare_vars -> VAR vars .)
@@ -391,7 +391,7 @@ state 12
     PRINCIPAL       reduce using rule 6 (vars -> empty .)
     FUNCION         reduce using rule 6 (vars -> empty .)
     SI              reduce using rule 6 (vars -> empty .)
-    RETORNO         reduce using rule 6 (vars -> empty .)
+    RETORNA         reduce using rule 6 (vars -> empty .)
     QUACKOUT        reduce using rule 6 (vars -> empty .)
     QUACKIN         reduce using rule 6 (vars -> empty .)
     DESDE           reduce using rule 6 (vars -> empty .)
@@ -581,7 +581,7 @@ state 31
     PRINCIPAL       reduce using rule 108 (empty -> .)
     FUNCION         reduce using rule 108 (empty -> .)
     SI              reduce using rule 108 (empty -> .)
-    RETORNO         reduce using rule 108 (empty -> .)
+    RETORNA         reduce using rule 108 (empty -> .)
     QUACKOUT        reduce using rule 108 (empty -> .)
     QUACKIN         reduce using rule 108 (empty -> .)
     DESDE           reduce using rule 108 (empty -> .)
@@ -706,7 +706,7 @@ state 42
     PRINCIPAL       reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
     FUNCION         reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
     SI              reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
-    RETORNO         reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
+    RETORNA         reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
     QUACKOUT        reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
     QUACKIN         reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
     DESDE           reduce using rule 5 (vars -> first_var more_vars SEMICOLON vars .)
@@ -757,7 +757,7 @@ state 47
 
     VAR             shift and go to state 6
     SI              reduce using rule 108 (empty -> .)
-    RETORNO         reduce using rule 108 (empty -> .)
+    RETORNA         reduce using rule 108 (empty -> .)
     QUACKOUT        reduce using rule 108 (empty -> .)
     QUACKIN         reduce using rule 108 (empty -> .)
     DESDE           reduce using rule 108 (empty -> .)
@@ -824,7 +824,7 @@ state 53
     (33) estatuto -> . asignacion
     (34) estatuto -> . condicion
     (35) estatuto -> . func_void
-    (36) estatuto -> . retorno
+    (36) estatuto -> . retorna
     (37) estatuto -> . escribe
     (38) estatuto -> . lee
     (39) estatuto -> . desde
@@ -833,7 +833,7 @@ state 53
     (41) asignacion -> . id ASSIGN megaexp SEMICOLON
     (42) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
     (48) func_void -> . func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON
-    (61) retorno -> . RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON
+    (61) retorna -> . RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON
     (53) escribe -> . QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
     (58) lee -> . QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON
     (62) desde -> . DESDE id ASSIGN exp hasta exp hacer bloque
@@ -846,7 +846,7 @@ state 53
 
     RCURLYB         reduce using rule 108 (empty -> .)
     SI              shift and go to state 72
-    RETORNO         shift and go to state 74
+    RETORNA         shift and go to state 74
     QUACKOUT        shift and go to state 75
     QUACKIN         shift and go to state 76
     DESDE           shift and go to state 77
@@ -859,7 +859,7 @@ state 53
     asignacion                     shift and go to state 63
     condicion                      shift and go to state 64
     func_void                      shift and go to state 65
-    retorno                        shift and go to state 66
+    retorna                        shift and go to state 66
     escribe                        shift and go to state 67
     lee                            shift and go to state 68
     desde                          shift and go to state 69
@@ -937,7 +937,7 @@ state 61
     (33) estatuto -> . asignacion
     (34) estatuto -> . condicion
     (35) estatuto -> . func_void
-    (36) estatuto -> . retorno
+    (36) estatuto -> . retorna
     (37) estatuto -> . escribe
     (38) estatuto -> . lee
     (39) estatuto -> . desde
@@ -946,7 +946,7 @@ state 61
     (41) asignacion -> . id ASSIGN megaexp SEMICOLON
     (42) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
     (48) func_void -> . func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON
-    (61) retorno -> . RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON
+    (61) retorna -> . RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON
     (53) escribe -> . QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
     (58) lee -> . QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON
     (62) desde -> . DESDE id ASSIGN exp hasta exp hacer bloque
@@ -959,7 +959,7 @@ state 61
 
     RCURLYB         reduce using rule 108 (empty -> .)
     SI              shift and go to state 72
-    RETORNO         shift and go to state 74
+    RETORNA         shift and go to state 74
     QUACKOUT        shift and go to state 75
     QUACKIN         shift and go to state 76
     DESDE           shift and go to state 77
@@ -972,7 +972,7 @@ state 61
     asignacion                     shift and go to state 63
     condicion                      shift and go to state 64
     func_void                      shift and go to state 65
-    retorno                        shift and go to state 66
+    retorna                        shift and go to state 66
     escribe                        shift and go to state 67
     lee                            shift and go to state 68
     desde                          shift and go to state 69
@@ -993,7 +993,7 @@ state 63
     (33) estatuto -> asignacion .
 
     SI              reduce using rule 33 (estatuto -> asignacion .)
-    RETORNO         reduce using rule 33 (estatuto -> asignacion .)
+    RETORNA         reduce using rule 33 (estatuto -> asignacion .)
     QUACKOUT        reduce using rule 33 (estatuto -> asignacion .)
     QUACKIN         reduce using rule 33 (estatuto -> asignacion .)
     DESDE           reduce using rule 33 (estatuto -> asignacion .)
@@ -1007,7 +1007,7 @@ state 64
     (34) estatuto -> condicion .
 
     SI              reduce using rule 34 (estatuto -> condicion .)
-    RETORNO         reduce using rule 34 (estatuto -> condicion .)
+    RETORNA         reduce using rule 34 (estatuto -> condicion .)
     QUACKOUT        reduce using rule 34 (estatuto -> condicion .)
     QUACKIN         reduce using rule 34 (estatuto -> condicion .)
     DESDE           reduce using rule 34 (estatuto -> condicion .)
@@ -1021,7 +1021,7 @@ state 65
     (35) estatuto -> func_void .
 
     SI              reduce using rule 35 (estatuto -> func_void .)
-    RETORNO         reduce using rule 35 (estatuto -> func_void .)
+    RETORNA         reduce using rule 35 (estatuto -> func_void .)
     QUACKOUT        reduce using rule 35 (estatuto -> func_void .)
     QUACKIN         reduce using rule 35 (estatuto -> func_void .)
     DESDE           reduce using rule 35 (estatuto -> func_void .)
@@ -1032,16 +1032,16 @@ state 65
 
 state 66
 
-    (36) estatuto -> retorno .
+    (36) estatuto -> retorna .
 
-    SI              reduce using rule 36 (estatuto -> retorno .)
-    RETORNO         reduce using rule 36 (estatuto -> retorno .)
-    QUACKOUT        reduce using rule 36 (estatuto -> retorno .)
-    QUACKIN         reduce using rule 36 (estatuto -> retorno .)
-    DESDE           reduce using rule 36 (estatuto -> retorno .)
-    ID              reduce using rule 36 (estatuto -> retorno .)
-    MIENTRAS        reduce using rule 36 (estatuto -> retorno .)
-    RCURLYB         reduce using rule 36 (estatuto -> retorno .)
+    SI              reduce using rule 36 (estatuto -> retorna .)
+    RETORNA         reduce using rule 36 (estatuto -> retorna .)
+    QUACKOUT        reduce using rule 36 (estatuto -> retorna .)
+    QUACKIN         reduce using rule 36 (estatuto -> retorna .)
+    DESDE           reduce using rule 36 (estatuto -> retorna .)
+    ID              reduce using rule 36 (estatuto -> retorna .)
+    MIENTRAS        reduce using rule 36 (estatuto -> retorna .)
+    RCURLYB         reduce using rule 36 (estatuto -> retorna .)
 
 
 state 67
@@ -1049,7 +1049,7 @@ state 67
     (37) estatuto -> escribe .
 
     SI              reduce using rule 37 (estatuto -> escribe .)
-    RETORNO         reduce using rule 37 (estatuto -> escribe .)
+    RETORNA         reduce using rule 37 (estatuto -> escribe .)
     QUACKOUT        reduce using rule 37 (estatuto -> escribe .)
     QUACKIN         reduce using rule 37 (estatuto -> escribe .)
     DESDE           reduce using rule 37 (estatuto -> escribe .)
@@ -1063,7 +1063,7 @@ state 68
     (38) estatuto -> lee .
 
     SI              reduce using rule 38 (estatuto -> lee .)
-    RETORNO         reduce using rule 38 (estatuto -> lee .)
+    RETORNA         reduce using rule 38 (estatuto -> lee .)
     QUACKOUT        reduce using rule 38 (estatuto -> lee .)
     QUACKIN         reduce using rule 38 (estatuto -> lee .)
     DESDE           reduce using rule 38 (estatuto -> lee .)
@@ -1077,7 +1077,7 @@ state 69
     (39) estatuto -> desde .
 
     SI              reduce using rule 39 (estatuto -> desde .)
-    RETORNO         reduce using rule 39 (estatuto -> desde .)
+    RETORNA         reduce using rule 39 (estatuto -> desde .)
     QUACKOUT        reduce using rule 39 (estatuto -> desde .)
     QUACKIN         reduce using rule 39 (estatuto -> desde .)
     DESDE           reduce using rule 39 (estatuto -> desde .)
@@ -1091,7 +1091,7 @@ state 70
     (40) estatuto -> mientras_estatuto .
 
     SI              reduce using rule 40 (estatuto -> mientras_estatuto .)
-    RETORNO         reduce using rule 40 (estatuto -> mientras_estatuto .)
+    RETORNA         reduce using rule 40 (estatuto -> mientras_estatuto .)
     QUACKOUT        reduce using rule 40 (estatuto -> mientras_estatuto .)
     QUACKIN         reduce using rule 40 (estatuto -> mientras_estatuto .)
     DESDE           reduce using rule 40 (estatuto -> mientras_estatuto .)
@@ -1123,7 +1123,7 @@ state 73
 
 state 74
 
-    (61) retorno -> RETORNO . OPENPAR megaexp CLOSEPAR SEMICOLON
+    (61) retorna -> RETORNA . OPENPAR megaexp CLOSEPAR SEMICOLON
 
     OPENPAR         shift and go to state 89
 
@@ -1389,7 +1389,7 @@ state 88
 
 state 89
 
-    (61) retorno -> RETORNO OPENPAR . megaexp CLOSEPAR SEMICOLON
+    (61) retorna -> RETORNA OPENPAR . megaexp CLOSEPAR SEMICOLON
     (68) megaexp -> . superexp
     (69) megaexp -> . megaexp boolean_op superexp
     (70) superexp -> . exp
@@ -2154,7 +2154,7 @@ state 120
 
 state 121
 
-    (61) retorno -> RETORNO OPENPAR megaexp . CLOSEPAR SEMICOLON
+    (61) retorna -> RETORNA OPENPAR megaexp . CLOSEPAR SEMICOLON
     (69) megaexp -> megaexp . boolean_op superexp
     (91) boolean_op -> . OR
     (92) boolean_op -> . AND
@@ -2301,7 +2301,7 @@ state 131
     (41) asignacion -> id ASSIGN megaexp SEMICOLON .
 
     SI              reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
-    RETORNO         reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
+    RETORNA         reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
     QUACKOUT        reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
     QUACKIN         reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
     DESDE           reduce using rule 41 (asignacion -> id ASSIGN megaexp SEMICOLON .)
@@ -2885,7 +2885,7 @@ state 153
 
 state 154
 
-    (61) retorno -> RETORNO OPENPAR megaexp CLOSEPAR . SEMICOLON
+    (61) retorna -> RETORNA OPENPAR megaexp CLOSEPAR . SEMICOLON
 
     SEMICOLON       shift and go to state 173
 
@@ -3210,7 +3210,7 @@ state 171
     (48) func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .
 
     SI              reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
-    RETORNO         reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
+    RETORNA         reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
     QUACKOUT        reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
     QUACKIN         reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
     DESDE           reduce using rule 48 (func_void -> func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON .)
@@ -3232,16 +3232,16 @@ state 172
 
 state 173
 
-    (61) retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .
+    (61) retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .
 
-    SI              reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    RETORNO         reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    QUACKOUT        reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    QUACKIN         reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    DESDE           reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    ID              reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    MIENTRAS        reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
-    RCURLYB         reduce using rule 61 (retorno -> RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    SI              reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    RETORNA         reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    QUACKOUT        reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    QUACKIN         reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    DESDE           reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    ID              reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    MIENTRAS        reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
+    RCURLYB         reduce using rule 61 (retorna -> RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON .)
 
 
 state 174
@@ -3249,7 +3249,7 @@ state 174
     (53) escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .
 
     SI              reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
-    RETORNO         reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
+    RETORNA         reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
     QUACKOUT        reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
     QUACKIN         reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
     DESDE           reduce using rule 53 (escribe -> QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON .)
@@ -3271,7 +3271,7 @@ state 176
     (58) lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .
 
     SI              reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
-    RETORNO         reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
+    RETORNA         reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
     QUACKOUT        reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
     QUACKIN         reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
     DESDE           reduce using rule 58 (lee -> QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON .)
@@ -3447,7 +3447,7 @@ state 184
     (42) condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .
 
     SI              reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
-    RETORNO         reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
+    RETORNA         reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
     QUACKOUT        reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
     QUACKIN         reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
     DESDE           reduce using rule 42 (condicion -> SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces .)
@@ -3466,7 +3466,7 @@ state 185
 
     SINO            shift and go to state 193
     SI              reduce using rule 108 (empty -> .)
-    RETORNO         reduce using rule 108 (empty -> .)
+    RETORNA         reduce using rule 108 (empty -> .)
     QUACKOUT        reduce using rule 108 (empty -> .)
     QUACKIN         reduce using rule 108 (empty -> .)
     DESDE           reduce using rule 108 (empty -> .)
@@ -3486,7 +3486,7 @@ state 186
     (33) estatuto -> . asignacion
     (34) estatuto -> . condicion
     (35) estatuto -> . func_void
-    (36) estatuto -> . retorno
+    (36) estatuto -> . retorna
     (37) estatuto -> . escribe
     (38) estatuto -> . lee
     (39) estatuto -> . desde
@@ -3495,7 +3495,7 @@ state 186
     (41) asignacion -> . id ASSIGN megaexp SEMICOLON
     (42) condicion -> . SI OPENPAR megaexp CLOSEPAR entonces bloque_entonces
     (48) func_void -> . func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON
-    (61) retorno -> . RETORNO OPENPAR megaexp CLOSEPAR SEMICOLON
+    (61) retorna -> . RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON
     (53) escribe -> . QUACKOUT OPENPAR print_options CLOSEPAR SEMICOLON
     (58) lee -> . QUACKIN OPENPAR read_options CLOSEPAR SEMICOLON
     (62) desde -> . DESDE id ASSIGN exp hasta exp hacer bloque
@@ -3508,7 +3508,7 @@ state 186
 
     RCURLYB         reduce using rule 108 (empty -> .)
     SI              shift and go to state 72
-    RETORNO         shift and go to state 74
+    RETORNA         shift and go to state 74
     QUACKOUT        shift and go to state 75
     QUACKIN         shift and go to state 76
     DESDE           shift and go to state 77
@@ -3521,7 +3521,7 @@ state 186
     asignacion                     shift and go to state 63
     condicion                      shift and go to state 64
     func_void                      shift and go to state 65
-    retorno                        shift and go to state 66
+    retorna                        shift and go to state 66
     escribe                        shift and go to state 67
     lee                            shift and go to state 68
     desde                          shift and go to state 69
@@ -3550,7 +3550,7 @@ state 188
     (65) mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .
 
     SI              reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
-    RETORNO         reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
+    RETORNA         reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
     QUACKOUT        reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
     QUACKIN         reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
     DESDE           reduce using rule 65 (mientras_estatuto -> mientras OPENPAR megaexp CLOSEPAR haz bloque .)
@@ -3577,7 +3577,7 @@ state 190
     (44) bloque_entonces -> bloque bloque_sino .
 
     SI              reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
-    RETORNO         reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
+    RETORNA         reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
     QUACKOUT        reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
     QUACKIN         reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
     DESDE           reduce using rule 44 (bloque_entonces -> bloque bloque_sino .)
@@ -3600,7 +3600,7 @@ state 192
     (46) bloque_sino -> empty .
 
     SI              reduce using rule 46 (bloque_sino -> empty .)
-    RETORNO         reduce using rule 46 (bloque_sino -> empty .)
+    RETORNA         reduce using rule 46 (bloque_sino -> empty .)
     QUACKOUT        reduce using rule 46 (bloque_sino -> empty .)
     QUACKIN         reduce using rule 46 (bloque_sino -> empty .)
     DESDE           reduce using rule 46 (bloque_sino -> empty .)
@@ -3669,7 +3669,7 @@ state 198
     (45) bloque_sino -> sino bloque .
 
     SI              reduce using rule 45 (bloque_sino -> sino bloque .)
-    RETORNO         reduce using rule 45 (bloque_sino -> sino bloque .)
+    RETORNA         reduce using rule 45 (bloque_sino -> sino bloque .)
     QUACKOUT        reduce using rule 45 (bloque_sino -> sino bloque .)
     QUACKIN         reduce using rule 45 (bloque_sino -> sino bloque .)
     DESDE           reduce using rule 45 (bloque_sino -> sino bloque .)
@@ -3684,7 +3684,7 @@ state 199
 
     SINO            reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
     SI              reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
-    RETORNO         reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
+    RETORNA         reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
     QUACKOUT        reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
     QUACKIN         reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
     DESDE           reduce using rule 30 (bloque -> LCURLYB estatutos_rec RCURLYB .)
@@ -3698,7 +3698,7 @@ state 200
     (62) desde -> DESDE id ASSIGN exp hasta exp hacer bloque .
 
     SI              reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)
-    RETORNO         reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)
+    RETORNA         reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)
     QUACKOUT        reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)
     QUACKIN         reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)
     DESDE           reduce using rule 62 (desde -> DESDE id ASSIGN exp hasta exp hacer bloque .)

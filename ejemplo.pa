@@ -1,7 +1,7 @@
 programa patito; var int i; float valor; funcion int fact(int j) var int i; { quackout(123); } principal() { }
 programa patito; var int i; float valor; funcion int fact(int j) var int i; {  quackout(3 * 10); } principal() { fact(12+3); }
-programa patito; var int i; float valor; principal() { }
-programa patito; var int i; float valor, hola; principal() { }
+programa patito; var int i[10][10], j; float valor; principal() { }
+programa patito; var int i[10]; float valor[2], hola; principal() { quackout(i[2]); }
 programa patito; funcion int fact(int j) { } principal() { }
 programa patito; var int i;  principal() { }
 programa patito; funcion int fact(int j) { } funcion int fact(int i) { } principal() { }

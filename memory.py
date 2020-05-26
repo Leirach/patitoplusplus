@@ -1,19 +1,24 @@
 
 offsets = {
-    'global': 0,
+    'global': 1,
     'local' : 10000,
     'temp' : 20000,
     'const' : 30000,
     'int' : 0,
-    'float' : 1000,
-    'bool' : 2000,
-    'char' : 3000
+    'float' : 2000,
+    'bool' : 4000,
+    'char' : 6000,
+    'ptr' : 8000
 }
 
 class MemoryManager:
     def __init__(self):
         self.constants = { }
         self.temporals = { }
+        self.memory = {
+            'const': { },
+            'temp': { }
+        }
         self.counters = {
             'global': {
                 'int': 0,
@@ -25,13 +30,14 @@ class MemoryManager:
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
             },
             'temp': {
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
+                'ptr' : 0
             },
             'const': {
                 'int': 0,
@@ -41,26 +47,23 @@ class MemoryManager:
             },
         }
 
-    def assignAddress(self, scope, tipo, size=1):
+    def assignAddress(self, scope, tipo, dim1=None, dim2=None):
+        size = 0
+        if dim1 is not None:
+            size = dim1
+        if dim2 is not None:
+            size *= dim2
+        size += 1
         addr = offsets[scope] + offsets[tipo] + self.counters[scope][tipo]
         self.counters[scope][tipo] += size
         return addr
 
-    def getConstant(self, value, tipo):
-        cte = self.constants.get(value)
-        if cte is not None:
-            return cte['addr']
-        addr = self.assignAddress('const', tipo)
-        self.constants.update({value: {'addr': addr, 'type': tipo}})
-        return addr
-        
-
-    def getTemporal(self, value, tipo):
-        temp = self.temporals.get(value)
-        if temp is not None:
-            return temp['addr']
-        addr = self.assignAddress('temp', tipo)
-        self.temporals.update({value: {'addr': addr, 'type': tipo}})
+    def getAddress(self, value, tipo, scope):
+        aux = self.memory[scope].get(value)
+        if aux is not None:
+            return aux['addr']
+        addr = self.assignAddress(scope, tipo)
+        self.memory[scope].update({value: {'addr': addr, 'type': tipo}})
         return addr
 
     def reset(self):
@@ -76,12 +79,13 @@ class MemoryManager:
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
+                'ptr' : 0
             }})
 
     def createConstTable(self):
         mem = []
-        for key in self.constants:
-            buf = "%s %s %s\n" %(self.constants[key]['addr'], key, self.constants[key]['type'])
+        for key in self.memory['const']:
+            buf = "%s %s %s\n" %(self.memory['const'][key]['addr'], key, self.memory['const'][key]['type'])
             mem.append(buf)
         return mem

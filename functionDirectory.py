@@ -1,9 +1,7 @@
 
 # TODO doble llamada de función
 # type tipo de retorno esperado de la funcion
-# params: lista de los id de parametros esperados para la llamada
-#         la idea es que se indexe vars con estos strings para checar a que variable
-#         pertenece cual parametro. sentiende claro diafano cristalino?
+# params: lista de tipos de parametros esperados para la llamada
 # vars: guarda parametros y variables en un diccionario para indexar facilmente
 
 import exceptions as exception
@@ -31,47 +29,34 @@ class FunctionManager:
     #add function to Directory
     def registerFuncParams(self, paramId, paramType):
         self.registerVariable(paramId, paramType)
-        self.functionsDir[self.scope]['params'].append(paramId)
+        self.functionsDir[self.scope]['params'].append(paramType)
 
     # TODO guardar tamaño de funcion
     def endFunc(self):
         self.memory.reset()
 
     #add function to Directory
-    def registerVariable(self, varId, varType):
+    def registerVariable(self, varId, varType, dim1=None, dim2=None):
         if varType is None: # Si no se manda tipo usar el anterior
             varType = self.lastType
         else:               # Si se manda tipo guardarlo para siguientes vars
             self.lastType = varType
-        if self.functionsDir[self.scope]['vars'].get(varId) is None:
-            memoryScope = "local" if self.scope != "global" else "global"
-            address = self.memory.assignAddress(memoryScope, varType)
-            self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address} })
-            return True 
-        exception.fatalError("Variable '%s' duplicada en función '%s'" % (varId, self.scope))
+        if self.functionsDir[self.scope]['vars'].get(varId) is not None:
+            exception.fatalError("Variable '%s' duplicada en función '%s'" % (varId, self.scope))
+        if dim1 == 0 or dim2 == 0:
+            exception.fatalError("Variable dimensionada %s no puede tener tamaño 0" % (varId))
+        memoryScope = "local" if self.scope != "global" else "global"
+        address = self.memory.assignAddress(memoryScope, varType, dim1, dim2)
+        self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address, 'dim1': dim1, 'dim2':dim2} })
+        return True
 
-
-    def getVariableType(self, functionName, varId):
-        #si le mandas None en functionName se asume que es el scope
-        if functionName is None:
-            functionName = self.scope
-        var = self.functionsDir[functionName]['vars'].get(varId)
-        if var is not None:
-            return var['type']
-        # Si no estaba en el scope local intenta en global o ya de plano no existe
-        var = self.functionsDir['global']['vars'].get(varId)
-        if var is not None: 
-            return var['type']
-        exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
-
-    # se supone que ya se valido que existe la variable
-    def getVariableAddress(self, varId):
+    def getVariable(self, varId):
         var = self.functionsDir[self.scope]['vars'].get(varId)
         if var is not None:
-            return var['address']
+            return var
         var = self.functionsDir['global']['vars'].get(varId)
-        if var is not None: 
-            return var['address']
+        if var is not None:
+            return var
         exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
 
     # func: functionName, paramNum: Number, type: Type sent
@@ -80,8 +65,7 @@ class FunctionManager:
         length = len(self.functionsDir[func]['params'])
         if paramNum >= length:
             exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s." % ( func, length) )
-        var = self.functionsDir[func]['params'][paramNum]
-        expected = self.getVariableType(func, var) # deberia regresar tipo de la variable local
+        expected = self.functionsDir[func]['params'][paramNum] # deberia regresar tipo de la variable local
         if expected != paramType:
             exception.fatalError("Se esperaba parámetro de tipo %s. Se recibió %s." % (expected, paramType))
         return True
@@ -93,13 +77,11 @@ class FunctionManager:
 
     # regresa direccion de variable
     # si no es variable regresa direccion con el modulo de memoria
-    def getAddress(self, value, scope, tipo):
-        if scope == 'var':
-            return self.getVariableAddress(value)
-        if scope == 'temp':
-            return self.memory.getTemporal(value, tipo)
-        if scope == 'const':
-            return self.memory.getConstant(value, tipo)
+    def getAddress(self, value, tipo, scope):
+        if scope == 'var': # para local y global
+            return self.getVariable(value)['address']
+        else: # para const y temp
+            return self.memory.getAddress(value, tipo, scope)
 
     def createConstTable(self):
         return self.memory.createConstTable()

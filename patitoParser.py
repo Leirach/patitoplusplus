@@ -27,27 +27,33 @@ def p_declare_vars(p):
                     | empty'''
 
 def p_vars(p):
-    '''vars : var_id dimensions more_vars SEMICOLON vars
+    '''vars : first_var more_vars SEMICOLON vars
             | empty'''
 
-def p_var_id(p):
-    '''var_id : tipo ID'''
-    #Falta identificar entre globales y las que pertecen a una función
-    code.registerVariable(p[2], p[1])
+def p_first_var(p):
+    '''first_var : tipo ID dimensions'''
+    code.registerVariable(p[2], p[1], p[3][0], p[3][1])
 
 def p_more_vars(p):
-    '''more_vars : more_var_id dimensions more_vars
+    '''more_vars : more_var_id more_vars
                  | empty'''
 
 def p_more_var_id(p):
-    '''more_var_id : COMMA ID'''
-    if(p[2] != None and p[2] != EMPTY):
-        code.registerVariable(p[2], None)
+    'more_var_id : COMMA ID dimensions'
+    code.registerVariable(p[2], None, p[3][0], p[3][1])
 
-def p_dimensions(p):
-    '''dimensions : OPENBRAC CTEI CLOSEBRAC 
-                  | OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC
-                  | empty'''
+def p_dimensions_empty(p):
+    'dimensions : empty'
+    p[0] = [None, None]
+
+def p_dimensions_one(p):
+    'dimensions : OPENBRAC CTEI CLOSEBRAC'
+    p[0] = [int(p[2]), None]
+
+def p_dimensions_two(p):
+    'dimensions : OPENBRAC CTEI CLOSEBRAC OPENBRAC CTEI CLOSEBRAC'
+    p[0] = [int(p[2]), int(p[5])]
+
 
 def p_declare_func_rec(p):
     '''declare_func_rec : declare_func_rec declare_func
@@ -265,13 +271,24 @@ def p_vcte_ID(p):
 
 # ID o acceso a arreglo
 def p_id(p):
-    '''id : ID
-          | ID OPENBRAC exp CLOSEBRAC
-          | ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'''
+    'id : ID'
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
     code.memStack.append('var')
+
+# falta poner breaks en operaciones 
+# o sea, openbrac, en vez de OPENBRAC, como regla que haga push a opstack('[')
+# y closebrac que haga pop
+def p_id_dimensions_one(p):
+    'id : ID OPENBRAC exp CLOSEBRAC'
+    p[0] = p[1]
+    code.accessArray(p[1], 'dim1')
+
+def p_id_dimensions_two(p):
+    'id : ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'
+    p[0] = p[1]
+    code.accessArray(p[1], 'dim2')
 
 def p_vcte_CTEI(p):
     'vcte : CTEI'
@@ -302,6 +319,14 @@ def p_vcte_CTEC(p):
     code.tpStack.append('char')
     code.memStack.append('const')
 
+# arreglos como constantes no se si esto tiene que ir D:
+# def p_array(p):
+#     'array : OPENBRAC arr_elem CLOSEBRAC'
+
+# def p_arr_elem(p):
+#     '''arr_elem : arr_elem COMMA vcte
+#                 |
+#                 | empty'''
 
 # -- Operadores --
 def p_boolean_op(p):

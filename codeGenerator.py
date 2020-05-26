@@ -59,9 +59,9 @@ class CodeGenerator:
         auxType = semantics.match(op, izqType, derType)
         if auxType is None:
             exceptions.fatalError("Invalid operand %s for types %s and %s" % (op, izqType, derType))
-        izqAddr = self.funcDir.getAddress(izq, izqMemScope, izqType)
-        derAddr = self.funcDir.getAddress(der, derMemScope, derType)
-        auxAddr = self.funcDir.getAddress(aux, 'temp', auxType)
+        izqAddr = self.funcDir.getAddress(izq, izqType, izqMemScope)
+        derAddr = self.funcDir.getAddress(der, derType, derMemScope)
+        auxAddr = self.funcDir.getAddress(aux, auxType, 'temp')
         self.writeQuad(op, izqAddr, derAddr, auxAddr)
         self.idStack.append(aux)
         self.tpStack.append(auxType)
@@ -87,8 +87,8 @@ class CodeGenerator:
         matches = semantics.match(op, varType, valType)
         if matches is None:
             exceptions.fatalError("No se puede asignar tipo %s a variable de tipo %s" % (valType, varType))
-        valAddr = self.funcDir.getAddress(val, valMem, valType)
-        varAddr = self.funcDir.getAddress(var, varMem, varType)
+        valAddr = self.funcDir.getAddress(val, valType, valMem)
+        varAddr = self.funcDir.getAddress(var, varType, varMem)
         self.writeQuad('=', valAddr, '0', varAddr)
 
     # -- IF ELSE / SI ENTONCES SINO--
@@ -96,7 +96,7 @@ class CodeGenerator:
         cond, condType, condMemScope = self.popVar()
         if condType not in ['bool']:
             exceptions.fatalError("Se esperaba bool en condicional se leyó %s" % (condType))
-        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
+        condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
         buf = "gotof %s" %(condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
@@ -123,7 +123,7 @@ class CodeGenerator:
         cond, condType, condMemScope = self.popVar() # TODO Checar que sea bool (int tambien?)
         if condType not in ['bool']:
             exceptions.fatalError("Se esperaba bool en ciclo mientras, se recibió %s" % (condType))
-        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
+        condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
         buf = "gotof %s" % (condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
@@ -142,8 +142,8 @@ class CodeGenerator:
         inc, incType, incMem = self.popVar()
         if  valType not in ['int', 'float']:
             exceptions.fatalError("Se esperaba variable int o float para iterar en 'desde', se recibió %s" %(valType))
-        valAddr = self.funcDir.getAddress(val, valMem, valType)
-        incAddr = self.funcDir.getAddress(inc, incMem, incType)
+        valAddr = self.funcDir.getAddress(val, valType, valMem)
+        incAddr = self.funcDir.getAddress(inc, incType, incMem)
         self.writeQuad("=", valAddr, "0", incAddr)
         self.idStack.append(inc)
         self.tpStack.append(incType)
@@ -155,7 +155,7 @@ class CodeGenerator:
         self.opStack.append("<=")
         self.buildExp()
         cond, condType, condMemScope = self.popVar()
-        condAddr = self.funcDir.getAddress(cond, condMemScope, condType)
+        condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
         self.gotoStack.append(self.line)
         buf = "gotof %s" % (condAddr)
         self.pendingLines.append(buf)
@@ -174,11 +174,11 @@ class CodeGenerator:
 
 
     # -- FUNCDIR Y VARIABLES --
-    def registerVariable(self, var, varType):
-        self.funcDir.registerVariable(var, varType)
+    def registerVariable(self, var, varType, dim1=None, dim2=None):
+        self.funcDir.registerVariable(var, varType, dim1, dim2)
 
     def getVarType(self, p):
-        return self.funcDir.getVariableType(None, p) #default scope
+        return self.funcDir.getVariable(p)['type']
 
     def registerFunc(self, functionName, functionType):
         if functionName == 'principal':
@@ -207,7 +207,7 @@ class CodeGenerator:
         calledFunc = self.peek(self.idStack)
         self.funcDir.validateParam(calledFunc, self.paramCounter, paramType)
         self.paramCounter += 1 # param counting starts at 0
-        paramAddr = self.funcDir.getAddress(param, paramMemScope, paramType)
+        paramAddr = self.funcDir.getAddress(param, paramType, paramMemScope)
         aux = 'par'+str(self.paramCounter)
         self.writeQuad('PARAM', paramAddr, aux, '0')
 
@@ -217,9 +217,38 @@ class CodeGenerator:
         self.paramCounter = 0 # reset param counter
         # funcDir.validateFunctionSemantics(func_id)
 
+    # -- ARRAYS --
+    def accessArray(self, arrId, dimKey):
+        idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
+        print(idx, idxType, idxMem)
+        idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
+        print(idxAddr)
+        if idxType != 'int':                  #TODO no estoy seguro si float tambien
+            exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
+        arrVar = self.funcDir.getVariable(arrId)
+        # verificacion de limites
+        limit = arrVar[dimKey] - 1
+        limitAddr = self.funcDir.getAddress(limit, 'int', 'const')
+        zeroAddr = self.funcDir.getAddress(0, 'int', 'const')
+        self.writeQuad('ver', idxAddr, zeroAddr, limitAddr) # checar si esta en rango
+        # direccion base del arreglo como constante
+        arrAddr = arrVar['address']
+        baseAddr = self.funcDir.getAddress(arrAddr, 'int', 'const')
+        # suma en un pointer temporal
+        ptr = "pt"+str(self.temp)
+        ptrAddr = self.funcDir.getAddress(ptr, 'ptr', 'temp')
+        self.temp += 1
+        self.writeQuad('+', baseAddr, idxAddr, ptrAddr) # sumar y poner en pointer
+        # append pointer, tipo de dato es el mismo que el arreglo, no 'ptr'
+        self.idStack.append(ptr)
+        self.tpStack.append(idxType)
+        self.memStack.append('temp')
+
+
+
     # -- READ PRINT / QUACKIN QUACKOUT --
     def ioQuad(self, io):
         var, varType, varMemScope = self.popVar()
-        varAddr = self.funcDir.getAddress(var, varMemScope, varType)
+        varAddr = self.funcDir.getAddress(var, varType, varMemScope)
         self.writeQuad(io, varAddr, '0','0')
 

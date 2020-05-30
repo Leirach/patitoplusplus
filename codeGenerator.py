@@ -5,7 +5,7 @@ import exceptions
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open(filename+".obj", "w")
-        self.code = ["gosub principal\n"]
+        self.code = ["GOSUB principal 0 0\n"]
         self.line = 2
         # expresions
         self.opStack = []
@@ -97,7 +97,7 @@ class CodeGenerator:
         if condType not in ['bool']:
             exceptions.fatalError("Se esperaba bool en condicional se leyó %s" % (condType))
         condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
-        buf = "gotof %s" %(condAddr)
+        buf = "GOTOF %s" %(condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
         self.writeQuad('if', 'gotof', 'temp', '0') # temporal quadruple
@@ -105,7 +105,7 @@ class CodeGenerator:
     def ifElse(self):
         self.writeQuad('else', 'goto', 'temp', '0')
         self.ifEnd()
-        buf = "goto"
+        buf = "GOTO"
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line-1)
 
@@ -124,7 +124,7 @@ class CodeGenerator:
         if condType not in ['bool']:
             exceptions.fatalError("Se esperaba bool en ciclo mientras, se recibió %s" % (condType))
         condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
-        buf = "gotof %s" % (condAddr)
+        buf = "GOTOF %s" % (condAddr)
         self.pendingLines.append(buf)
         self.gotoStack.append(self.line)
         self.writeQuad('while', 'goto', 'temp', '0')
@@ -134,7 +134,7 @@ class CodeGenerator:
         buf = "%s %d 0\n" % (self.pendingLines.pop(), self.line+1)
         self.code[lineNo-1] = buf
         retLine = self.gotoStack.pop()
-        self.writeQuad('goto', retLine, '0', '0')
+        self.writeQuad('GOTO', retLine, '0', '0')
 
     # -- FOR / DESDE HASTA HACER --
     def forStart(self):
@@ -157,7 +157,7 @@ class CodeGenerator:
         cond, condType, condMemScope = self.popVar()
         condAddr = self.funcDir.getAddress(cond, condType, condMemScope)
         self.gotoStack.append(self.line)
-        buf = "gotof %s" % (condAddr)
+        buf = "GOTOF %s" % (condAddr)
         self.pendingLines.append(buf)
         self.writeQuad('loop', 'gotof', 'temp', '0')
 
@@ -168,7 +168,7 @@ class CodeGenerator:
         self.writeQuad('+', incAddr, 1, incAddr)
         pendingIdx = self.gotoStack.pop() - 1
         retLine = self.gotoStack.pop()
-        self.writeQuad('goto', str(retLine), '0', '0')
+        self.writeQuad('GOTO', str(retLine), '0', '0')
         buf = "%s %d 0 0\n" % (self.pendingLines.pop(), self.line)
         self.code[pendingIdx] = buf
 
@@ -191,7 +191,7 @@ class CodeGenerator:
         self.temp = 1 # reset temp counter
         self.code.append("ENDFUNC 0 0 0\n")
         self.line += 1
-        self.funcDir.endFunc(self.temp)
+        self.funcDir.endFunc()
 
     # -- LLAMADAS DE FUNCIONES --
     def funcCallStart(self, func_id):

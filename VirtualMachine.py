@@ -1,5 +1,6 @@
 
 import sys, getopt
+TYPES = ['int', 'float', 'char', 'bool'] # para iterar diccionarios
 memEmpty = {
     'global': {
         'int': [],
@@ -37,12 +38,14 @@ class VirtualMachine:
         self.code.insert(0,"")          # code index starts at 1
         obj = obj[split+1:]
         self.mem = memEmpty
+        self.contextStack = []
+        self.funcCallStack = ['principal']
         self.funcdir = {}
         self.reconstructMemory(obj)
         self.ip = 1                     # instruction pointer
         self.operations = {
-            'goto' :self.goto,
-            'gotof': self.gotof,
+            'GOTO' :self.goto,
+            'GOTOF': self.gotof,
             '=': self.assign,
             '+': self.sum,
             '-': self.subs,
@@ -64,9 +67,10 @@ class VirtualMachine:
             'GOSUB': self.gosub,
             'ENDFUNC': self.endfunc,
             # 'ver': self.verify,
-            'print': self.print,
-            'read': self.read,
+            'PRINT': self.print,
+            'READ': self.read,
         }
+        self.running = True
         self.run()
 
     def offsetMemory(self, addr):
@@ -100,11 +104,10 @@ class VirtualMachine:
         return addr, scope, tipo
 
     def malloc(self, scope, sizes):
-        types = ['int', 'float', 'char', 'bool']
-        for i in len(sizes):
-            if sizes[i] == 0:
-                sizes[i] = 1
-            self.mem[scope][types[i]] = [0] * sizes[i]
+        sizes = list(map(int, sizes))
+        for i in range(0, len(sizes)):
+            if sizes[i] > 0:
+                self.mem[scope][TYPES[i]] = [0] * sizes[i]
 
     def memSet(self, addr, value):
         addr = int(addr)
@@ -134,13 +137,12 @@ class VirtualMachine:
         while idx < len(funcs):
             identifier = funcs[idx].split()
             local = funcs[idx+1].split()
-            local = list(map(int, local[1:]))
-            temp = funcs[idx+1].split()
-            temp = list(map(int, temp[1:]))
+            temp = funcs[idx+2].split()
             func = {
-                identifier[0] : {'goto': int(identifier[2]), 'local': local, 'temp': temp}
+                identifier[0] : {'goto': int(identifier[1]), 'local': local[1:], 'temp': temp[1:]}
             }
             self.funcdir.update(func)
+            idx += 3
 
         sizes = memory[0].split()
         self.malloc('global', sizes[1:])
@@ -152,7 +154,7 @@ class VirtualMachine:
             self.memSet(int(aux[0]), aux[1])
 
     def run(self):
-        while self.code[self.ip] != 'ENDFUNC 0 0 0':
+        while self.running:
             line = self.code[self.ip].split()
             op = line[0]
             self.operations[op](line[1], line[2], line[3])
@@ -239,23 +241,41 @@ class VirtualMachine:
         self.memSet(op3, temp1 or temp2)
         self.ip += 1
 
-    # funciones
+    # funciones - 4 horsemen of the apocalypse
     def era(self, op1, op2, op3):
-        # entrar a funcion
-        pass
-    
+        self.funcCallStack.append(op1)
+        self.ip += 1
+
     def param(self, op1, op2, op3):
         #asignar parametro a funcion
+        self.ip += 1
         pass
 
     def gosub(self, op1, op2, op3):
-        # ir a funcion en func dir
-        pass
+        # se guarda una copia de la memoria local y temporal
+        context = {
+            'mem': {'local': self.mem['local'].copy(), 'temp': self.mem['temp'].copy()},
+            'ip': self.ip + 1
+        }
+        self.contextStack.append(context)
+        func_id = self.funcCallStack.pop()
+        localSize = self.funcdir[func_id]['local']
+        tempSize = self.funcdir[func_id]['temp']
+        self.malloc('local', localSize)
+        self.malloc('temp', tempSize)
+        self.ip = self.funcdir[op1]['goto']
 
     def endfunc(self, op1, op2, op3):
         # cambiar de contexto al anterior
-        # si ya esta vacio el stack / se acaba main terminar ejecucion
-        pass
+        if len(self.contextStack) == 1:
+            self.running = False
+        else:
+            prevContext = self.contextStack.pop()
+            for key in TYPES:
+                self.mem['local'][key] = prevContext['mem']['local'][key]
+                self.mem['temp'][key] = prevContext['mem']['temp'][key]
+            self.ip = prevContext['ip']
+
     # otros
     def print(self, op1, op2, op3):
         print(self.memGet(op1))

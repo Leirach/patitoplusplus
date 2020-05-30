@@ -38,8 +38,7 @@ class FunctionManager:
         self.registerVariable(paramId, paramType)
         self.functionsDir[self.scope]['params'].append(paramType)
 
-    # TODO guardar tamaño de funcion
-    def endFunc(self, temps):
+    def endFunc(self):
         counters = self.memory.reset() # regresa tamaños local y temp de self.memory
         localMem = []
         tempMem = []
@@ -112,7 +111,7 @@ class FunctionManager:
                 buf = "%s %d\n" % (key, self.functionsDir[key]['goto'])
                 func.append(buf)
                 func.append('local ' + self.functionsDir[key]['local'] + '\n')
-                func.append('temp ' + self.functionsDir[key]['local'] + '\n')
+                func.append('temp ' + self.functionsDir[key]['temp'] + '\n')
         func.append('\n') # separar dir func de memoria global/const
         memObj = self.memory.createConstTable()
         return func + memObj

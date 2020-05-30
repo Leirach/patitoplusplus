@@ -162,7 +162,7 @@ def p_escribe(p):
 def p_print_multi(p):
     '''print_options : print_options COMMA printable
                      | printable'''
-    code.ioQuad('print')
+    code.ioQuad('PRINT')
 
 def p_printable_exp(p):
     'printable : megaexp'
@@ -181,7 +181,7 @@ def p_lee(p):
 def p_read_options(p):
     '''read_options : read_options COMMA id
                     | id'''
-    code.ioQuad('read')
+    code.ioQuad('READ')
 
 # -- Retorna --
 def p_retorna(p):

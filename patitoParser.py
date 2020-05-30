@@ -378,11 +378,23 @@ def p_error(p):
 # -- Crea el parser y loop para leer --
 parser = yacc.yacc()
 
-while True:
-    try:
-        s = input('test > ')
-        if s == '$':
-            sys.exit()
-    except EOFError:
-        break
-    parser.parse(s, debug=0)
+try:
+    filename = sys.argv[1]
+except IndexError:
+    print ('Uso: python patitoParser.py <patito.p>')
+
+if filename == 'debug':
+    while True:
+        try:
+            s = input('test > ')
+            if s == '$':
+                sys.exit()
+        except EOFError:
+            break
+        parser.parse(s, debug=0)
+
+f = open(filename, "r")
+source = f.read()
+parser.parse(source, debug=0)
+
+

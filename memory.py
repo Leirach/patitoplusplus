@@ -13,8 +13,6 @@ offsets = {
 
 class MemoryManager:
     def __init__(self):
-        self.constants = { }
-        self.temporals = { }
         self.memory = {
             'const': { },
             'temp': { }
@@ -67,7 +65,11 @@ class MemoryManager:
         return addr
 
     def reset(self):
-        self.temporals = { }
+        self.memory['temp'] = { }
+        ret = {
+            'local': self.counters['local'],
+            'temp': self.counters['temp']
+        }
         self.counters.update( 
             {'local': {
                 'int': 0,
@@ -82,9 +84,17 @@ class MemoryManager:
                 'bool': 0,
                 'ptr' : 0
             }})
+        return ret
 
     def createConstTable(self):
         mem = []
+        temp = []
+        temp2 = []
+        for key in self.counters['global']:
+            temp.append(str(self.counters['global'][key]))
+            temp2.append(str(self.counters['const'][key]))
+        mem.append('global ' + " ".join(temp) + '\n')
+        mem.append('const ' + " ".join(temp2) + '\n')
         for key in self.memory['const']:
             buf = "%s %s %s\n" %(self.memory['const'][key]['addr'], key, self.memory['const'][key]['type'])
             mem.append(buf)

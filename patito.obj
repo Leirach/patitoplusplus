@@ -1,2 +1,39 @@
-Goto main
+Goto principal
++ 30000 30001 20000
+print 20000 0 0
+ENDFUNC 0 0 0
+- 30002 30003 20000
+print 20000 0 0
+ENDFUNC 0 0 0
+ERA fact 0 0
++ 30004 30000 20000
++ 20000 30002 20001
++ 20001 30003 20002
+PARAM 20002 par1 0
+GOSUB fact 0 0
+ERA fact2 0 0
+* 30005 30006 20003
++ 20003 30001 20004
+PARAM 20004 par1 0
+GOSUB fact2 0 0
+ENDFUNC 0 0 0
 
+fact 2
+local 1 0 0 0
+temp 1 0 0 0
+fact2 5
+local 1 0 0 0
+temp 1 0 0 0
+principal 8
+local 0 0 0 0
+temp 0 0 0 0
+
+global 2 0 0 0
+const 7 0 0 0
+30000 1 int
+30001 2 int
+30002 4 int
+30003 5 int
+30004 12 int
+30005 20 int
+30006 7 int

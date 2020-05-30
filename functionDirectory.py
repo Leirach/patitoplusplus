@@ -16,11 +16,11 @@ class FunctionManager:
         self.memory = mem.MemoryManager()
 
     #add function to Directory
-    def registerFunc(self, functionName, functionType):
+    def registerFunc(self, functionName, functionType, line):
         if self.functionsDir.get(functionName) is not None:
             exception.fatalError("Función '%s' fue definida anteriormente." % (functionName))
         function = {
-            functionName : {'type': functionType, 'params': [], 'vars': {} },
+            functionName : {'type': functionType, 'params': [], 'vars': {}, 'goto': line },
         }
         self.functionsDir.update(function)
         self.scope = functionName
@@ -39,8 +39,16 @@ class FunctionManager:
         self.functionsDir[self.scope]['params'].append(paramType)
 
     # TODO guardar tamaño de funcion
-    def endFunc(self):
-        self.memory.reset()
+    def endFunc(self, temps):
+        counters = self.memory.reset() # regresa tamaños local y temp de self.memory
+        localMem = []
+        tempMem = []
+        for key in counters['local']:
+            localMem.append(str(counters['local'][key]))
+            tempMem.append(str(counters['temp'][key]))
+        localMem = " ".join(localMem)
+        tempMem = " ".join(tempMem)
+        self.functionsDir[self.scope].update({'local': localMem, 'temp': tempMem})
 
     #add function to Directory
     def registerVariable(self, varId, varType, dim1=None, dim2=None):
@@ -90,5 +98,21 @@ class FunctionManager:
         else: # para const y temp
             return self.memory.getAddress(value, tipo, scope)
 
+    # orre al terminar la compilacion
+    # contiene primero el directorio de funciones
+    # "func_id goto\n" - id y goto
+    # "local <int> <float> <bool> <char>" - tamaño de memoria local
+    # "temp <int> <float> <bool> <char>" - tamaño de memoria temporal
+    # memObj tiene el tamaño de global y const
+    # y despues la lista de memoria constante en formato "address value"
     def createConstTable(self):
-        return self.memory.createConstTable()
+        func = []
+        for key in self.functionsDir:
+            if key != 'global': # no hay nada que imprimir para global el tamaño esta en memObj
+                buf = "%s %d\n" % (key, self.functionsDir[key]['goto'])
+                func.append(buf)
+                func.append('local ' + self.functionsDir[key]['local'] + '\n')
+                func.append('temp ' + self.functionsDir[key]['local'] + '\n')
+        func.append('\n') # separar dir func de memoria global/const
+        memObj = self.memory.createConstTable()
+        return func + memObj

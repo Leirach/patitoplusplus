@@ -1,6 +1,5 @@
 
 import sys, getopt
-
 memEmpty = {
     'global': {
         'int': [],
@@ -38,6 +37,7 @@ class VirtualMachine:
         self.code.insert(0,"")          # code index starts at 1
         obj = obj[split+1:]
         self.mem = memEmpty
+        self.funcdir = {}
         self.reconstructMemory(obj)
         self.ip = 1                     # instruction pointer
         self.operations = {
@@ -62,8 +62,10 @@ class VirtualMachine:
             'ERA': self.era,
             'PARAM': self.param,
             'GOSUB': self.gosub,
+            'ENDFUNC': self.endfunc,
             # 'ver': self.verify,
             'print': self.print,
+            'read': self.read,
         }
         self.run()
 
@@ -97,8 +99,13 @@ class VirtualMachine:
             addr = addr - 6000
         return addr, scope, tipo
 
-    # Hacer estos para no usar diccionarios nacos
-    # update: sigo usando diccionarios nacos, pero con arreglos adentro
+    def malloc(self, scope, sizes):
+        types = ['int', 'float', 'char', 'bool']
+        for i in len(sizes):
+            if sizes[i] == 0:
+                sizes[i] = 1
+            self.mem[scope][types[i]] = [0] * sizes[i]
+
     def memSet(self, addr, value):
         addr = int(addr)
         addr, scope, tipo = self.offsetMemory(addr)
@@ -120,12 +127,32 @@ class VirtualMachine:
         return self.mem[scope][tipo][addr] # accesos => dicc dicc arreglo
 
     def reconstructMemory(self, obj): # los diccionarios son nacos
-        for line in obj:                
+        split = obj.index('')
+        funcs = obj[:split]
+        memory = obj[split+1:]
+        idx = 0
+        while idx < len(funcs):
+            identifier = funcs[idx].split()
+            local = funcs[idx+1].split()
+            local = list(map(int, local[1:]))
+            temp = funcs[idx+1].split()
+            temp = list(map(int, temp[1:]))
+            func = {
+                identifier[0] : {'goto': int(identifier[2]), 'local': local, 'temp': temp}
+            }
+            self.funcdir.update(func)
+
+        sizes = memory[0].split()
+        self.malloc('global', sizes[1:])
+        sizes = memory[1].split()
+        self.malloc('const', sizes[1:])
+        memory = memory[2:]
+        for line in memory:
             aux = line.split()
             self.memSet(int(aux[0]), aux[1])
 
     def run(self):
-        while self.code[self.ip] != 'ENDFUNC 0 0':
+        while self.code[self.ip] != 'ENDFUNC 0 0 0':
             line = self.code[self.ip].split()
             op = line[0]
             self.operations[op](line[1], line[2], line[3])
@@ -225,6 +252,10 @@ class VirtualMachine:
         # ir a funcion en func dir
         pass
 
+    def endfunc(self, op1, op2, op3):
+        # cambiar de contexto al anterior
+        # si ya esta vacio el stack / se acaba main terminar ejecucion
+        pass
     # otros
     def print(self, op1, op2, op3):
         print(self.memGet(op1))

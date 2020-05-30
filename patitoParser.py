@@ -229,7 +229,7 @@ def p_megaexp(p):
 def p_superexp(p):
     '''superexp : exp
                 | superexp logical_op exp'''
-    nextOp = code.peek(code.opStack) 
+    nextOp = code.peek(code.opStack)
     if (nextOp in ['<', '<=', '>', '>=', '!=', '==']):
         code.buildExp()
 

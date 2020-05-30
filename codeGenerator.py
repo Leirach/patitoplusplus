@@ -5,7 +5,7 @@ import exceptions
 class CodeGenerator:
     def __init__(self, filename="patito"):
         self.f = open(filename+".obj", "w")
-        self.code = ["Goto main\n"]
+        self.code = ["gosub principal\n"]
         self.line = 2
         # expresions
         self.opStack = []
@@ -181,19 +181,17 @@ class CodeGenerator:
         return self.funcDir.getVariable(p)['type']
 
     def registerFunc(self, functionName, functionType):
-        if functionName == 'principal':
-            self.code[0] = "goto %d 0 0\n" %(self.line)
-        self.funcDir.registerFunc(functionName, functionType)
+        self.funcDir.registerFunc(functionName, functionType, self.line)
 
     def registerFuncParams(self, paramId, paramType):
-        self.funcDir.registerFuncParams(paramId, paramType) 
+        self.funcDir.registerFuncParams(paramId, paramType)
 
     def endFunc(self):
         # calcular tamaño de todo, self.temp tiene el count
         self.temp = 1 # reset temp counter
-        self.code.append("ENDFUNC\n")
+        self.code.append("ENDFUNC 0 0 0\n")
         self.line += 1
-        self.funcDir.endFunc()
+        self.funcDir.endFunc(self.temp)
 
     # -- LLAMADAS DE FUNCIONES --
     def funcCallStart(self, func_id):

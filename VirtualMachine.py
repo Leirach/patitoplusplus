@@ -156,7 +156,7 @@ class VirtualMachine:
         elif tipo == 'float':
             value = float(value)
         elif tipo == 'bool':
-            value = value == 'true'
+            value = bool(value)
         # por si no hay espacio en el arreglo
         if len(self.mem[scope][tipo]) <= addr:
             self.mem[scope][tipo].insert(addr, value)
@@ -218,6 +218,7 @@ class VirtualMachine:
         temp1 = self.memGet(op1)
         temp2 = self.memGet(op2)
         self.memSet(op3, temp1 > temp2)
+        print(self.memGet(op3))
         self.ip += 1
     def gte(self, op1, op2, op3):
         temp1 = self.memGet(op1)

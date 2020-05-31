@@ -96,6 +96,9 @@ class MemoryManager:
         mem.append('global ' + " ".join(temp) + '\n')
         mem.append('const ' + " ".join(temp2) + '\n')
         for key in self.memory['const']:
-            buf = "%s %s %s\n" %(self.memory['const'][key]['addr'], key, self.memory['const'][key]['type'])
+            val = key
+            if self.memory['const'][key]['type'] == 'bool':
+                val = 1 if key == 'true' else 0
+            buf = "%s %s\n" %(self.memory['const'][key]['addr'], val)
             mem.append(buf)
         return mem

@@ -5,7 +5,12 @@ funcion int fact(int j) {
 }
 
 funcion int fact2(int a) {
-    quackout(a + 4-5);
+    si (true) entonces {
+        quackout(15);
+    }
+    sino {
+        quackout(a + 4-5);
+    }
 }
 
 principal() {

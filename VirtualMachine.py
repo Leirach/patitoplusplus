@@ -31,17 +31,10 @@ memEmpty = {
 
 class VirtualMachine:
     def __init__(self, file):
-        f = open(file, "r")
-        obj = f.read().splitlines()
-        split = obj.index('')
-        self.code = obj[:split]         # guardar cuadruplos
-        self.code.insert(0,"")          # code index starts at 1
-        obj = obj[split+1:]
         self.mem = memEmpty
         self.contextStack = []
-        self.funcCallStack = ['principal']
+        self.arStack = [{'func_id': 'principal', 'params': []}] # Activation Record Stack
         self.funcdir = {}
-        self.reconstructMemory(obj)
         self.ip = 1                     # instruction pointer
         self.operations = {
             'GOTO' :self.goto,
@@ -70,9 +63,55 @@ class VirtualMachine:
             'PRINT': self.print,
             'READ': self.read,
         }
+        self.readCode(file)
         self.running = True
         self.run()
 
+    # -- LECTURA DE CODIGO FUENTE --
+    def readCode(self, file):
+        f = open(file, "r")
+        obj = f.read().splitlines()     # pasa el codigo a un arreglo de lineas
+        div = obj.index('')             # primera division entre -> codigo / funcs mem
+        self.code = obj[:div]           # guardar cuadruplos
+        self.code.insert(0,"")          # para gotos, indice 1
+        obj = obj[div+1:]               # quitar cuadruplos
+        div = obj.index('')             # dividir otra vez -> funcs / mem
+        funcs = obj[:div]
+        self.reconstructFunctions(funcs) # reconstruir funciones
+        mem = obj[div+1:]
+        self.reconstructMemory(mem)      # reconstruir memoria
+    
+    def reconstructFunctions(self, funcs):
+        while len(funcs) > 0:
+            signature = funcs.pop(0).split() # [id, goto, paramCount]
+            params = []
+            for _i in range(0, int(signature[2])):
+                par = funcs.pop(0).split()
+                params.append(int(par[1]))
+            local = funcs.pop(0).split()
+            temp = funcs.pop(0).split()
+            func = {
+                signature[0] : {
+                    'goto': int(signature[1]),          # goto line
+                    'local': local[1:],                 # local mem sizes
+                    'temp': temp[1:],                   # temp mem sizes
+                    'paramCount': int(signature[2]),    # param count
+                    'params': params,                   # param address list
+                }
+            }
+            self.funcdir.update(func)
+
+    def reconstructMemory(self, memory): # los diccionarios son nacos
+        sizes = memory[0].split()
+        self.malloc('global', sizes[1:])
+        sizes = memory[1].split()
+        self.malloc('const', sizes[1:])
+        memory = memory[2:]
+        for line in memory:
+            aux = line.split()
+            self.memSet(int(aux[0]), aux[1])
+
+    # -- MANEJO DE MEMORIA --
     def offsetMemory(self, addr):
         # offset de scope
         scope = tipo = ''
@@ -129,30 +168,7 @@ class VirtualMachine:
         addr, scope, tipo = self.offsetMemory(addr)
         return self.mem[scope][tipo][addr] # accesos => dicc dicc arreglo
 
-    def reconstructMemory(self, obj): # los diccionarios son nacos
-        split = obj.index('')
-        funcs = obj[:split]
-        memory = obj[split+1:]
-        idx = 0
-        while idx < len(funcs):
-            identifier = funcs[idx].split()
-            local = funcs[idx+1].split()
-            temp = funcs[idx+2].split()
-            func = {
-                identifier[0] : {'goto': int(identifier[1]), 'local': local[1:], 'temp': temp[1:]}
-            }
-            self.funcdir.update(func)
-            idx += 3
-
-        sizes = memory[0].split()
-        self.malloc('global', sizes[1:])
-        sizes = memory[1].split()
-        self.malloc('const', sizes[1:])
-        memory = memory[2:]
-        for line in memory:
-            aux = line.split()
-            self.memSet(int(aux[0]), aux[1])
-
+    # -- EJECUCION --
     def run(self):
         while self.running:
             line = self.code[self.ip].split()
@@ -160,7 +176,7 @@ class VirtualMachine:
             self.operations[op](line[1], line[2], line[3])
         return 0
 
-    # operaciones en ejecucion
+    # gotos
     def goto(self, op1, op2, op3):
         self.ip = int(op1)
 
@@ -243,11 +259,13 @@ class VirtualMachine:
 
     # funciones - 4 horsemen of the apocalypse
     def era(self, op1, op2, op3):
-        self.funcCallStack.append(op1)
+        self.arStack.append({'func_id': op1, 'params': []})
         self.ip += 1
 
     def param(self, op1, op2, op3):
-        #asignar parametro a funcion
+        activationRecord = self.arStack[-1]             # apuntador a ultimo llamada de funcion
+        param_value = self.memGet(op1)
+        activationRecord['params'].append(param_value)
         self.ip += 1
         pass
 
@@ -258,11 +276,14 @@ class VirtualMachine:
             'ip': self.ip + 1
         }
         self.contextStack.append(context)
-        func_id = self.funcCallStack.pop()
-        localSize = self.funcdir[func_id]['local']
-        tempSize = self.funcdir[func_id]['temp']
-        self.malloc('local', localSize)
-        self.malloc('temp', tempSize)
+        activationRecord = self.arStack.pop()
+        func = self.funcdir[ activationRecord['func_id'] ] # entrada en dir de func
+        self.malloc('local', func['local'])
+        self.malloc('temp', func['temp'])
+        for i in range(0, func['paramCount']):
+            addr = func['params'][i]
+            val = activationRecord['params'][i]
+            self.memSet(addr, val)
         self.ip = self.funcdir[op1]['goto']
 
     def endfunc(self, op1, op2, op3):

@@ -205,7 +205,7 @@ class CodeGenerator:
         self.funcDir.validateParam(calledFunc, self.paramCounter, paramType)
         self.paramCounter += 1 # param counting starts at 0
         paramAddr = self.funcDir.getAddress(param, paramType, paramMemScope)
-        aux = 'par'+str(self.paramCounter)
+        aux = 'PAR'+str(self.paramCounter)
         self.writeQuad('PARAM', paramAddr, aux, '0')
 
     def funcCallEnd(self):

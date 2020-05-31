@@ -20,7 +20,7 @@ class FunctionManager:
         if self.functionsDir.get(functionName) is not None:
             exception.fatalError("Función '%s' fue definida anteriormente." % (functionName))
         function = {
-            functionName : {'type': functionType, 'params': [], 'vars': {}, 'goto': line },
+            functionName : {'type': functionType, 'params': [], 'vars': {}, 'goto': line, 'paramAddr': [] },
         }
         self.functionsDir.update(function)
         self.scope = functionName
@@ -35,8 +35,9 @@ class FunctionManager:
 
     #add function to Directory
     def registerFuncParams(self, paramId, paramType):
-        self.registerVariable(paramId, paramType)
+        addr = self.registerVariable(paramId, paramType)
         self.functionsDir[self.scope]['params'].append(paramType)
+        self.functionsDir[self.scope]['paramAddr'].append(addr)
 
     def endFunc(self):
         counters = self.memory.reset() # regresa tamaños local y temp de self.memory
@@ -62,7 +63,7 @@ class FunctionManager:
         memoryScope = "local" if self.scope != "global" else "global"
         address = self.memory.assignAddress(memoryScope, varType, dim1, dim2)
         self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address, 'dim1': dim1, 'dim2':dim2} })
-        return True
+        return address
 
     def getVariable(self, varId):
         var = self.functionsDir[self.scope]['vars'].get(varId)
@@ -108,8 +109,12 @@ class FunctionManager:
         func = []
         for key in self.functionsDir:
             if key != 'global': # no hay nada que imprimir para global el tamaño esta en memObj
-                buf = "%s %d\n" % (key, self.functionsDir[key]['goto'])
+                parCount = len(self.functionsDir[key]['paramAddr'])
+                buf = "%s %d %d\n" % (key, self.functionsDir[key]['goto'], parCount)
                 func.append(buf)
+                for i in range(0, parCount):
+                    buf = "PAR%d %d\n" % (i+1, self.functionsDir[key]['paramAddr'][i])
+                    func.append(buf)
                 func.append('local ' + self.functionsDir[key]['local'] + '\n')
                 func.append('temp ' + self.functionsDir[key]['temp'] + '\n')
         func.append('\n') # separar dir func de memoria global/const

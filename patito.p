@@ -1,11 +1,11 @@
 programa patito;
 
 funcion int fact(int j) {
-    quackout(1+2);
+    quackout(j - 1+2);
 }
 
 funcion int fact2(int a) {
-    quackout(4-5);
+    quackout(a + 4-5);
 }
 
 principal() {

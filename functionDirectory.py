@@ -74,6 +74,12 @@ class FunctionManager:
             return var
         exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
 
+    def getReturnVariable(self, func_id):
+        func = self.functionsDir[func_id]
+        if func['type'] == 'void':
+            exception.fatalError("Funcion '%s' no tiene un tipo de retorno valido en expresión." % (func_id))
+        return self.getVariable('&' + func_id)
+
     # func: functionName, paramNum: Number, type: Type sent
     # se asume que ya se valido que la funcion existe
     def validateParam(self, func, paramNum, paramType):

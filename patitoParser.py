@@ -3,10 +3,10 @@
 import patitoLexer
 import codeGenerator as cg
 import ply.yacc as yacc
+import exceptions
 import sys
 
 tokens = patitoLexer.tokens
-code = cg.CodeGenerator()
 
 EMPTY = '$'
 
@@ -32,6 +32,8 @@ def p_vars(p):
 
 def p_first_var(p):
     '''first_var : tipo ID dimensions'''
+    # p[3][0] dimension1
+    # p[3][1] dimension2
     code.registerVariable(p[2], p[1], p[3][0], p[3][1])
 
 def p_more_vars(p):
@@ -104,9 +106,9 @@ def p_estatutos_rec(p):
                      | empty''' 
 
 def p_estatuto(p):
-    '''estatuto : asignacion 
+    '''estatuto : asignacion SEMICOLON
                 | condicion 
-                | func_void
+                | func_call SEMICOLON
                 | retorna
                 | escribe
                 | lee 
@@ -115,7 +117,7 @@ def p_estatuto(p):
 
 # -- Asignacion --
 def p_asignacion(p):
-    "asignacion : id ASSIGN megaexp SEMICOLON"
+    "asignacion : id ASSIGN megaexp"
     code.buildAssign()
 
 # -- Condicion --
@@ -139,12 +141,14 @@ def p_condicion_sino(p):
     code.ifElse()
 
 # -- Funcion void --
-def p_func_void(p):
-    'func_void : func_call_id OPENPAR func_call_params CLOSEPAR SEMICOLON'
+def p_func_call(p):
+    'func_call : func_call_id openpar func_call_params closepar'
+    p[0] = p[1]         # para retorno en una expresion
     code.funcCallEnd()
 
 def p_func_call_id(p):
     'func_call_id : ID'
+    p[0] = p[1]
     code.funcCallStart(p[1])
 
 def p_func_call_params(p):
@@ -169,7 +173,6 @@ def p_printable_exp(p):
 def p_printable(p):
     'printable : CTES'
     p[0] = p[1]
-    print(p[1])
     code.idStack.append(p[1])
     code.tpStack.append('char')
     code.memStack.append('const')
@@ -291,6 +294,10 @@ def p_id_dimensions_two(p):
     p[0] = p[1]
     code.accessArray(p[1], 'dim2')
 
+def p_vcte_func_call(p):
+    'vcte : func_call'
+    code.funcCallReturn(p[1])
+
 def p_vcte_CTEI(p):
     'vcte : CTEI'
     p[0] = p[1]
@@ -380,21 +387,27 @@ parser = yacc.yacc()
 
 try:
     filename = sys.argv[1]
+    if filename == 'debug':
+        while True:
+            try:
+                s = input('test > ')
+                if s == '$':
+                    sys.exit()
+            except EOFError:
+                break
+            parser.parse(s, debug=0)
 except IndexError:
-    print ('Uso: python patitoParser.py <patito.p>')
+    print('Uso: python patitoParser.py <patito.p>')
+    sys.exit()
 
-if filename == 'debug':
-    while True:
-        try:
-            s = input('test > ')
-            if s == '$':
-                sys.exit()
-        except EOFError:
-            break
-        parser.parse(s, debug=0)
+try:
+    f = open(filename, "r")
+except FileNotFoundError:
+    print("No se encontró el archivo %s" % (filename))
+    sys.exit()
 
-f = open(filename, "r")
 source = f.read()
+filename = filename.split('.')[0]
+code = cg.CodeGenerator(filename)
 parser.parse(source, debug=0)
-
-
+code.saveObj()

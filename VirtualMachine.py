@@ -1,4 +1,3 @@
-
 import sys, getopt
 TYPES = ['int', 'float', 'char', 'bool'] # para iterar diccionarios
 memEmpty = {
@@ -157,11 +156,7 @@ class VirtualMachine:
             value = float(value)
         elif tipo == 'bool':
             value = bool(value)
-        # por si no hay espacio en el arreglo
-        if len(self.mem[scope][tipo]) <= addr:
-            self.mem[scope][tipo].insert(addr, value)
-        else:
-            self.mem[scope][tipo][addr] = value
+        self.mem[scope][tipo][addr] = value
 
     def memGet(self, addr):
         addr = int(addr)
@@ -268,7 +263,6 @@ class VirtualMachine:
         param_value = self.memGet(op1)
         activationRecord['params'].append(param_value)
         self.ip += 1
-        pass
 
     def gosub(self, op1, op2, op3):
         # se guarda una copia de la memoria local y temporal

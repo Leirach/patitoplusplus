@@ -4,7 +4,7 @@ import exceptions
 
 class CodeGenerator:
     def __init__(self, filename="patito"):
-        self.f = open(filename+".obj", "w")
+        self.filename = filename
         self.code = ["GOSUB principal 0 0\n"]
         self.line = 2
         # expresions
@@ -21,7 +21,8 @@ class CodeGenerator:
         # Memory
         self.memStack = []
 
-    def __del__(self):
+    def saveObj(self):
+        self.f = open(self.filename+".obj", "w")
         mem = self.funcDir.createConstTable()
         for line in self.code:
             self.f.write(line)
@@ -71,7 +72,6 @@ class CodeGenerator:
     # TODO incompleto
     def buildUnaryExp(self):
         op = self.opStack.pop()
-        # 
         if op == '-': # no estoy seguro si esto funciona
             self.opStack.append('*')
             self.idStack.append('-1')
@@ -212,13 +212,22 @@ class CodeGenerator:
         func_id = self.idStack.pop()
         self.writeQuad('GOSUB', func_id, '0', '0')
         self.paramCounter = 0 # reset param counter
-        # funcDir.validateFunctionSemantics(func_id)
+
+    def funcCallReturn(self, func_id):
+        retVar = self.funcDir.getReturnVariable(func_id)
+        temp = "t"+str(self.temp)
+        self.temp += 1
+        tempAddr = self.funcDir.getAddress(temp, retVar['type'], 'temp')
+        self.writeQuad('=', retVar['address'], '0', tempAddr)
+        self.idStack.append(temp)
+        self.tpStack.append(retVar['type'])
+        self.memStack.append('temp')
 
     # -- ARRAYS --
     def accessArray(self, arrId, dimKey):
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
         idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
-        if idxType != 'int':                  #TODO no estoy seguro si float tambien
+        if idxType != 'int':                  # TODO no estoy seguro si float tambien
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
         arrVar = self.funcDir.getVariable(arrId)
         # verificacion de limites

@@ -7,7 +7,8 @@ tokens = [
     'GTE', 'LTE', 'NEQ', 'EQ', 'GT', 'LT', 'AND', 'OR',
     'LCURLYB', 'RCURLYB', 'OPENPAR', 'CLOSEPAR', 'OPENBRAC', 'CLOSEBRAC',
     'ID', 'CTEI', 'CTEF', 'CTES', 'CTEC',
-    'DETERM', 'TRANSPOSE', 'INVERSE'
+    'DETERM', 'TRANSPOSE', 'INVERSE',
+    'COMMENT'
 ]
 
 # Reserved 
@@ -78,8 +79,8 @@ def t_CTEC(t):
     return t
     
 def t_CTES(t):
-    r'"([^"\n]|(\\"))*"$'
-    print(t.value)
+    r'"([^"\n]|(\\"))*"'
+    t.value = t.value[1:-1]
     return t
 
 def t_ID(t):
@@ -88,9 +89,12 @@ def t_ID(t):
         t.type = reserved.get(t.value, 'ID')
     return t
 
- 
+def t_COMMENT(t):
+    r'\%%.*'
+    pass
+
 # Ignored characters
-t_ignore = " \t\n"
+t_ignore = " \t"
 
 def t_newline(t):
     r'\n+'

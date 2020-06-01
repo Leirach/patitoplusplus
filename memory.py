@@ -49,7 +49,7 @@ class MemoryManager:
         size = 0
         if dim1 is not None:
             size = dim1
-        if dim2 is not None:
+        if dim2 is not None: # siempre que hay dim2 hay dim1
             size *= dim2
         size += 1
         addr = offsets[scope] + offsets[tipo] + self.counters[scope][tipo]

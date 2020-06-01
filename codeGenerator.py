@@ -13,6 +13,7 @@ class CodeGenerator:
         self.tpStack = []
         self.memStack = []
         self.dimStack = []
+        self.arrStack = []
         # functions and variables
         self.funcDir = fm.FunctionManager()
         self.gotoStack = []
@@ -165,7 +166,7 @@ class CodeGenerator:
         incAddr = self.forIds.pop()
         # la maquina virtual puede hacer incrementos aunque en teoria se deberia 
         # usar un temporal para esta suma
-        self.writeQuad('+', incAddr, 1, incAddr)
+        self.writeQuad('++', incAddr, '0', '0')
         pendingIdx = self.gotoStack.pop() - 1
         retLine = self.gotoStack.pop()
         self.writeQuad('GOTO', str(retLine), '0', '0')
@@ -245,7 +246,7 @@ class CodeGenerator:
                 exceptions.fatalError("Variable '%s' no es un arreglo de dos dimensiones" % (arrId))
         limitAddr = self.funcDir.getAddress(limit, 'int', 'const')
         zeroAddr = self.funcDir.getAddress(0, 'int', 'const')
-        self.writeQuad('ver', idxAddr, zeroAddr, limitAddr) # checar si esta en rango
+        self.writeQuad('VER', idxAddr, zeroAddr, limitAddr) # checar si esta en rango
         if dim == 1 and arrVar['dim2'] is not None:
             dim2Addr = self.funcDir.getAddress(arrVar['dim2'], 'int', 'const')
             self.writeQuad('*', idxAddr, dim2Addr, idxAddr) # multiplicar offset de dim1 si hay 2 dimensiones
@@ -262,7 +263,7 @@ class CodeGenerator:
     def offsetVariable(self):
         dims = self.dimStack.pop()
         if dims == 0: # no hacer nada si no es variable dimensionada
-            pass
+            return
         if dims == 2:   # sumar los ultimos 2 temps para el offset total
             self.opStack.append('+')
             self.buildExp()
@@ -270,13 +271,12 @@ class CodeGenerator:
         offset, offType, offMem = self.popVar() # [exp] o [idx]+[idx2] = offset
         offsetAddr = self.funcDir.getAddress(offset, offType, offMem)
         arr, arrType, arrMem = self.popVar()
-        arrAddr = self.funcDir.getAddress(arr, arrType, arrMem)
-        addrAsConstant = self.funcDir.getAddress(arrAddr, 'int', 'const')
+        baseAddr = self.funcDir.getAddress(arr, arrType, arrMem)
         # suma en un pointer temporal
         ptr = "pt"+str(self.temp)
         ptrAddr = self.funcDir.getAddress(ptr, 'ptr', 'temp')
         self.temp += 1
-        self.writeQuad('+', addrAsConstant, offsetAddr, ptrAddr) # sumar y poner en pointer
+        self.writeQuad('+ADDR', baseAddr, offsetAddr, ptrAddr) # sumar y poner en pointer
         # append pointer, tipo de dato es el mismo que el arreglo (para semantica), no debe ser 'ptr'
         self.idStack.append(ptr)
         self.tpStack.append(arrType)

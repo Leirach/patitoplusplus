@@ -43,7 +43,7 @@ class FunctionManager:
         counters = self.memory.reset() # regresa tamaños local y temp de self.memory
         localMem = []
         tempMem = []
-        for key in counters['local']:
+        for key in mem.TYPES:
             localMem.append(str(counters['local'][key]))
             tempMem.append(str(counters['temp'][key]))
         localMem = " ".join(localMem)

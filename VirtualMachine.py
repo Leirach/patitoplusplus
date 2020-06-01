@@ -1,17 +1,19 @@
-import sys, getopt
-TYPES = ['int', 'float', 'char', 'bool'] # para iterar diccionarios
+import sys, copy
+TYPES = ['int', 'float', 'char', 'bool', 'ptr'] # para iterar diccionarios
 memEmpty = {
     'global': {
         'int': [],
         'float': [],
         'char': [],
-        'bool': []
+        'bool': [],
+        'ptr': []
     },
     'local': {
         'int': [],
         'float': [],
         'char': [],
         'bool': [],
+        'ptr': []
     },
     'temp': {
         'int': [],
@@ -24,7 +26,8 @@ memEmpty = {
         'int': [],
         'float': [],
         'char': [],
-        'bool': []
+        'bool': [],
+        'ptr': []
     }
 }
 
@@ -51,6 +54,7 @@ class VirtualMachine:
             '==': self.eq,
             '&': self.op_and,
             '|': self.op_or,
+            '++': self.increment,
             # '$': self.determ,
             # '!': self.transpose,
             # '^': self.inverse,
@@ -58,7 +62,8 @@ class VirtualMachine:
             'PARAM': self.param,
             'GOSUB': self.gosub,
             'ENDFUNC': self.endfunc,
-            # 'ver': self.verify,
+            'VER': self.verify,
+            '+ADDR': self.sumAddress,
             'PRINT': self.print,
             'READ': self.read,
         }
@@ -119,26 +124,29 @@ class VirtualMachine:
             addr -= 1 # la primer direccion global esta en 1, para no confundir con el padding de 0's
         elif addr < 20000:
             scope = 'local'
-            addr = addr - 10000
+            addr -= 10000
         elif addr < 30000:
             scope = 'temp'
-            addr = addr - 20000
+            addr -= 20000
         else:
             scope = 'const'
-            addr = addr - 30000
+            addr -= 30000
         # offset de tipo
         if addr < 2000:         # int
             tipo = 'int'
             # addr no cambia
         elif addr < 4000:       # float
             tipo = 'float'
-            addr = addr - 2000
+            addr -= 2000
         elif addr < 6000:       # bool
             tipo = 'bool'
-            addr = addr - 4000
-        else:                   # char
+            addr -= 4000
+        elif addr < 8000:       # char
             tipo = 'char'
-            addr = addr - 6000
+            addr -= 6000
+        else:                    # pointer
+            tipo = 'ptr'
+            addr -= 8000
         return addr, scope, tipo
 
     def malloc(self, scope, sizes):
@@ -147,21 +155,38 @@ class VirtualMachine:
             if sizes[i] > 0:
                 self.mem[scope][TYPES[i]] = [0] * sizes[i]
 
+    # escribe en la direccion de memoria si no es pointer,
+    # si es apuntador, trae la direccion que guarda el apuntador y lo escribe ahi
     def memSet(self, addr, value):
         addr = int(addr)
-        addr, scope, tipo = self.offsetMemory(addr)
+        idx, scope, tipo = self.offsetMemory(addr)
         if tipo == 'int':
             value = int(value)
         elif tipo == 'float':
             value = float(value)
         elif tipo == 'bool':
             value = bool(value)
-        self.mem[scope][tipo][addr] = value
+        if tipo == 'ptr':   # si es apuntador se vuelve a hacer el offset
+            newAddr = self.mem[scope][tipo][idx] # obtienes la direccion dentro de la direccion
+            # print("received pointer, new address is", newAddr)
+            idx, scope, tipo = self.offsetMemory(newAddr) # ahora si estos datos son los buenos
+        self.mem[scope][tipo][idx] = copy.copy(value)
+        # print("wrote %s to %s" %(value, addr))
 
     def memGet(self, addr):
         addr = int(addr)
-        addr, scope, tipo = self.offsetMemory(addr)
-        return self.mem[scope][tipo][addr] # accesos => dicc dicc arreglo
+        idx, scope, tipo = self.offsetMemory(addr)
+        if tipo == 'ptr':
+            newAddr = self.mem[scope][tipo][idx] # obtienes la direccion dentro de la direccion
+            # print("received pointer, new address is", newAddr)
+            idx, scope, tipo = self.offsetMemory(newAddr) # ahora si estos datos son los buenos
+        return self.mem[scope][tipo][idx] # accesos => dicc dicc arreglo
+
+    # escribe directamente en esa direccion de memoria
+    def ptrSet(self, addr, value):
+        addr = int(addr)
+        idx, scope, tipo = self.offsetMemory(addr)
+        self.mem[scope][tipo][idx] = value
 
     # -- EJECUCION --
     def run(self):
@@ -183,6 +208,7 @@ class VirtualMachine:
 
     def assign(self, op1, op2, op3):
         temp = self.memGet(op1)
+        # print("assigning %s to address %s" % (temp, op3))
         self.memSet(op3, temp)
         self.ip += 1
 
@@ -213,7 +239,6 @@ class VirtualMachine:
         temp1 = self.memGet(op1)
         temp2 = self.memGet(op2)
         self.memSet(op3, temp1 > temp2)
-        print(self.memGet(op3))
         self.ip += 1
     def gte(self, op1, op2, op3):
         temp1 = self.memGet(op1)
@@ -242,15 +267,20 @@ class VirtualMachine:
         self.ip += 1
 
     # logicos booleanos
-    def op_and (self, op1, op2, op3):
+    def op_and(self, op1, op2, op3):
         temp1 = self.memGet(op1)
         temp2 = self.memGet(op2)
         self.memSet(op3, temp1 and temp2)
         self.ip += 1
-    def op_or (self, op1, op2, op3):
+    def op_or(self, op1, op2, op3):
         temp1 = self.memGet(op1)
         temp2 = self.memGet(op2)
         self.memSet(op3, temp1 or temp2)
+        self.ip += 1
+
+    def increment(self, op1, op2, op3):
+        temp = self.memGet(op1)
+        self.memSet(op1, temp + 1)
         self.ip += 1
 
     # funciones - 4 horsemen of the apocalypse
@@ -291,6 +321,22 @@ class VirtualMachine:
                 self.mem['local'][key] = prevContext['mem']['local'][key]
                 self.mem['temp'][key] = prevContext['mem']['temp'][key]
             self.ip = prevContext['ip']
+
+    def verify(self, op1, op2, op3):
+        idx = self.memGet(op1)
+        limInf = self.memGet(op2)
+        limSup = self.memGet(op3)
+        if (idx < limInf or idx >= limSup):
+            print("Indice fuera de rango.")
+            sys.exit()
+        self.ip += 1
+    
+    def sumAddress(self, op1, op2, op3):
+        baseAddr = int(op1) # this is already an address
+        offset = self.memGet(op2) # temporal
+        # print("setting pointer %s to: %d" % (op3, baseAddr + offset))
+        self.ptrSet(op3, baseAddr + offset)
+        self.ip += 1
 
     # otros
     def print(self, op1, op2, op3):

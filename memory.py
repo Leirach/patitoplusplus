@@ -11,6 +11,8 @@ offsets = {
     'ptr' : 8000
 }
 
+TYPES = ['int', 'float', 'char', 'bool', 'ptr'] # para iterar diccionarios
+
 class MemoryManager:
     def __init__(self):
         self.memory = {
@@ -22,13 +24,15 @@ class MemoryManager:
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
+                'ptr': 0
             },
             'local': {
                 'int': 0,
                 'float': 0,
                 'char': 0,
                 'bool': 0,
+                'ptr': 0
             },
             'temp': {
                 'int': 0,
@@ -41,7 +45,8 @@ class MemoryManager:
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
+                'ptr': 0
             },
         }
 
@@ -67,15 +72,16 @@ class MemoryManager:
     def reset(self):
         self.memory['temp'] = { }
         ret = {
-            'local': self.counters['local'],
-            'temp': self.counters['temp']
+            'local': self.counters['local'].copy(),
+            'temp': self.counters['temp'].copy()
         }
         self.counters.update( 
             {'local': {
                 'int': 0,
                 'float': 0,
                 'char': 0,
-                'bool': 0
+                'bool': 0,
+                'ptr': 0
             },
             'temp': {
                 'int': 0,
@@ -90,7 +96,7 @@ class MemoryManager:
         mem = []
         temp = []
         temp2 = []
-        for key in self.counters['global']:
+        for key in TYPES:
             temp.append(str(self.counters['global'][key]))
             temp2.append(str(self.counters['const'][key]))
         mem.append('global ' + " ".join(temp) + '\n')

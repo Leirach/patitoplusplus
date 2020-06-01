@@ -72,7 +72,7 @@ class FunctionManager:
         var = self.functionsDir['global']['vars'].get(varId)
         if var is not None:
             return var
-        exception.fatalError("Variable '%s' no ha sido declarada" % (varId))
+        exception.fatalError("Variable '%s' no ha sido declarada en '%s'." % (varId, self.scope))
 
     def getReturnVariable(self, func_id):
         func = self.functionsDir[func_id]

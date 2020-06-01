@@ -275,24 +275,31 @@ def p_vcte_ID(p):
 
 # ID o acceso a arreglo
 def p_id(p):
-    'id : ID'
+    '''id : variable
+          | variable dimensions_offset
+          | variable dimensions_offset dimensions_offset'''
+    code.offsetVariable()
+
+def p_variable(p):
+    'variable : ID'
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
     code.memStack.append('var')
+    code.dimStack.append(0)
 
-# falta poner breaks en operaciones 
-# o sea, openbrac, en vez de OPENBRAC, como regla que haga push a opstack('[')
-# y closebrac que haga pop
 def p_id_dimensions_one(p):
-    'id : ID OPENBRAC exp CLOSEBRAC'
-    p[0] = p[1]
-    code.accessArray(p[1], 'dim1')
+    'dimensions_offset : openbrac exp closebrac'
+    code.accessArray()
 
-def p_id_dimensions_two(p):
-    'id : ID OPENBRAC exp CLOSEBRAC OPENBRAC exp CLOSEBRAC'
-    p[0] = p[1]
-    code.accessArray(p[1], 'dim2')
+# fondo falso para arreglos
+def p_openbrac(p):
+    'openbrac : OPENBRAC'
+    code.opStack.append(p[1])
+
+def p_closebrac(p):
+    'closebrac : CLOSEBRAC'
+    code.opStack.pop()
 
 def p_vcte_func_call(p):
     'vcte : func_call'

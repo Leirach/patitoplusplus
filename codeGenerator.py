@@ -11,6 +11,8 @@ class CodeGenerator:
         self.opStack = []
         self.idStack = []
         self.tpStack = []
+        self.memStack = []
+        self.dimStack = []
         # functions and variables
         self.funcDir = fm.FunctionManager()
         self.gotoStack = []
@@ -18,8 +20,6 @@ class CodeGenerator:
         self.paramCounter = 0
         self.forIds = []
         self.temp = 1
-        # Memory
-        self.memStack = []
 
     def saveObj(self):
         self.f = open(self.filename+".obj", "w")
@@ -224,37 +224,70 @@ class CodeGenerator:
         self.memStack.append('temp')
 
     # -- ARRAYS --
-    def accessArray(self, arrId, dimKey):
+    def accessArray(self):
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
-        idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
-        if idxType != 'int':                  # TODO no estoy seguro si float tambien
+        if idxType != 'int':
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
+        idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
+        arrId = self.peek(self.idStack) # variable presuntamente dimensionada
         arrVar = self.funcDir.getVariable(arrId)
         # verificacion de limites
-        limit = arrVar[dimKey] - 1
+        dim = self.dimStack.pop() + 1
+        if dim == 1:
+            dimKey = 'dim1'
+            limit = arrVar[dimKey]
+            if limit is None:
+                exceptions.fatalError("Variable '%s' no es un arreglo dimensionado" % (arrId))
+        else:
+            dimKey = 'dim2'
+            limit = arrVar[dimKey]
+            if limit is None:
+                exceptions.fatalError("Variable '%s' no es un arreglo de dos dimensiones" % (arrId))
         limitAddr = self.funcDir.getAddress(limit, 'int', 'const')
         zeroAddr = self.funcDir.getAddress(0, 'int', 'const')
         self.writeQuad('ver', idxAddr, zeroAddr, limitAddr) # checar si esta en rango
-        # direccion base del arreglo como constante
-        arrAddr = arrVar['address']
-        baseAddr = self.funcDir.getAddress(arrAddr, 'int', 'const')
+        if dim == 1 and arrVar['dim2'] is not None:
+            dim2Addr = self.funcDir.getAddress(arrVar['dim2'], 'int', 'const')
+            self.writeQuad('*', idxAddr, dim2Addr, idxAddr) # multiplicar offset de dim1 si hay 2 dimensiones
+        # vuelve a meter al stack
+        self.idStack.append(idx)
+        self.tpStack.append(idxType)
+        self.memStack.append(idxMem)
+        self.dimStack.append(dim)
+
+    # [idx1][idx2] son las ultimas 2 temps calculadas con accessArray, 
+    # se deberian sumar y meter en la pila el resultado, el ultimo temporal es 
+    # el offset total de la variable.
+    # si solo hay una dimension popVar() ya es el offset total
+    def offsetVariable(self):
+        dims = self.dimStack.pop()
+        if dims == 0: # no hacer nada si no es variable dimensionada
+            pass
+        if dims == 2:   # sumar los ultimos 2 temps para el offset total
+            self.opStack.append('+')
+            self.buildExp()
+        # sumar el offset a la direccion base
+        offset, offType, offMem = self.popVar() # [exp] o [idx]+[idx2] = offset
+        offsetAddr = self.funcDir.getAddress(offset, offType, offMem)
+        arr, arrType, arrMem = self.popVar()
+        arrAddr = self.funcDir.getAddress(arr, arrType, arrMem)
+        addrAsConstant = self.funcDir.getAddress(arrAddr, 'int', 'const')
         # suma en un pointer temporal
         ptr = "pt"+str(self.temp)
         ptrAddr = self.funcDir.getAddress(ptr, 'ptr', 'temp')
         self.temp += 1
-        self.writeQuad('+', baseAddr, idxAddr, ptrAddr) # sumar y poner en pointer
-        # append pointer, tipo de dato es el mismo que el arreglo, no 'ptr'
+        self.writeQuad('+', addrAsConstant, offsetAddr, ptrAddr) # sumar y poner en pointer
+        # append pointer, tipo de dato es el mismo que el arreglo (para semantica), no debe ser 'ptr'
         self.idStack.append(ptr)
-        self.tpStack.append(idxType)
+        self.tpStack.append(arrType)
         self.memStack.append('temp')
-
 
     # -- RETORNA --
     def retorna(self):
         ret, retType, retMem = self.popVar()
         retAddr = self.funcDir.getAddress(ret, retType, retMem)
         gRetId = '&' + self.funcDir.scope
-        globalRetVar = self.funcDir.getVariable(gRetId)
+        globalRetVar = self.funcDir.getVariable(gRetId) # cambiar a get address
         if globalRetVar['type'] != retType:
             exceptions.fatalError("No se puede retornar '%s' en funcion '%s', se esparaba tipo '%s'" %(retType, self.funcDir.scope, globalRetVar['type']))
         self.writeQuad("=", retAddr, "0", globalRetVar['address'])

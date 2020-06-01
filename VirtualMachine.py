@@ -116,6 +116,8 @@ class VirtualMachine:
             self.memSet(int(aux[0]), aux[1])
 
     # -- MANEJO DE MEMORIA --
+    # Traduce una direccion de memoria (numero) a 3 variables
+    # scope, tipo, e idx, para indexar el diccionario de memoria
     def offsetMemory(self, addr):
         # offset de scope
         scope = tipo = ''
@@ -147,16 +149,18 @@ class VirtualMachine:
         else:                    # pointer
             tipo = 'ptr'
             addr -= 8000
-        return addr, scope, tipo
+        return addr, scope, tipo # idx, scope, tipo
 
+    # Mas como mallocz, llena de 0 la cantidad definida por sizes en el orden de
+    # TYPE
     def malloc(self, scope, sizes):
         sizes = list(map(int, sizes))
         for i in range(0, len(sizes)):
             if sizes[i] > 0:
                 self.mem[scope][TYPES[i]] = [0] * sizes[i]
 
-    # escribe en la direccion de memoria si no es pointer,
-    # si es apuntador, trae la direccion que guarda el apuntador y lo escribe ahi
+    # escribe en la direccion de memoria addr, a menos que sea de tipo 'ptr'
+    # si es apuntador, trae la direccion del apuntador y lo escribe ahi
     def memSet(self, addr, value):
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)
@@ -166,23 +170,20 @@ class VirtualMachine:
             value = float(value)
         elif tipo == 'bool':
             value = bool(value)
-        if tipo == 'ptr':   # si es apuntador se vuelve a hacer el offset
-            newAddr = self.mem[scope][tipo][idx] # obtienes la direccion dentro de la direccion
-            # print("received pointer, new address is", newAddr)
-            idx, scope, tipo = self.offsetMemory(newAddr) # ahora si estos datos son los buenos
+        if tipo == 'ptr':   # si es apuntador trae lo de memoria y vuelve a hacer el offset
+            newAddr = self.mem[scope][tipo][idx]            # obtienes la direccion dentro de la direccion
+            idx, scope, tipo = self.offsetMemory(newAddr)   # ahora si estos datos son los buenos
         self.mem[scope][tipo][idx] = copy.copy(value)
-        # print("wrote %s to %s" %(value, addr))
 
     def memGet(self, addr):
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)
         if tipo == 'ptr':
-            newAddr = self.mem[scope][tipo][idx] # obtienes la direccion dentro de la direccion
-            # print("received pointer, new address is", newAddr)
-            idx, scope, tipo = self.offsetMemory(newAddr) # ahora si estos datos son los buenos
+            newAddr = self.mem[scope][tipo][idx]            # obtienes la direccion dentro de la direccion
+            idx, scope, tipo = self.offsetMemory(newAddr)   # ahora si estos datos son los buenos
         return self.mem[scope][tipo][idx] # accesos => dicc dicc arreglo
 
-    # escribe directamente en esa direccion de memoria
+    # escribe directamente en la direccion de memoria sin cast de value y sin checar si es pointer
     def ptrSet(self, addr, value):
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)

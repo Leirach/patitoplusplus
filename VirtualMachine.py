@@ -235,6 +235,8 @@ class VirtualMachine:
     def div(self, op1, op2, op3):
         temp1 = self.memGet(op1)
         temp2 = self.memGet(op2)
+        if(temp2 == 0):
+            exceptions.fatalError("División entre 0")
         self.memSet(op3, temp1 / temp2)
         self.ip += 1
 

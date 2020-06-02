@@ -143,7 +143,7 @@ class CodeGenerator:
     def forStart(self):
         val, valType, valMem = self.popVar()
         inc, incType, incMem = self.popVar()
-        if  valType not in ['int', 'float']:
+        if  valType not in ['int']:
             exceptions.fatalError("Se esperaba variable int o float para iterar en 'desde', se recibió %s" %(valType))
         valAddr = self.funcDir.getAddress(val, valType, valMem)
         incAddr = self.funcDir.getAddress(inc, incType, incMem)

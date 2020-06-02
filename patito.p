@@ -1,10 +1,12 @@
     programa patito;
     var int i;
-    funcion void factor(bool num) {
-        quackout(num);
+    funcion bool factor(int num) {
+        var bool aux;
+        retorna aux;
     }
 
     principal() {
-        var int i, A[5], aux;
-        i = A[5][8];
+       var int A[3];
+       A[0] = 4;
+       quackout(1/0);
     }

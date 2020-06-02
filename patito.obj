@@ -1,19 +1,24 @@
 GOSUB principal 0 0
-PRINT 14000 0 0
+= 14000 0 4001
+GOTO 4 0 0
 ENDFUNC 0 0 0
-VER 30000 0 5
-+ADDR 10001 30000 28000
-= 28000 0 10000
+VER 30000 0 3
++ADDR 10000 30000 28000
+= 30001 0 28000
+/ 30002 30000 22000
+PRINT 22000 0 0
 ENDFUNC 0 0 0
 
 factor 2 1
-PAR1 14000
-local 0 0 0 1 0
+PAR1 10000
+local 1 0 0 1 0
 temp 0 0 0 0 0
-principal 4 0
-local 8 0 0 0 0
-temp 0 0 0 0 1
+principal 5 0
+local 4 0 0 0 0
+temp 0 1 0 0 1
 
-global 1 0 0 0 0
-const 1 0 0 0 0
-30000 5
+global 1 0 0 1 0
+const 3 0 0 0 0
+30000 0
+30001 4
+30002 1

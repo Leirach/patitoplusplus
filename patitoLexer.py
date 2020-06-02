@@ -102,7 +102,7 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
-    exceptions.fatalError("Illegal character '%s' in line '%d'" % (lexer.token(), t.lexer.lineno))
+    exceptions.fatalError("Caracter ilegal '%s' en línea '%d'" % (lexer.token(), t.lexer.lineno))
 
 # Build the lexer
 lexer = lex.lex()

@@ -1,20 +1,16 @@
 programa patito;
 
-funcion int fibo(int n) {
-    si (n == 0) entonces {
-        retorna 0;
+funcion void factorial(int num) {
+    var int aux, i;
+    aux = 1;
+    desde i = 2 hasta num hacer {
+        aux = aux*i;
     }
-    si (n <= 2) entonces {
-        retorna 1;
-    }
-    sino {
-        retorna fibo(n-1) + fibo(n-2);
-    }
+    quackout(aux);
 }
 
 principal() {
-    var int N;
-    quackout("Cuantos?");
-    quackin(N);
-    quackout(fibo(N));
+    var int cont;
+    quackin(cont);
+    factorial(cont);
 }

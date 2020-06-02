@@ -113,8 +113,8 @@ class VirtualMachine:
         self.malloc('const', sizes[1:])
         memory = memory[2:]
         for line in memory:
-            aux = line.split()
-            self.memSet(int(aux[0]), aux[1])
+            div = line.index(' ') 
+            self.memSet(line[:div], line[div+1:])
 
     # -- MANEJO DE MEMORIA --
     # Traduce una direccion de memoria (numero) a 3 variables

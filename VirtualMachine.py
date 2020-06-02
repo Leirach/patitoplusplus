@@ -1,4 +1,5 @@
 import sys, copy
+import math
 import exceptions
 TYPES = ['int', 'float', 'char', 'bool', 'ptr'] # para iterar diccionarios
 memEmpty = {
@@ -166,7 +167,7 @@ class VirtualMachine:
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)
         if tipo == 'int':
-            value =int(value) if value.isdigit() else exceptions.fatalError("Error de semántica, el valor '%s' no es tipo '%s'" %(value, tipo))
+            value = int(float(value))
         elif tipo == 'float':
             value = float(value)
         elif tipo == 'bool':

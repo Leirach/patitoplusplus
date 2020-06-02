@@ -1,4 +1,5 @@
 import ply.lex as lex
+import exceptions
 
 # === LEXER ===
 tokens = [
@@ -101,8 +102,7 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
     
 def t_error(t):
-    print("Illegal character '%s'" % lexer.token())
-    t.lexer.skip(1)
-    
+    exceptions.fatalError("Illegal character '%s' in line '%d'" % (lexer.token(), t.lexer.lineno))
+
 # Build the lexer
 lexer = lex.lex()

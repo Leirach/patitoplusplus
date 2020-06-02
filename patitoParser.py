@@ -188,7 +188,7 @@ def p_read_options(p):
 
 # -- Retorna --
 def p_retorna(p):
-    'retorna : RETORNA OPENPAR megaexp CLOSEPAR SEMICOLON'
+    'retorna : RETORNA megaexp SEMICOLON'
     code.retorna()
 
 # -- Desde --
@@ -288,7 +288,7 @@ def p_variable(p):
     code.memStack.append('var')
     code.dimStack.append(0)
 
-def p_id_dimensions_one(p):
+def p_dimensions_offset(p):
     'dimensions_offset : openbrac exp closebrac'
     code.accessArray()
 
@@ -387,7 +387,7 @@ def p_empty(p):
     p[0] = EMPTY
 
 def p_error(p):
-    print("Syntax error en %s" %p.value)
+    print("Syntax error en linea %d cerca de '%s'" %(patitoLexer.lexer.lineno, p.value))
 
 # -- Crea el parser y loop para leer --
 parser = yacc.yacc()

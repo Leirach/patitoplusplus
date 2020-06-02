@@ -18,6 +18,8 @@ class CodeGenerator:
         self.funcDir = fm.FunctionManager()
         self.gotoStack = []
         self.pendingLines = []
+        self.retStack = []
+        self.pendingReturns = []
         self.paramCounter = 0
         self.forIds = []
         self.temp = 1
@@ -190,8 +192,11 @@ class CodeGenerator:
     def endFunc(self):
         # calcular tamaño de todo, self.temp tiene el count
         self.temp = 1 # reset temp counter
-        self.code.append("ENDFUNC 0 0 0\n")
-        self.line += 1
+        self.writeQuad('ENDFUNC', '0', '0', '0')
+        buf = "GOTO %s 0 0\n"
+        for ret in self.retStack:
+            self.code[ret-1] = buf % (self.line -1)
+        self.retStack = []
         self.funcDir.endFunc()
 
     # -- LLAMADAS DE FUNCIONES --
@@ -225,7 +230,7 @@ class CodeGenerator:
         self.memStack.append('temp')
 
     # -- ARRAYS --
-    def accessArray(self):
+    def accessArray(self): 
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
         if idxType != 'int':
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
@@ -235,18 +240,14 @@ class CodeGenerator:
         # verificacion de limites
         dim = self.dimStack.pop() + 1
         if dim == 1:
-            dimKey = 'dim1'
-            limit = arrVar[dimKey]
+            limit = arrVar['dim1']
             if limit is None:
                 exceptions.fatalError("Variable '%s' no es un arreglo dimensionado" % (arrId))
-        else:
-            dimKey = 'dim2'
-            limit = arrVar[dimKey]
+        else: # dim == 2
+            limit = arrVar['dim2']
             if limit is None:
                 exceptions.fatalError("Variable '%s' no es un arreglo de dos dimensiones" % (arrId))
-        limitAddr = self.funcDir.getAddress(limit, 'int', 'const')
-        zeroAddr = self.funcDir.getAddress(0, 'int', 'const')
-        self.writeQuad('VER', idxAddr, zeroAddr, limitAddr) # checar si esta en rango
+        self.writeQuad('VER', idxAddr, 0, limit) # checar si esta en rango
         if dim == 1 and arrVar['dim2'] is not None:
             dim2Addr = self.funcDir.getAddress(arrVar['dim2'], 'int', 'const')
             self.writeQuad('*', idxAddr, dim2Addr, idxAddr) # multiplicar offset de dim1 si hay 2 dimensiones
@@ -286,11 +287,13 @@ class CodeGenerator:
     def retorna(self):
         ret, retType, retMem = self.popVar()
         retAddr = self.funcDir.getAddress(ret, retType, retMem)
-        gRetId = '&' + self.funcDir.scope
-        globalRetVar = self.funcDir.getVariable(gRetId) # cambiar a get address
+        globalRetVar = self.funcDir.getReturnVariable(self.funcDir.scope)
         if globalRetVar['type'] != retType:
             exceptions.fatalError("No se puede retornar '%s' en funcion '%s', se esparaba tipo '%s'" %(retType, self.funcDir.scope, globalRetVar['type']))
         self.writeQuad("=", retAddr, "0", globalRetVar['address'])
+        self.writeQuad('return', 'goto', 'pending', '')
+        self.retStack.append(self.line-1)
+
 
     # -- READ PRINT / QUACKIN QUACKOUT --
     def ioQuad(self, io):

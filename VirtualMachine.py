@@ -1,4 +1,5 @@
 import sys, copy
+import exceptions
 TYPES = ['int', 'float', 'char', 'bool', 'ptr'] # para iterar diccionarios
 memEmpty = {
     'global': {
@@ -325,18 +326,16 @@ class VirtualMachine:
 
     def verify(self, op1, op2, op3):
         idx = self.memGet(op1)
-        limInf = self.memGet(op2)
-        limSup = self.memGet(op3)
+        limInf = int(op2)
+        limSup = int(op3)
         if (idx < limInf or idx >= limSup):
-            print("Indice fuera de rango.")
-            sys.exit()
+            exceptions.fatalError("Indice fuera de rango.")
         self.ip += 1
     
     def sumAddress(self, op1, op2, op3):
         baseAddr = int(op1) # this is already an address
-        offset = self.memGet(op2) # temporal
-        # print("setting pointer %s to: %d" % (op3, baseAddr + offset))
-        self.ptrSet(op3, baseAddr + offset)
+        temp = self.memGet(op2) # offset de la direccion del arreglo
+        self.ptrSet(op3, baseAddr + temp)
         self.ip += 1
 
     # otros

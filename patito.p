@@ -1,13 +1,13 @@
 
     programa patito;
 
-    funcion void testingTypes(int num) {
+    funcion void testingTypes(bool num) {
         quackout(num);
     }
 
     principal() {
-        var int cont;
-        quackout("Escribe un int: ");
+        var bool cont;
+        quackout("Escribe un bool: ");
         quackin(cont);
         testingTypes(cont);
     }

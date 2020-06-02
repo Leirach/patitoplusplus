@@ -163,6 +163,7 @@ class VirtualMachine:
 
     # escribe en la direccion de memoria addr, a menos que sea de tipo 'ptr'
     # si es apuntador, trae la direccion del apuntador y lo escribe ahi
+    
     def memSet(self, addr, value):
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)
@@ -171,7 +172,7 @@ class VirtualMachine:
         elif tipo == 'float':
             value = float(value)
         elif tipo == 'bool':
-            value = bool(value)
+            value = value != '0' if isinstance(value, str) else bool(value)
         if tipo == 'ptr':   # si es apuntador trae lo de memoria y vuelve a hacer el offset
             newAddr = self.mem[scope][tipo][idx]            # obtienes la direccion dentro de la direccion
             idx, scope, tipo = self.offsetMemory(newAddr)   # ahora si estos datos son los buenos

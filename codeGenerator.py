@@ -62,7 +62,7 @@ class CodeGenerator:
         aux = "t"+str(self.temp)
         auxType = semantics.match(op, izqType, derType)
         if auxType is None:
-            exceptions.fatalError("Invalid operand %s for types %s and %s" % (op, izqType, derType))
+            exceptions.fatalError("Operador inválido %s para tipos %s y %s" % (op, izqType, derType))
         izqAddr = self.funcDir.getAddress(izq, izqType, izqMemScope)
         derAddr = self.funcDir.getAddress(der, derType, derMemScope)
         auxAddr = self.funcDir.getAddress(aux, auxType, 'temp')

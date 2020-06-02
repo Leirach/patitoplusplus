@@ -1,21 +1,19 @@
 GOSUB principal 0 0
 PRINT 14000 0 0
 ENDFUNC 0 0 0
-PRINT 36000 0 0
-READ 14000 0 0
-ERA testingTypes 0 0
-PARAM 14000 PAR1 0
-GOSUB testingTypes 0 0
+VER 30000 0 5
++ADDR 10001 30000 28000
+= 28000 0 10000
 ENDFUNC 0 0 0
 
-testingTypes 2 1
+factor 2 1
 PAR1 14000
 local 0 0 0 1 0
 temp 0 0 0 0 0
 principal 4 0
-local 0 0 0 1 0
-temp 0 0 0 0 0
+local 8 0 0 0 0
+temp 0 0 0 0 1
 
-global 0 0 0 0 0
-const 0 0 1 0 0
-36000 Escribe un bool: 
+global 1 0 0 0 0
+const 1 0 0 0 0
+30000 5

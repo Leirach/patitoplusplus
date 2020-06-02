@@ -1,18 +1,13 @@
 
     programa patito;
 
-    funcion void factorial(int num) {
-        var int aux, i;
-        aux = 1;
-        desde i = 2 hasta num hacer {
-            aux = aux*i;
-        }
-        quackout(aux);
+    funcion void testingTypes(bool num) {
+        quackout(num);
     }
 
     principal() {
-        var int cont;
-        quackout("Calcular factorial de: ");
+        var bool cont;
+        quackout("Escribe un flotante: ");
         quackin(cont);
-        factorial(cont);
+        testingTypes(cont);
     }

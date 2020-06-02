@@ -166,7 +166,7 @@ class VirtualMachine:
         addr = int(addr)
         idx, scope, tipo = self.offsetMemory(addr)
         if tipo == 'int':
-            value = int(value)
+            value =int(value) if value.isdigit() else exceptions.fatalError("Error de semántica, el valor '%s' no es tipo '%s'" %(value, tipo))
         elif tipo == 'float':
             value = float(value)
         elif tipo == 'bool':

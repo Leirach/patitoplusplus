@@ -1,31 +1,21 @@
 GOSUB principal 0 0
-= 30000 0 10001
-= 30001 0 10002
-<= 10002 10000 24000
-GOTOF 24000 10 0 0
-* 10001 10002 20000
-= 20000 0 10001
-++ 10002 0 0
-GOTO 4 0 0
-PRINT 10001 0 0
+PRINT 14000 0 0
 ENDFUNC 0 0 0
 PRINT 36000 0 0
-READ 10000 0 0
-ERA factorial 0 0
-PARAM 10000 PAR1 0
-GOSUB factorial 0 0
+READ 14000 0 0
+ERA testingTypes 0 0
+PARAM 14000 PAR1 0
+GOSUB testingTypes 0 0
 ENDFUNC 0 0 0
 
-factorial 2 1
-PAR1 10000
-local 3 0 0 0 0
-temp 1 0 0 1 0
-principal 12 0
-local 1 0 0 0 0
+testingTypes 2 1
+PAR1 14000
+local 0 0 0 1 0
+temp 0 0 0 0 0
+principal 4 0
+local 0 0 0 1 0
 temp 0 0 0 0 0
 
 global 0 0 0 0 0
-const 2 0 1 0 0
-30000 1
-30001 2
-36000 Calcular factorial de: 
+const 0 0 1 0 0
+36000 Escribe un flotante: 

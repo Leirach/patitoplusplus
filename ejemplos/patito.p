@@ -1,17 +1,20 @@
 programa patito;
 
-funcion int factorial(int num) {
-    var int aux, i;
-    aux = 1;
-    desde i = 2 hasta num hacer {
-        aux = aux*i;
+funcion int fibo(int n) {
+    si (n == 0) entonces {
+        retorna 0;
     }
-    return aux;
+    si (n <= 2) entonces {
+        retorna 1;
+    }
+    sino {
+        retorna fibo(n-1) + fibo(n-2);
+    }
 }
 
 principal() {
-    var int cont;
-    quackout("Calcular factorial de: ");
-    quackin(cont);
-    factorial(factorial(cont));
+    var int n;
+    quackout("Introducir número:");
+    quackin(N);
+    quackout(fibo(n));
 }

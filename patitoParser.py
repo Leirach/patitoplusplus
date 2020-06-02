@@ -387,7 +387,7 @@ def p_empty(p):
     p[0] = EMPTY
 
 def p_error(p):
-    print("Syntax error en linea %d cerca de '%s'" %(patitoLexer.lexer.lineno, p.value))
+    exceptions.fatalError("Error de sintáxtis en línea %d cerca de '%s'" %(patitoLexer.lexer.lineno, p.value))
 
 # -- Crea el parser y loop para leer --
 parser = yacc.yacc()

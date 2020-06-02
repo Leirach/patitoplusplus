@@ -14,7 +14,7 @@ funcion int fibo(int n) {
 
 principal() {
     var int N;
-    quackout("Cuantos?");
+    quackout("Introducir número:");
     quackin(N);
     quackout(fibo(N));
 }

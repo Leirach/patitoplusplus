@@ -1,17 +1,17 @@
 programa patito;
-var int i[10];
 
-funcion void init() {
-    var int cont;
-    desde cont = 0 hasta 9 hacer {
-        i[cont] = cont + 1;
+funcion int factorial(int num) {
+    var int aux, i;
+    aux = 1;
+    desde i = 2 hasta num hacer {
+        aux = aux*i;
     }
+    return aux;
 }
 
 principal() {
     var int cont;
-    init();
-    desde cont = 0 hasta 9 hacer {
-        quackout(i[cont]); %% esto es un patito-comentario cuack
-    }
+    quackout("Calcular factorial de: ");
+    quackin(cont);
+    factorial(factorial(cont));
 }

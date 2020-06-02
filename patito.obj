@@ -7,23 +7,32 @@ GOTOF 24000 10 0 0
 = 20000 0 10001
 ++ 10002 0 0
 GOTO 4 0 0
-PRINT 10001 0 0
+= 10001 0 1
+GOTO 12 0 0
 ENDFUNC 0 0 0
+PRINT 36000 0 0
 READ 10000 0 0
+ERA factorial 0 0
 ERA factorial 0 0
 PARAM 10000 PAR1 0
 GOSUB factorial 0 0
+= 1 0 20000
+PARAM 20000 PAR1 0
+GOSUB factorial 0 0
+= 1 0 20001
+PRINT 20001 0 0
 ENDFUNC 0 0 0
 
 factorial 2 1
 PAR1 10000
 local 3 0 0 0 0
 temp 1 0 0 1 0
-principal 12 0
+principal 13 0
 local 1 0 0 0 0
-temp 0 0 0 0 0
+temp 2 0 0 0 0
 
-global 0 0 0 0 0
-const 2 0 0 0 0
+global 1 0 0 0 0
+const 2 0 1 0 0
 30000 1
 30001 2
+36000 Calcular factorial de: 

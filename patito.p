@@ -1,16 +1,17 @@
 programa patito;
 
-funcion void factorial(int num) {
+funcion int factorial(int num) {
     var int aux, i;
     aux = 1;
     desde i = 2 hasta num hacer {
         aux = aux*i;
     }
-    quackout(aux);
+    return aux;
 }
 
 principal() {
     var int cont;
+    quackout("Calcular factorial de: ");
     quackin(cont);
-    factorial(cont);
+    quackout(factorial(factorial(cont)));
 }

@@ -80,16 +80,10 @@ principal() {
 ### Condicionales
 
 ```
-
-%% declaracion de funcion
-funcion bool esPar(num) {
-    var int aux;
-    aux = num/2;
-    si(aux == 0) entonces {
-        retorna true;
-    }sino{
-        retorna false;
-    }
+si(<condicion>) entonces {
+    %% bloque true
+}sino{
+    %% bloque false
 }
 
 ```
@@ -97,26 +91,16 @@ funcion bool esPar(num) {
 
 Mientras:
 ```
-%%Función print a matriz
-funcion void imprime(limite){
-    %%Ciclo mientras
-    var int i;
-    i = 0;
-    mientras (i<=limite) haz { %% mientras no se cumpla la condición
-        quackout(matriz[i]); %%imprime
-        i = i + 1; %% incrementa variable de control
-    }
+mientras (<condicion>) haz { %% mientras no se cumpla la condición
+    %% Código del ciclo
 }
 ```
 
 Desde:
 ```
-%%Función tipo void que asigna valores a index en matriz
-funcion void asigna(int n) { 
-    var int i; %%variable local a función
-    desde i = 0 hasta n hacer { %%Ciclo que va desde 0 hasta n
-        matriz[i] = i; %%Asigna a matriz
-    }
+var int i; %% variable local a función
+desde i = 0 hasta n hacer {     %%Ciclo que va desde 0 hasta n inclusivo
+    %% codigo del ciclo
 }
 ```
 
@@ -125,13 +109,10 @@ funcion void asigna(int n) {
 ### Input / Output
 
 ```
-%% Inicio de función principal
-principal() {
-    var int i, busca; %%Variable local a principal
+    var int input;
     quackout("Introducir número:"); %% output
     quackin(input); %% input
-    asigna(input); %%Llamada a función
-}
+
 ```
 
 ## Autores

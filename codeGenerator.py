@@ -230,12 +230,14 @@ class CodeGenerator:
         self.memStack.append('temp')
 
     # -- ARRAYS --
-    def accessArray(self): 
+    def accessArray(self):
+        print(self.idStack)
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
         if idxType != 'int':
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
         idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
-        arrId = self.peek(self.idStack) # variable presuntamente dimensionada
+        # variable presuntamente dimensionada
+        arrId = self.peek(self.arrStack)
         arrVar = self.funcDir.getVariable(arrId)
         # verificacion de limites
         dim = self.dimStack.pop() + 1
@@ -247,21 +249,26 @@ class CodeGenerator:
             limit = arrVar['dim2']
             if limit is None:
                 exceptions.fatalError("Variable '%s' no es un arreglo de dos dimensiones" % (arrId))
-        self.writeQuad('VER', idxAddr, 0, limit) # checar si esta en rango
-        if dim == 1 and arrVar['dim2'] is not None:
-            dim2Addr = self.funcDir.getAddress(arrVar['dim2'], 'int', 'const')
-            self.writeQuad('*', idxAddr, dim2Addr, idxAddr) # multiplicar offset de dim1 si hay 2 dimensiones
-        # vuelve a meter al stack
+        # checar si esta en rango
+        self.writeQuad('VER', idxAddr, 0, limit)
+        # vuelve a meter al stack para las siguientes operaciones o para 
         self.idStack.append(idx)
         self.tpStack.append(idxType)
         self.memStack.append(idxMem)
         self.dimStack.append(dim)
+        if dim == 1 and arrVar['dim2'] is not None:
+            self.idStack.append(arrVar['dim2'])
+            self.tpStack.append('int')
+            self.memStack.append('const')
+            self.opStack.append('*')
+            self.buildExp()
 
     # [idx1][idx2] son las ultimas 2 temps calculadas con accessArray, 
     # se deberian sumar y meter en la pila el resultado, el ultimo temporal es 
     # el offset total de la variable.
     # si solo hay una dimension popVar() ya es el offset total
     def offsetVariable(self):
+        _arr = self.arrStack.pop() # no se usa, igual hay que popear
         dims = self.dimStack.pop()
         if dims == 0: # no hacer nada si no es variable dimensionada
             return

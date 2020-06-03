@@ -286,6 +286,8 @@ def p_variable(p):
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
     code.memStack.append('var')
+    # por si es arreglo
+    code.arrStack.append(p[1])
     code.dimStack.append(0)
 
 def p_dimensions_offset(p):

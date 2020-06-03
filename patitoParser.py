@@ -4,6 +4,7 @@ import codeGenerator as cg
 import ply.yacc as yacc
 import exceptions
 import sys
+import os
 
 tokens = patitoLexer.tokens
 

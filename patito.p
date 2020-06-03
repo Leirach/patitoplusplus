@@ -1,22 +1,16 @@
-programa hello_world; %% Comentarios
+programa patito;
 
-%% Variables globales
-var int array[10], matrix[5][5];
-
-%% declaracion de funciones
-funcion void init() {
-    var int i;
-    desde i = 0 hasta 4 hacer {
-        matrix[i][i] = i;
+funcion int factorial(int num) {
+    si (num == 0) entonces {
+        retorna 1;
+    }sino{
+        retorna num*factorial(num-1);
     }
 }
 
-%% funcion principal
 principal() {
-    var int i, limite;
-    i = 1/0;
-    quackin(limite);
-    desde i = 0 hasta limite hacer {
-        quackout(matrix[i][i]);
-    }
+    var int cont;
+    quackout("Calcular factorial de:");
+    quackin(cont);
+    quackout(factorial(cont));
 }

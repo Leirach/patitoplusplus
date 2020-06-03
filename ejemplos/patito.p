@@ -1,20 +1,21 @@
-programa patito;
+    
+    programa patito;  %% Se inicia el programa asignando un nombre
+    var int contador, matriz[5][5];
+    funcion void asigna(int n) { %% función tipo int para hacer los cálculos
+        var int i;
+        desde i = 0 hasta n haz{
+            matriz[i][i] = i*n;
+        }
+    }
 
-funcion int fibo(int n) {
-    si (n == 0) entonces {
-        retorna 0;
-    }
-    si (n <= 2) entonces {
-        retorna 1;
-    }
-    sino {
-        retorna fibo(n-1) + fibo(n-2);
-    }
-}
+    %% Inicio de función principal
+    principal() {
+        var int i;
+        quackout("Introducir número:"); %%print
+        quackin(contador); %% read
+        quackout(asigna(n)); %%print
 
-principal() {
-    var int n;
-    quackout("Introducir número:");
-    quackin(N);
-    quackout(fibo(n));
-}
+        desde i = 0 hasta n haz{
+            quackout(matriz[i][i]);
+        }
+    }

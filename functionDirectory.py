@@ -82,11 +82,11 @@ class FunctionManager:
 
     # func: functionName, paramNum: Number, type: Type sent
     # se asume que ya se valido que la funcion existe
-    def validateParam(self, func, paramNum, paramType):
-        length = len(self.functionsDir[func]['params'])
-        if paramNum >= length:
-            exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s." % ( func, length) )
-        expected = self.functionsDir[func]['params'][paramNum] # deberia regresar tipo de la variable local
+    def validateParam(self, func_id, paramNum, paramType):
+        parCount = len(self.functionsDir[func_id]['params'])
+        if paramNum >= parCount:
+            exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s, recibió %s." % ( func_id, parCount, paramNum+1) )
+        expected = self.functionsDir[func_id]['params'][paramNum] # deberia regresar tipo de la variable local
         if expected != paramType:
             exception.fatalError("Se esperaba parámetro de tipo %s. Se recibió %s." % (expected, paramType))
         return True
@@ -94,6 +94,12 @@ class FunctionManager:
     def callFunction(self, functionName):
         if self.functionsDir.get(functionName) is None:
             exception.fatalError("Función '%s' no existe" % (functionName))
+        return True
+
+    def verParamCounter(self, func_id, paramCounter):
+        parCount = len(self.functionsDir[func_id]['paramAddr'])
+        if parCount != paramCounter:
+            exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s, recibió %s" % ( func_id, parCount, paramCounter) )
         return True
 
     # regresa direccion de variable

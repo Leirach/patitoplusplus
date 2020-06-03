@@ -216,6 +216,7 @@ class CodeGenerator:
 
     def funcCallEnd(self):
         func_id = self.idStack.pop()
+        self.funcDir.verParamCounter(func_id, self.paramCounter)
         self.writeQuad('GOSUB', func_id, '0', '0')
         self.paramCounter = 0 # reset param counter
 
@@ -231,7 +232,6 @@ class CodeGenerator:
 
     # -- ARRAYS --
     def accessArray(self):
-        print(self.idStack)
         idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
         if idxType != 'int':
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))

@@ -17,7 +17,7 @@ programa patito; funcion int fact(int j) { quackout(1+2);} funcion int fact2(int
 programa patito; principal() { retorno(2*5-3); retorno(2*1); }
 programa patito; principal() { i = 1*(2+3); }
 
-programa patito; principal() { retorno(true*2); }
+programa patito; principal() { retorna true*2; }
 
 
 programa patito; principal() { quackout(true*5); }

@@ -46,6 +46,12 @@ class CodeGenerator:
         mem = self.memStack.pop()
         return var, tipo, mem
 
+    def peekVar(self):
+        var = self.idStack[-1]
+        tipo = self.tpStack[-1]
+        mem = self.memStack[-1]
+        return var, tipo, mem
+
     def peek(self, stack):
         if len(stack) > 0:
             return stack[-1]    # this will get the last element of stack
@@ -143,8 +149,8 @@ class CodeGenerator:
     def forStart(self):
         val, valType, valMem = self.popVar()
         inc, incType, incMem = self.popVar()
-        if  valType not in ['int']:
-            exceptions.fatalError("Se esperaba variable int o float para iterar en 'desde', se recibió %s" %(valType))
+        if  valType != 'int':
+            exceptions.fatalError("Se esperaba variable int para iterar en 'desde', se recibió %s" %(valType))
         valAddr = self.funcDir.getAddress(val, valType, valMem)
         incAddr = self.funcDir.getAddress(inc, incType, incMem)
         self.writeQuad("=", valAddr, "0", incAddr)
@@ -155,6 +161,9 @@ class CodeGenerator:
         self.gotoStack.append(self.line)
 
     def forDo(self):
+        _limit, limitType, _limitMem = self.peekVar()
+        if limitType != 'int':
+            exceptions.fatalError("Se esperaba expresion int como limite para iterar en 'desde', se recibió %s" %(limitType))
         self.opStack.append("<=")
         self.buildExp()
         cond, condType, condMemScope = self.popVar()
@@ -194,6 +203,7 @@ class CodeGenerator:
         self.temp = 1 # reset temp counter
         self.writeQuad('ENDFUNC', '0', '0', '0')
         buf = "GOTO %s 0 0\n"
+        # escribe goto ENDFUN pendientes por 'retorna'
         for ret in self.retStack:
             self.code[ret-1] = buf % (self.line -1)
         self.retStack = []
@@ -232,7 +242,7 @@ class CodeGenerator:
 
     # -- ARRAYS --
     def accessArray(self):
-        idx, idxType, idxMem = self.popVar() # expresion que se leyo entre brackets [idx]
+        idx, idxType, idxMem = self.peekVar() # expresion que se leyo entre brackets [idx][]
         if idxType != 'int':
             exceptions.fatalError("Se esperaba int para indexar arreglo, se recibió %s" % (idxType))
         idxAddr = self.funcDir.getAddress(idx, idxType, idxMem)
@@ -252,9 +262,6 @@ class CodeGenerator:
         # checar si esta en rango
         self.writeQuad('VER', idxAddr, 0, limit)
         # vuelve a meter al stack para las siguientes operaciones o para 
-        self.idStack.append(idx)
-        self.tpStack.append(idxType)
-        self.memStack.append(idxMem)
         self.dimStack.append(dim)
         if dim == 1 and arrVar['dim2'] is not None:
             self.idStack.append(arrVar['dim2'])
@@ -275,7 +282,7 @@ class CodeGenerator:
         if dims == 2:   # sumar los ultimos 2 temps para el offset total
             self.opStack.append('+')
             self.buildExp()
-        # sumar el offset a la direccion base
+        # sumar el offset a la direccion base 
         offset, offType, offMem = self.popVar() # [exp] o [idx]+[idx2] = offset
         offsetAddr = self.funcDir.getAddress(offset, offType, offMem)
         arr, arrType, arrMem = self.popVar()
@@ -298,7 +305,7 @@ class CodeGenerator:
         if globalRetVar['type'] != retType:
             exceptions.fatalError("No se puede retornar '%s' en funcion '%s', se esparaba tipo '%s'" %(retType, self.funcDir.scope, globalRetVar['type']))
         self.writeQuad("=", retAddr, "0", globalRetVar['address'])
-        self.writeQuad('return', 'goto', 'pending', '')
+        self.writeQuad('return', 'goto', 'pending', '0')
         self.retStack.append(self.line-1)
 
 

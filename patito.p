@@ -1,27 +1,22 @@
 programa hello_world; %% Comentarios
 
 %% Variables globales
-var int single, array[10], matrix[5][5];
-    float precise;
-    char letter;
-    bool check;
+var int array[10], matrix[5][5];
 
 %% declaracion de funciones
-funcion void prueba(int val) {
-    %% variables locales
-    var bool test;
-    %% print = quackout, read = quackin
-    si (val > 5) entonces {
-        quackout("cuack!");
-    }
-    sino {
-        quackout("cuack :c");
+funcion void init() {
+    var int i;
+    desde i = 0 hasta 4 hacer {
+        matrix[i][i] = i;
     }
 }
 
 %% funcion principal
 principal() {
-    %% vars locales a principal
-    quackout("Hello World!");
-    prueba(6);
+    var int i, limite;
+    i = 1/0;
+    quackin(limite);
+    desde i = 0 hasta limite hacer {
+        quackout(matrix[i][i]);
+    }
 }

@@ -1,5 +1,4 @@
 # === PARSER ===
-# Parsing rules
 import patitoLexer
 import codeGenerator as cg
 import ply.yacc as yacc
@@ -14,6 +13,7 @@ precedence = (
     ('left', 'COMMA'),
 )
 
+# Parsing rules
 def p_program_declaration(p):
     'program_declaration : PROGRAMA ID SEMICOLON declare_vars declare_func_rec declare_main OPENPAR CLOSEPAR bloque_funcion'
     code.endFunc()
@@ -285,7 +285,7 @@ def p_variable(p):
     p[0] = p[1]
     code.idStack.append(p[1])
     code.tpStack.append(code.getVarType(p[1]))
-    code.memStack.append('var')
+    code.memStack.append('var') # local o global, depende del funcdir
     # por si es arreglo
     code.arrStack.append(p[1])
     code.dimStack.append(0)
@@ -391,29 +391,36 @@ def p_empty(p):
 def p_error(p):
     exceptions.fatalError("Error de sintáxtis en línea %d cerca de '%s'" %(patitoLexer.lexer.lineno, p.value))
 
-# -- Crea el parser y loop para leer --
+# -- Crea el parser --
 parser = yacc.yacc()
 
+# -- COMPILACION --
+filename = ''
+code = cg.CodeGenerator(filename)
 try:
     filename = sys.argv[1]
-    if filename == 'debug':
-        while True:
-            try:
-                s = input('test > ')
-                if s == '$':
-                    sys.exit()
-            except EOFError:
-                break
-            parser.parse(s, debug=0)
 except IndexError:
     print('Uso: python patitoParser.py <patito.p>')
     sys.exit()
 
+if filename == 'debug':
+    while True:
+        try:
+            s = input('test > ')
+            if s == '$':
+                sys.exit()
+        except EOFError:
+            break
+        parser.parse(s, debug=0)
+
 try:
-    f = open(filename, "r")
+    file_dir = os.path.dirname(__file__) # absolute dir
+    abs_file_path = os.path.join(file_dir, filename)
+    f = open(abs_file_path, "r")
 except FileNotFoundError:
     print("No se encontró el archivo %s" % (filename))
     sys.exit()
+
 
 source = f.read()
 filename = filename.split('.')[0]

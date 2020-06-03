@@ -40,6 +40,7 @@ class CodeGenerator:
         self.code.append(buf)
         self.line += 1
 
+    # Regresa el nombre, tipo y scope de los 3 stacks
     def popVar(self):
         var = self.idStack.pop()
         tipo = self.tpStack.pop()

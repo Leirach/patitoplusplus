@@ -65,6 +65,7 @@ class FunctionManager:
         self.functionsDir[self.scope]['vars'].update({varId: {'type': varType, 'address': address, 'dim1': dim1, 'dim2':dim2} })
         return address
 
+    # Retorna todos los datos de la variable en el scope actual
     def getVariable(self, varId):
         var = self.functionsDir[self.scope]['vars'].get(varId)
         if var is not None:
@@ -102,8 +103,8 @@ class FunctionManager:
             exception.fatalError("Número de parámetros incorrecto para la función '%s'. Se esperaban %s, recibió %s" % ( func_id, parCount, paramCounter) )
         return True
 
-    # regresa direccion de variable
-    # si no es variable regresa direccion con el modulo de memoria
+    # regresa dirección de variable
+    # si no es variable regresa dirección con el módulo de memoria
     def getAddress(self, value, tipo, scope):
         if scope == 'var': # para local y global
             return self.getVariable(value)['address']

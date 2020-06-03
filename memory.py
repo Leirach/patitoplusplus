@@ -50,6 +50,8 @@ class MemoryManager:
             },
         }
 
+    # Crea una nueva dirección basada en el scope, el tipo
+    # y la memoria ocupada previamente en el mismo
     def assignAddress(self, scope, tipo, dim1=None, dim2=None):
         size = 0
         if dim1 is not None:
@@ -61,6 +63,8 @@ class MemoryManager:
         self.counters[scope][tipo] += size
         return addr
 
+    # Trae la dirección de la variable enviada como parámetro
+    # si no tiene dirección la crea
     def getAddress(self, value, tipo, scope):
         aux = self.memory[scope].get(value)
         if aux is not None:

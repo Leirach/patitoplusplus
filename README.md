@@ -54,7 +54,7 @@ var int single, array[10], matrix[5][5];
     char letter;
     bool check;
 
-% declaracion de funciones
+%% declaracion de funciones
 funcion void prueba(int val) {
     %% variables locales
     var bool test;
@@ -63,14 +63,14 @@ funcion void prueba(int val) {
         quackout("cuack!");
     }
     sino {
-        quackout("cuack :c")
+        quackout("cuack :c");
     }
 }
 
-%funcion principal
+%% funcion principal
 principal() {
-    %vars locales a principal
-    quackout("Hello World!")
+    %% vars locales a principal
+    quackout("Hello World!");
     prueba(6);
 }
 ```

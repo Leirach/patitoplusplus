@@ -1,12 +1,20 @@
-    programa patito;
-    var int i;
-    funcion bool factor(int num) {
-        var bool aux;
-        retorna aux;
-    }
+programa patito;
 
-    principal() {
-       var int A[3];
-       A[0] = 4;
-       quackout(1/0);
+funcion int fibo(int n) {
+    si (n == 0) entonces {
+        retorna 0;
     }
+    si (n <= 2) entonces {
+        retorna 1;
+    }
+    sino {
+        retorna fibo(n-1) + fibo(n-2);
+    }
+}
+
+principal() {
+    var int N;
+    quackout("Introducir número:");
+    quackin(N);
+    quackout(fibo(N));
+}

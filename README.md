@@ -71,7 +71,7 @@ funcion void prueba(int val) {
 
 %% funcion principal
 principal() {
-    %% vars locales a principal
+    var int X; %% vars locales a principal
     quackout("Hello World!");
     prueba(6);
 }
@@ -80,7 +80,7 @@ principal() {
 ### Condicionales
 
 ```
-si(<condicion>) entonces {
+si(<CONDICIÓN>) entonces {
     %% bloque true
 }sino{
     %% bloque false
@@ -91,7 +91,7 @@ si(<condicion>) entonces {
 
 Mientras:
 ```
-mientras (<condicion>) haz { %% mientras no se cumpla la condición
+mientras (<CONDICIÓN>) haz { %% mientras condición sea true
     %% Código del ciclo
 }
 ```
@@ -104,15 +104,31 @@ desde i = 0 hasta n hacer {     %%Ciclo que va desde 0 hasta n inclusivo
 }
 ```
 
-### 
-
 ### Input / Output
 
 ```
-    var int input;
-    quackout("Introducir número:"); %% output
-    quackin(input); %% input
+var int input;
+quackout("Introducir número:"); %% output
+quackin(input); %% input
+```
 
+### Funciones
+
+Funcion Void:
+
+```
+funcion void <NOMBRE> () {
+    %% código de la función
+}
+```
+
+Funcion con retorno:
+
+```
+funcion <TIPO> <NOMBRE> () {
+    %% código de la función
+    retorna <EXPRESION>; 
+}
 ```
 
 ## Autores
@@ -123,4 +139,6 @@ Blanca Leticia Badillo Guzmán
 
 ## Links
 
-[Documentacion Patito++](http://www.example.com)
+[Documentacion Patito++](https://docs.google.com/document/d/1qS5o_JG0cAdLHrY_L1FT6wISGaL4imzIBd7v90zgFJk/edit?usp=sharing)
+
+[Video demo](https://drive.google.com/file/d/1eqE3nnBPwNpmLMyvsGBt0BhUYHGA9kkN/view?usp=sharing)

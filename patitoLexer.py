@@ -12,7 +12,7 @@ tokens = [
     'COMMENT'
 ]
 
-# Reserved 
+# Palabras reservadas 
 reserved = {
     'programa': 'PROGRAMA',
     'principal': 'PRINCIPAL',
@@ -67,36 +67,43 @@ t_TRANSPOSE = r'!'
 t_INVERSE   = r'\^'
 
 
+# Constantes flotantes - SI importa el orden
 def t_CTEF(t):
     r'\d*\.\d+'
     return t
 
+# Constantes enteras
 def t_CTEI(t):
     r'\d+'
     return t
-    
+
+# Constantes char
 def t_CTEC(t):
     r"'.'"
     return t
-    
+
+# Constantes string (char para print)
 def t_CTES(t):
     r'"([^"\n]|(\\"))*"'
     t.value = t.value[1:-1]
     return t
 
+# Nombres de variable
 def t_ID(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     if t.value in reserved:
         t.type = reserved.get(t.value, 'ID')
     return t
 
+# Ignorar comentarios
 def t_COMMENT(t):
     r'\%%.*'
     pass
 
-# Ignored characters
+# Ignorar espacios y tabs
 t_ignore = " \t"
 
+# Contar lineas de codigo para errores
 def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count("\n")

@@ -1,20 +1,7 @@
 programa patito;
 
-funcion int fibo(int n) {
-    si (n == 0) entonces {
-        retorna 0;
-    }
-    si (n <= 2) entonces {
-        retorna 1;
-    }
-    sino {
-        retorna fibo(n-1) + fibo(n-2);
-    }
-}
-
 principal() {
-    var int N;
-    quackout("Introducir número:");
-    quackin(N);
-    quackout(fibo(N));
+    var int A[3][5];
+    A[0][0] = 4;
+    quackout(A[0][0]);
 }
